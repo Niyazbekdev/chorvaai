@@ -16,6 +16,22 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+
+            {{-- Language switcher --}}
+            @php $locale = app()->getLocale(); @endphp
+            <div class="absolute top-4 right-4 flex items-center bg-white rounded-full shadow px-1 py-1 gap-1">
+                <a href="{{ route('lang.switch', 'uz') }}"
+                   class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition
+                          {{ $locale === 'uz' ? 'bg-[#011f13] text-white' : 'text-gray-500 hover:text-gray-800' }}">
+                    🇺🇿 UZ
+                </a>
+                <a href="{{ route('lang.switch', 'ru') }}"
+                   class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition
+                          {{ $locale === 'ru' ? 'bg-[#011f13] text-white' : 'text-gray-500 hover:text-gray-800' }}">
+                    🇷🇺 RU
+                </a>
+            </div>
+
             <div>
                 <a href="/">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
