@@ -77,6 +77,7 @@
                             </span></p>
                         </div>
 
+                        {{-- Egasi: tahrirlash/o'chirish --}}
                         @auth
                             @if(auth()->id() === $product->user_id)
                                 <div class="flex gap-3 mt-6">
@@ -84,7 +85,6 @@
                                         class="flex-1 text-center bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition text-sm">
                                         Tahrirlash
                                     </a>
-
                                     <form method="POST" action="{{ route('products.destroy', $product) }}"
                                         onsubmit="return confirm('E\'lonni o\'chirishni tasdiqlaysizmi?')">
                                         @csrf @method('DELETE')
@@ -94,7 +94,54 @@
                                         </button>
                                     </form>
                                 </div>
+                            @else
+                                {{-- Xaridor: mavjud suhbatga o'tish yoki yangi xabar --}}
+                                @php
+                                    $existing = \App\Models\Conversation::where('product_id', $product->id)
+                                        ->where('buyer_id', auth()->id())->first();
+                                @endphp
+                                @if($existing)
+                                    <a href="{{ route('conversations.show', $existing) }}"
+                                       class="mt-6 flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
+                                        💬 Suhbatni davom ettirish
+                                    </a>
+                                @else
+                                    <div class="mt-6">
+                                        <button onclick="document.getElementById('msgBox').classList.toggle('hidden')"
+                                            class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
+                                            💬 Sotuvchiga xabar yozish
+                                        </button>
+                                        <div id="msgBox" class="hidden mt-3">
+                                            <form method="POST" action="{{ route('conversations.store') }}">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <textarea name="message" rows="3" required
+                                                    placeholder="Xabaringizni yozing..."
+                                                    class="w-full rounded-xl border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+                                                <button type="submit"
+                                                    class="mt-2 w-full bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
+                                                    Yuborish
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endif
                             @endif
+                        @else
+                            {{-- Guest --}}
+                            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                                <p class="text-sm text-blue-700 font-medium mb-3">Sotuvchiga xabar yozish uchun kiring</p>
+                                <div class="flex gap-2 justify-center">
+                                    <a href="{{ route('login') }}"
+                                       class="px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
+                                        Kirish
+                                    </a>
+                                    <a href="{{ route('register') }}"
+                                       class="px-5 py-2 border border-blue-600 text-blue-600 rounded-xl text-sm font-semibold hover:bg-blue-50 transition">
+                                        Ro'yxatdan o'tish
+                                    </a>
+                                </div>
+                            </div>
                         @endauth
                     </div>
                 </div>

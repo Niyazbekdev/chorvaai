@@ -95,6 +95,18 @@
                         </span>
                         <a href="{{ route('profile.edit') }}">Profil sozlamalari</a>
                         <a href="{{ route('profile.my-products') }}">Mening e'lonlarim</a>
+                        <a href="{{ route('conversations.index') }}" style="display:flex;align-items:center;justify-content:space-between">
+                            Xabarlar
+                            @php
+                                $__unread = \App\Models\Message::whereHas('conversation', fn($q) =>
+                                    $q->where('buyer_id', auth()->id())->orWhere('seller_id', auth()->id())
+                                )->where('sender_id', '!=', auth()->id())->whereNull('read_at')->count();
+                            @endphp
+                            @if($__unread > 0)
+                                <span style="background:#2563eb;color:white;font-size:.7rem;font-weight:700;
+                                             padding:2px 7px;border-radius:999px">{{ $__unread }}</span>
+                            @endif
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="logout-btn">Chiqish</button>
