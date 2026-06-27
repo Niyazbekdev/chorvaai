@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\PhoneVerificationController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,13 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Phone OTP verification
+    Route::get('verify-phone', [PhoneVerificationController::class, 'show'])->name('phone.verify');
+    Route::post('verify-phone', [PhoneVerificationController::class, 'verify'])->name('phone.verify.submit');
+    Route::post('verify-phone/resend', [PhoneVerificationController::class, 'resend'])
+        ->middleware('throttle:3,1')
+        ->name('phone.verify.resend');
+
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

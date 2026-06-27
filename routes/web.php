@@ -12,7 +12,7 @@ Route::get('/', fn () => view('welcome'))->name('home');
 Route::get('/marketplace', [ProductController::class, 'index'])->name('products.index');
 Route::get('/marketplace/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::get('/dashboard', fn () => redirect()->route('products.index'))->name('dashboard');
 
     // Product CRUD

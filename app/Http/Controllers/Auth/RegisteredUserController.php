@@ -4,50 +4,52 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Services\EskizService;
+use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+    public function __construct(
+        private OtpService  $otpService,
+        private EskizService $eskizService,
+    ) {}
+
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:255', 'regex:/^(\+998|998)?(90|91|93|94|95|97|98|99|33|88|77)\d{7}$/','unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name'  => ['required', 'string', 'max:100'],
+            'phone'      => ['required', 'string', 'regex:/^\+998\d{9}$/', 'unique:users,phone'],
+            'password'   => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'phone.regex'  => "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak.",
+            'phone.unique' => 'Bu telefon raqam allaqachon ro\'yxatdan o\'tgan.',
         ]);
 
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
+            'first_name'        => $request->first_name,
+            'last_name'         => $request->last_name,
+            'phone'             => $request->phone,
+            'password'          => Hash::make($request->password),
+            'phone_verified_at' => null,
         ]);
 
-        event(new Registered($user));
+        $code = $this->otpService->generate($user->phone);
+        $this->eskizService->send($user->phone, "ChorvaAI: tasdiqlash kodingiz: $code. Amal qilish muddati 5 daqiqa.");
 
         Auth::login($user);
 
-        return redirect(route('marketplace', absolute: false));
+        return redirect()->route('phone.verify');
     }
 }

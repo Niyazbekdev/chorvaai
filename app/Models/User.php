@@ -38,6 +38,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function hasVerifiedPhone(): bool
+    {
+        return !is_null($this->phone_verified_at);
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
