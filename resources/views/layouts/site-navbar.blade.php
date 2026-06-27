@@ -29,24 +29,36 @@
 .site-register:hover { background: #15803d; color: white; }
 .profile-wrap { position: relative; }
 .profile-btn {
-    background: #16a34a; color: white; text-decoration: none; border: 0;
-    padding: 10px 20px; border-radius: 999px; font-weight: 700; cursor: pointer;
+    background: #16a34a; color: white; border: 0;
+    padding: 10px 20px; border-radius: 999px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: background .2s;
 }
+.profile-btn:hover { background: #15803d; }
+.profile-btn .arrow {
+    display: inline-block; transition: transform .25s ease; font-size: .75rem;
+}
+.profile-btn.open .arrow { transform: rotate(180deg); }
 .profile-menu {
     display: none; position: absolute; right: 0; top: 54px; width: 230px;
-    background: white; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.2);
-    overflow: hidden;
+    background: white; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    overflow: hidden; z-index: 100;
+    animation: dropIn .18s ease;
 }
-.profile-wrap:hover .profile-menu { display: block; }
+.profile-menu.open { display: block; }
+@keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 .profile-menu-header {
     display: block; width: 100%; padding: 14px 16px;
     color: #111827; background: #f9fafb; border-bottom: 1px solid #e5e7eb;
-    font-size: .9rem;
+    font-size: .88rem; line-height: 1.4;
 }
 .profile-menu a, .profile-menu button {
     display: block; width: 100%; padding: 11px 16px; text-align: left;
     color: #111827; text-decoration: none; background: white; border: 0;
-    font-size: .9rem; cursor: pointer;
+    font-size: .9rem; cursor: pointer; transition: background .15s;
 }
 .profile-menu a:hover, .profile-menu button:hover { background: #f3f4f6; }
 .profile-menu .logout-btn { color: #dc2626; }
@@ -71,17 +83,18 @@
             @endguest
 
             @auth
-                <div class="profile-wrap">
-                    <button class="profile-btn">
-                        {{ Auth::user()->first_name }} ▾
+                <div class="profile-wrap" id="profileWrap">
+                    <button class="profile-btn" id="profileBtn" onclick="toggleProfileMenu()">
+                        {{ Auth::user()->first_name }}
+                        <span class="arrow">▼</span>
                     </button>
-                    <div class="profile-menu">
+                    <div class="profile-menu" id="profileMenu">
                         <span class="profile-menu-header">
                             <strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong><br>
-                            <small style="color:#6b7280">{{ Auth::user()->phone }}</small>
+                            <span style="color:#6b7280;font-size:.8rem">{{ Auth::user()->phone }}</span>
                         </span>
                         <a href="{{ route('profile.edit') }}">Profil sozlamalari</a>
-                        <a href="{{ route('profile.edit') }}#my-products">Mening e'lonlarim</a>
+                        <a href="{{ route('profile.my-products') }}">Mening e'lonlarim</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="logout-btn">Chiqish</button>
@@ -92,3 +105,20 @@
         </div>
     </div>
 </header>
+
+<script>
+function toggleProfileMenu() {
+    const btn  = document.getElementById('profileBtn');
+    const menu = document.getElementById('profileMenu');
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+}
+
+document.addEventListener('click', function (e) {
+    const wrap = document.getElementById('profileWrap');
+    if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('profileBtn')?.classList.remove('open');
+        document.getElementById('profileMenu')?.classList.remove('open');
+    }
+});
+</script>
