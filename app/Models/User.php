@@ -47,4 +47,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Product::class);
     }
+
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteProducts()
+    {
+        return $this->belongsToMany(Product::class, 'favorites')->withPivot('created_at');
+    }
 }

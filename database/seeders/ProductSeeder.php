@@ -42,6 +42,26 @@ class ProductSeeder extends Seeder
         ],
     ];
 
+    // Shahar koordinatalari (taxminiy markaz + kichik offset)
+    private array $cityCoords = [
+        'Chirchiq'   => [41.469,  69.580],
+        'Samarqand'  => [39.654,  66.960],
+        'Andijon'    => [40.782,  72.344],
+        "Farg'ona"   => [40.386,  71.786],
+        'Namangan'   => [41.001,  71.672],
+        'Buxoro'     => [39.768,  64.423],
+        'Qarshi'     => [38.860,  65.790],
+        'Termiz'     => [37.224,  67.278],
+        'Nukus'      => [42.460,  59.613],
+        'Yunusobod'  => [41.336,  69.285],
+        'Navoiy'     => [40.084,  65.379],
+        'Urganch'    => [41.549,  60.634],
+        'Jizzax'     => [40.115,  67.842],
+        'Zarafshon'  => [41.564,  64.201],
+        "Xo'jayli"   => [41.975,  60.364],
+        'Toshkent'   => [41.299,  69.240],
+    ];
+
     // Har bir mahsulot ma'lumotlari
     private array $products = [
         // --- SIGIRLAR ---
@@ -52,6 +72,9 @@ class ProductSeeder extends Seeder
             'type'     => 'Sigir', 'color' => 'Qora', 'category' => 'Sigir',
             'age'      => 4, 'weight' => 480, 'img' => 'sigir', 'imgIdx' => 0,
             'region'   => 'Toshkent viloyati', 'city' => 'Chirchiq',
+            'breed'    => 'Golshteyn', 'gender' => 'urgochi',
+            'health'   => "Sog'lom, barcha emlashlar qilingan",
+            'phone'    => '+998901110001',
         ],
         [
             'name'     => "Bo'rdoqi buqa — Simmental",
@@ -60,14 +83,20 @@ class ProductSeeder extends Seeder
             'type'     => 'Buqa', 'color' => "Qo'ng'ir", 'category' => 'Buqa',
             'age'      => 5, 'weight' => 640, 'img' => 'sigir', 'imgIdx' => 1,
             'region'   => 'Samarqand viloyati', 'city' => 'Samarqand',
+            'breed'    => 'Simmental', 'gender' => 'erkak',
+            'health'   => "A'lo, nasl guvohnomasi mavjud",
+            'phone'    => '+998901110002',
         ],
         [
-            'name'     => 'Jersey sigir — sut yo\'nalishi',
+            'name'     => "Jersey sigir — sut yo'nalishi",
             'desc'     => "Jersey zotli sigir, kuniga 22 litr yuqori yog'li sut. 3 yoshli, sokin xarakter. Bolali xonadonga mos.",
             'price'    => 13_000_000,
             'type'     => 'Sigir', 'color' => "Qo'ng'ir", 'category' => 'Sigir',
             'age'      => 3, 'weight' => 390, 'img' => 'sigir', 'imgIdx' => 2,
             'region'   => 'Andijon viloyati', 'city' => 'Andijon',
+            'breed'    => 'Jersey', 'gender' => 'urgochi',
+            'health'   => "Sog'lom, bolasi bor",
+            'phone'    => '+998901110003',
         ],
         [
             'name'     => 'Naslli buzoq — 8 oylik',
@@ -76,66 +105,66 @@ class ProductSeeder extends Seeder
             'type'     => 'Sigir', 'color' => 'Ala', 'category' => 'Buzoq',
             'age'      => 1, 'weight' => 115, 'img' => 'sigir', 'imgIdx' => 0,
             'region'   => "Farg'ona viloyati", 'city' => "Farg'ona",
+            'breed'    => 'Golshteyn (aralash)', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110004',
         ],
         [
             'name'     => 'Qora-ola sigir juftligi',
-            'desc'     => "Ikki sigir birga sotiladi. Har biri kuniga 18-20 litr sut beradi. Jami 36-40 litr. 4 va 5 yoshli.",
+            'desc'     => "Ikki sigir birga sotiladi. Har biri kuniga 18-20 litr sut beradi. 4 va 5 yoshli.",
             'price'    => 27_000_000,
             'type'     => 'Sigir', 'color' => 'Ala', 'category' => 'Sigir',
             'age'      => 4, 'weight' => 450, 'img' => 'sigir', 'imgIdx' => 1,
             'region'   => 'Namangan viloyati', 'city' => 'Namangan',
+            'breed'    => 'Golshteyn-aralash', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom, emlangan',
+            'phone'    => '+998901110005',
         ],
 
         // --- QO'YLAR ---
         [
             'name'     => "Romanov qo'yi — nasl olish uchun",
-            'desc'     => "Romanov zotli qo'y — ko'p qo'zilovchi. 2 yoshli, sog'lom. Jun sifati a'lo. Hujjatlari mavjud.",
+            'desc'     => "Romanov zotli qo'y — ko'p qo'zilovchi. 2 yoshli, sog'lom. Jun sifati a'lo.",
             'price'    => 3_200_000,
             'type'     => "Qo'y", 'color' => 'Oq', 'category' => "Qo'y",
             'age'      => 2, 'weight' => 65, 'img' => 'qoy', 'imgIdx' => 0,
             'region'   => 'Buxoro viloyati', 'city' => 'Buxoro',
+            'breed'    => 'Romanov', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom, emlangan',
+            'phone'    => '+998901110006',
         ],
         [
             'name'     => "Gissar qo'chqori — go'shtli",
-            'desc'     => "Gissar zoti — go'shti mazali, tez semiradi. 3 yoshli, 85 kg. Nasl olish uchun juda mos.",
+            'desc'     => "Gissar zoti — go'shti mazali, tez semiradi. 3 yoshli, 85 kg.",
             'price'    => 4_800_000,
             'type'     => "Qo'y", 'color' => "Qo'ng'ir", 'category' => "Qo'y",
             'age'      => 3, 'weight' => 85, 'img' => 'qoy', 'imgIdx' => 1,
             'region'   => 'Qashqadaryo viloyati', 'city' => 'Qarshi',
+            'breed'    => 'Gissar', 'gender' => 'erkak',
+            'health'   => 'A\'lo holat',
+            'phone'    => '+998901110007',
         ],
         [
             'name'     => "5 ta qo'zi — birga sotiladi",
-            'desc'     => "4-6 oylik 5 ta sog'lom qo'zi. Barcha emlashlar qilingan. Semirtirish uchun tayyor.",
+            'desc'     => "4-6 oylik 5 ta sog'lom qo'zi. Barcha emlashlar qilingan.",
             'price'    => 9_500_000,
             'type'     => "Qo'y", 'color' => 'Oq', 'category' => "Qo'y",
             'age'      => 1, 'weight' => 35, 'img' => 'qoy', 'imgIdx' => 2,
             'region'   => 'Surxondaryo viloyati', 'city' => 'Termiz',
+            'breed'    => 'Aralash', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110008',
         ],
         [
             'name'     => "Edilbay qo'yi — yog'li dumba",
-            'desc'     => "Edilbay — yog'li dumba zoti. 4 yoshli, 72 kg. Go'shti va yog'i uchun qimmatli.",
+            'desc'     => "Edilbay — yog'li dumba zoti. 4 yoshli, 72 kg.",
             'price'    => 4_100_000,
             'type'     => "Qo'y", 'color' => "Qo'ng'ir", 'category' => "Qo'y",
             'age'      => 4, 'weight' => 72, 'img' => 'qoy', 'imgIdx' => 0,
             'region'   => "Qoraqalpog'iston", 'city' => 'Nukus',
-        ],
-
-        // --- OTLAR ---
-        [
-            'name'     => 'Argamak ot — 4 yoshli',
-            'desc'     => "Sof qon naslli ot. Tez yurar, ko'rkam. Egar-jabduqlari bilan birga. Nasl guvohnomasi mavjud.",
-            'price'    => 48_000_000,
-            'type'     => 'Ot', 'color' => "Qo'ng'ir", 'category' => 'Ot',
-            'age'      => 4, 'weight' => 460, 'img' => 'ot', 'imgIdx' => 0,
-            'region'   => 'Toshkent shahri', 'city' => 'Yunusobod',
-        ],
-        [
-            'name'     => 'Ishchi ot — kuchli va sokin',
-            'desc'     => "Og'ir yuk tashishga o'rgatilgan. 6 yoshli, 530 kg. Sokin xarakter, bolalar bilan ham ishlash mumkin.",
-            'price'    => 29_000_000,
-            'type'     => 'Ot', 'color' => 'Qora', 'category' => 'Ot',
-            'age'      => 6, 'weight' => 530, 'img' => 'ot', 'imgIdx' => 1,
-            'region'   => 'Navoiy viloyati', 'city' => 'Navoiy',
+            'breed'    => 'Edilbay', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110009',
         ],
 
         // --- ECHKILAR ---
@@ -146,32 +175,68 @@ class ProductSeeder extends Seeder
             'type'     => 'Echki', 'color' => 'Oq', 'category' => 'Echki',
             'age'      => 3, 'weight' => 58, 'img' => 'echki', 'imgIdx' => 0,
             'region'   => 'Xorazm viloyati', 'city' => 'Urganch',
+            'breed'    => 'Zaanen', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom, sut bermoqda',
+            'phone'    => '+998901110010',
         ],
         [
             'name'     => "Echki uloqlari — 3 dona",
-            'desc'     => "3-4 oylik, sog'lom uloqlar. Barcha emlashlar qilingan. Go'shtli yo'nalish uchun mos.",
+            'desc'     => "3-4 oylik, sog'lom uloqlar. Go'shtli yo'nalish uchun mos.",
             'price'    => 1_950_000,
             'type'     => 'Echki', 'color' => 'Ala', 'category' => 'Echki',
             'age'      => 1, 'weight' => 18, 'img' => 'echki', 'imgIdx' => 1,
             'region'   => 'Jizzax viloyati', 'city' => 'Jizzax',
+            'breed'    => 'Mahalliy', 'gender' => 'erkak',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110011',
+        ],
+
+        // --- OTLAR ---
+        [
+            'name'     => 'Argamak ot — 4 yoshli',
+            'desc'     => "Sof qon naslli ot. Tez yurar, ko'rkam. Egar-jabduqlari bilan birga.",
+            'price'    => 48_000_000,
+            'type'     => 'Ot', 'color' => "Qo'ng'ir", 'category' => 'Ot',
+            'age'      => 4, 'weight' => 460, 'img' => 'ot', 'imgIdx' => 0,
+            'region'   => 'Toshkent shahri', 'city' => 'Yunusobod',
+            'breed'    => 'Argamak (O\'rta Osiyo)', 'gender' => 'erkak',
+            'health'   => 'A\'lo holat, nasl guvohnomasi mavjud',
+            'phone'    => '+998901110012',
+        ],
+        [
+            'name'     => 'Ishchi ot — kuchli va sokin',
+            'desc'     => "Og'ir yuk tashishga o'rgatilgan. 6 yoshli, 530 kg. Sokin xarakter.",
+            'price'    => 29_000_000,
+            'type'     => 'Ot', 'color' => 'Qora', 'category' => 'Ot',
+            'age'      => 6, 'weight' => 530, 'img' => 'ot', 'imgIdx' => 1,
+            'region'   => 'Navoiy viloyati', 'city' => 'Navoiy',
+            'breed'    => 'Mahalliy', 'gender' => 'erkak',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110013',
         ],
 
         // --- TUYALAR ---
         [
             'name'     => "Baqtrian tuya — ikki o'rkachli",
-            'desc'     => "7 yoshli, sog'lom Baqtrian tuya. Xo'jalikda ishlash uchun. Ot va tuyaga ixtisoslashgan fermerdan.",
+            'desc'     => "7 yoshli, sog'lom Baqtrian tuya. Xo'jalikda ishlash uchun.",
             'price'    => 88_000_000,
             'type'     => 'Tuya', 'color' => "Qo'ng'ir", 'category' => 'Tuya',
             'age'      => 7, 'weight' => 760, 'img' => 'tuya', 'imgIdx' => 0,
             'region'   => "Qoraqalpog'iston", 'city' => "Xo'jayli",
+            'breed'    => 'Baqtrian', 'gender' => 'erkak',
+            'health'   => 'Sog\'lom, kuchli',
+            'phone'    => '+998901110014',
         ],
         [
             'name'     => "Dromader tuya — bir o'rkachli",
-            'desc'     => "5 yoshli, 610 kg. Suv tejovchi nasl. Cho'l sharoitida boqilgan. Sog'lom va kuchli.",
+            'desc'     => "5 yoshli, 610 kg. Cho'l sharoitida boqilgan. Sog'lom va kuchli.",
             'price'    => 74_000_000,
             'type'     => 'Tuya', 'color' => 'Sariq', 'category' => 'Tuya',
             'age'      => 5, 'weight' => 610, 'img' => 'tuya', 'imgIdx' => 1,
             'region'   => 'Navoiy viloyati', 'city' => 'Zarafshon',
+            'breed'    => 'Dromader', 'gender' => 'urgochi',
+            'health'   => 'Sog\'lom',
+            'phone'    => '+998901110015',
         ],
     ];
 
@@ -201,20 +266,32 @@ class ProductSeeder extends Seeder
             $imgKey  = $data['img'] . '-' . $data['imgIdx'];
             $imgPath = $downloaded[$imgKey] ?? null;
 
+            // Koordinatlar: shahar markazi + kichik random offset
+            $coords     = $this->cityCoords[$data['city']] ?? null;
+            $latOffset  = (mt_rand(-30, 30) / 1000);
+            $lngOffset  = (mt_rand(-30, 30) / 1000);
+
             Product::create([
-                'name'        => $data['name'],
-                'description' => $data['desc'],
-                'price'       => $data['price'],
-                'image'       => $imgPath,
-                'category_id' => $category->id,
-                'user_id'     => $users->random()->id,
-                'type_id'     => $type->id,
-                'color_id'    => $color->id,
-                'age'         => $data['age'],
-                'weight'      => $data['weight'],
-                'region_id'   => $region->id,
-                'city_id'     => $city->id,
-                'status_id'   => $statusId,
+                'name'          => $data['name'],
+                'description'   => $data['desc'],
+                'price'         => $data['price'],
+                'image'         => $imgPath,
+                'category_id'   => $category->id,
+                'user_id'       => $users->random()->id,
+                'type_id'       => $type->id,
+                'color_id'      => $color->id,
+                'age'           => $data['age'],
+                'weight'        => $data['weight'],
+                'region_id'     => $region->id,
+                'city_id'       => $city->id,
+                'status_id'     => $statusId,
+                'breed'         => $data['breed']  ?? null,
+                'gender'        => $data['gender'] ?? null,
+                'health_status' => $data['health'] ?? null,
+                'contact_phone' => $data['phone']  ?? null,
+                'latitude'      => $coords ? round($coords[0] + $latOffset, 7) : null,
+                'longitude'     => $coords ? round($coords[1] + $lngOffset, 7) : null,
+                'location'      => $data['city'] . ', ' . $data['region'],
             ]);
         }
 

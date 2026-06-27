@@ -7,6 +7,7 @@ use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Color;
+use App\Models\Conversation;
 use App\Models\Product;
 use App\Models\Region;
 use App\Models\Status;
@@ -26,13 +27,35 @@ class ProductController extends Controller
     public function index(Request $request): View
     {
         $products = $this->productService->getFiltered($request->only([
-            'category', 'region', 'city', 'type', 'price_from', 'price_to',
+            'category', 'region', 'city', 'type', 'price_from', 'price_to', 'gender',
+            'lat', 'lng', 'radius',
         ]));
 
+        $mapProducts = Product::with(['region', 'city', 'category.parent'])
+            ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->select(['id', 'name', 'price', 'image', 'images', 'latitude', 'longitude', 'location', 'region_id', 'city_id', 'category_id'])
+            ->limit(500)
+            ->get()
+            ->map(fn ($p) => [
+                'id'       => $p->id,
+                'title'    => $p->name,
+                'price'    => $p->formatted_price,
+                'lat'      => $p->latitude,
+                'lng'      => $p->longitude,
+                'loc'      => trim(($p->city?->name ?? '') . ', ' . ($p->region?->name ?? ''), ', '),
+                'img'      => $p->primary_image_url,
+                'url'      => route('products.show', $p),
+                'category' => $p->category?->name ?? '',
+                'parent'   => $p->category?->parent?->name ?? $p->category?->name ?? '',
+            ]);
+
         return view('products.index', [
-            'products'   => $products,
-            'categories' => Category::with('children')->whereNull('parent_id')->get(),
-            'regions'    => Region::all(),
+            'products'    => $products,
+            'mapProducts' => $mapProducts,
+            'categories'  => Category::with('children')->whereNull('parent_id')->get(),
+            'regions'     => Region::all(),
         ]);
     }
 
@@ -40,7 +63,19 @@ class ProductController extends Controller
     {
         $product->load(['category', 'user', 'type', 'color', 'region', 'city', 'status']);
 
-        return view('products.show', compact('product'));
+        Product::withoutTimestamps(fn () => $product->increment('views_count'));
+
+        $isFavorited = $product->isFavoritedBy(auth()->id());
+
+        $existingConversation = auth()->check()
+            ? Conversation::where('product_id', $product->id)
+                ->where('buyer_id', auth()->id())
+                ->first()
+            : null;
+
+        $contactPhone = $product->contact_phone ?? $product->user?->phone;
+
+        return view('products.show', compact('product', 'isFavorited', 'existingConversation', 'contactPhone'));
     }
 
     public function create(): View
@@ -50,9 +85,11 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
+        $images = $request->file('images') ?? [];
+
         $product = $this->productService->store(
-            $request->safe()->except('image'),
-            $request->file('image'),
+            $request->safe()->except(['images']),
+            $images,
             $request->user()->id
         );
 
@@ -71,10 +108,12 @@ class ProductController extends Controller
     {
         $this->authorize('update', $product);
 
+        $images = $request->file('images') ?? [];
+
         $this->productService->update(
             $product,
-            $request->safe()->except('image'),
-            $request->file('image')
+            $request->safe()->except(['images']),
+            $images
         );
 
         return redirect()->route('products.show', $product)
@@ -99,7 +138,7 @@ class ProductController extends Controller
             'colors'     => Color::all(),
             'regions'    => Region::all(),
             'cities'     => City::all(),
-            'statuses'   => Status::all(),
+            'statuses'   => Status::where('name', '!=', 'Sotildi')->get(),
         ];
     }
 }
