@@ -29,8 +29,9 @@ return [
     ],
 
     'eskiz' => [
-        'email'    => env('ESKIZ_EMAIL'),
-        'password' => env('ESKIZ_PASSWORD'),
+        'email'     => env('ESKIZ_EMAIL'),
+        'password'  => env('ESKIZ_PASSWORD'),
+        'test_mode' => env('ESKIZ_TEST_MODE', false),
     ],
 
     'slack' => [

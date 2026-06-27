@@ -40,6 +40,10 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
+        // Telefon raqamni normallashtirish
+        $digits = preg_replace('/\D/', '', $this->input('phone', ''));
+        $this->merge(['phone' => '+998' . substr($digits, -9)]);
+
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('phone', 'password'), $this->boolean('remember'))) {

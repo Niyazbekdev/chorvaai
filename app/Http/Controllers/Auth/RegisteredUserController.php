@@ -27,6 +27,10 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Telefon raqamni normallashtirish: oxirgi 9 ta raqam + +998 prefiksi
+        $digits = preg_replace('/\D/', '', $request->input('phone', ''));
+        $request->merge(['phone' => '+998' . substr($digits, -9)]);
+
         $request->validate([
             'first_name' => ['required', 'string', 'max:100'],
             'last_name'  => ['required', 'string', 'max:100'],
@@ -47,6 +51,11 @@ class RegisteredUserController extends Controller
 
         $code = $this->otpService->generate($user->phone);
         $this->eskizService->send($user->phone, "ChorvaAI: tasdiqlash kodingiz: $code. Amal qilish muddati 5 daqiqa.");
+
+        if (config('services.eskiz.test_mode') || app()->environment('local')) {
+            \Illuminate\Support\Facades\Log::info('OTP (test)', ['phone' => $user->phone, 'code' => $code]);
+            session(['dev_otp' => $code]);
+        }
 
         Auth::login($user);
 

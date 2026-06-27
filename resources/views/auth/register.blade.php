@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
         this.value = value;
     });
 
-    // Form yuborilishidan oldin +998 qo‘shish
-    this.closest('form')?.addEventListener('submit', function () {
-        if (phoneInput.value && !phoneInput.value.startsWith('+998')) {
-            phoneInput.value = '+998' + phoneInput.value;
+    // Form yuborilishidan oldin +998 qo’shish
+    phoneInput.closest(‘form’).addEventListener(‘submit’, function () {
+        if (phoneInput.value && !phoneInput.value.startsWith(‘+998’)) {
+            phoneInput.value = ‘+998’ + phoneInput.value;
         }
     });
 });

@@ -36,11 +36,16 @@ class EskizService
 
         $phone = preg_replace('/\D/', '', $phone);
 
+        // Eskiz test rejimida faqat shu matn jo'natiladi
+        $smsText = config('services.eskiz.test_mode')
+            ? 'Bu Eskiz dan test'
+            : $message;
+
         $response = Http::withToken($token)
             ->asForm()
             ->post(self::BASE_URL . '/message/sms/send', [
                 'mobile_phone' => $phone,
-                'message'      => $message,
+                'message'      => $smsText,
                 'from'         => self::FROM,
                 'callback_url' => '',
             ]);
@@ -55,6 +60,7 @@ class EskizService
             return false;
         }
 
+        Log::info('Eskiz SMS sent', ['phone' => $phone, 'test_mode' => config('services.eskiz.test_mode')]);
         return true;
     }
 }

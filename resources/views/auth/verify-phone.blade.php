@@ -8,6 +8,14 @@
         </p>
     </div>
 
+    {{-- Dev: OTP kodni ko'rsatish (faqat test/local muhitda) --}}
+    @if(session('dev_otp'))
+        <div class="mb-4 bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-xl text-sm text-center">
+            <p class="font-semibold">🛠 Test rejimi — SMS yuborilmadi</p>
+            <p class="mt-1">OTP kod: <span class="font-mono font-bold text-lg tracking-widest">{{ session('dev_otp') }}</span></p>
+        </div>
+    @endif
+
     {{-- Status --}}
     @if(session('status'))
         <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm text-center">
