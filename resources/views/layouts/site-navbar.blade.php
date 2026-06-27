@@ -63,6 +63,29 @@
 .profile-menu a:hover, .profile-menu button:hover { background: #f3f4f6; }
 .profile-menu .logout-btn { color: #dc2626; }
 .profile-menu .logout-btn:hover { background: #fee2e2; }
+
+/* ── Language switcher ── */
+.lang-switcher {
+    display: flex; align-items: center;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid rgba(255,255,255,.2);
+}
+.lang-btn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 11px; border-radius: 999px;
+    font-size: .78rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+    color: rgba(255,255,255,.7); text-decoration: none;
+    transition: all .2s; white-space: nowrap;
+}
+.lang-btn:hover { color: white; background: rgba(255,255,255,.12); }
+.lang-btn.active {
+    background: white; color: #065f46;
+    box-shadow: 0 1px 4px rgba(0,0,0,.18);
+}
+.lang-flag { font-size: 1rem; line-height: 1; }
 </style>
 
 <header class="site-navbar">
@@ -70,16 +93,29 @@
         <a href="{{ url('/') }}" class="site-logo">Chorva<span>AI</span></a>
 
         <nav class="site-links">
-            <a href="{{ url('/marketplace') }}">Marketplace</a>
-            <a href="{{ route('products.create') }}" class="site-announce-btn">+ E'lon berish</a>
-            <a href="{{ url('/about') }}">About</a>
-            <a href="{{ url('/contact') }}">Contact</a>
+            <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
+            <a href="{{ route('products.create') }}" class="site-announce-btn">{{ __('nav.post_ad') }}</a>
+            <a href="{{ url('/about') }}">{{ __('nav.about') }}</a>
+            <a href="{{ url('/contact') }}">{{ __('nav.contact') }}</a>
         </nav>
 
         <div class="site-auth">
+            @php $currentLocale = app()->getLocale(); @endphp
+
+            <div class="lang-switcher">
+                <a href="{{ route('lang.switch', 'uz') }}"
+                   class="lang-btn {{ $currentLocale === 'uz' ? 'active' : '' }}">
+                    <span class="lang-flag">🇺🇿</span> UZ
+                </a>
+                <a href="{{ route('lang.switch', 'ru') }}"
+                   class="lang-btn {{ $currentLocale === 'ru' ? 'active' : '' }}">
+                    <span class="lang-flag">🇷🇺</span> RU
+                </a>
+            </div>
+
             @guest
-                <a href="{{ route('login') }}" class="site-login">Kirish</a>
-                <a href="{{ route('register') }}" class="site-register">Ro'yxatdan o'tish</a>
+                <a href="{{ route('login') }}" class="site-login">{{ __('nav.login') }}</a>
+                <a href="{{ route('register') }}" class="site-register">{{ __('nav.register') }}</a>
             @endguest
 
             @auth
@@ -93,10 +129,19 @@
                             <strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong><br>
                             <span style="color:#6b7280;font-size:.8rem">{{ Auth::user()->phone }}</span>
                         </span>
-                        <a href="{{ route('profile.edit') }}">Profil sozlamalari</a>
-                        <a href="{{ route('profile.my-products') }}">Mening e'lonlarim</a>
+                        <a href="{{ route('profile.edit') }}">{{ __('nav.profile_settings') }}</a>
+                        <a href="{{ route('profile.my-products') }}">{{ __('nav.my_ads') }}</a>
+                        <a href="{{ route('profile.favorites') }}" style="display:flex;align-items:center;justify-content:space-between">
+                            {{ __('nav.favorites') }}
+                            @php
+                                $__favCount = auth()->user()?->favorites()->count() ?? 0;
+                            @endphp
+                            @if($__favCount > 0)
+                                <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px">{{ $__favCount }}</span>
+                            @endif
+                        </a>
                         <a href="{{ route('conversations.index') }}" style="display:flex;align-items:center;justify-content:space-between">
-                            Xabarlar
+                            {{ __('nav.messages') }}
                             @php
                                 $__unread = \App\Models\Message::whereHas('conversation', fn($q) =>
                                     $q->where('buyer_id', auth()->id())->orWhere('seller_id', auth()->id())
@@ -109,7 +154,7 @@
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="logout-btn">Chiqish</button>
+                            <button type="submit" class="logout-btn">{{ __('nav.logout') }}</button>
                         </form>
                     </div>
                 </div>
