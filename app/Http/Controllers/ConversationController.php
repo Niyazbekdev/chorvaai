@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -68,12 +69,15 @@ class ConversationController extends Controller
             ['seller_id' => $product->user_id, 'last_message_at' => now()]
         );
 
-        $conversation->messages()->create([
+        $message = $conversation->messages()->create([
             'sender_id' => $buyer->id,
             'message'   => $request->message,
         ]);
 
         $conversation->update(['last_message_at' => now()]);
+
+        $message->load('sender');
+        broadcast(new MessageSent($message));
 
         return redirect()->route('conversations.show', $conversation);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,12 +20,15 @@ class MessageController extends Controller
 
         $request->validate(['message' => 'required|string|max:2000']);
 
-        $conversation->messages()->create([
+        $message = $conversation->messages()->create([
             'sender_id' => $user->id,
             'message'   => $request->message,
         ]);
 
         $conversation->update(['last_message_at' => now()]);
+
+        $message->load('sender');
+        broadcast(new MessageSent($message));
 
         return redirect()->route('conversations.show', $conversation)
             ->withFragment('bottom');
