@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Xabarlar</h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('conversations.title') }}</h2>
     </x-slot>
 
     <div class="py-10 bg-gray-50 min-h-screen">
@@ -9,11 +9,11 @@
             @if($conversations->isEmpty())
                 <div class="bg-white rounded-2xl shadow p-16 text-center text-gray-400">
                     <p class="text-5xl mb-4">💬</p>
-                    <p class="text-xl font-semibold text-gray-600">Hali xabarlar yo'q</p>
-                    <p class="text-sm mt-1">Marketplace da mahsulot topib, sotuvchiga xabar yozing</p>
+                    <p class="text-xl font-semibold text-gray-600">{{ __('conversations.no_messages') }}</p>
+                    <p class="text-sm mt-1">{{ __('conversations.no_messages_hint') }}</p>
                     <a href="{{ route('products.index') }}"
                        class="inline-block mt-5 bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700 transition">
-                        Marketplace ga o'tish
+                        {{ __('conversations.go_marketplace') }}
                     </a>
                 </div>
             @else
@@ -45,7 +45,7 @@
                                             {{ $other->first_name }} {{ $other->last_name }}
                                         </span>
                                         <span class="text-xs text-gray-400 ml-2">
-                                            {{ $isSeller ? '(xaridor)' : '(sotuvchi)' }}
+                                            {{ $isSeller ? __('conversations.buyer') : __('conversations.seller') }}
                                         </span>
                                     </div>
                                     <div class="flex items-center gap-2 flex-shrink-0">
@@ -69,7 +69,7 @@
                                 @if($lastMsg)
                                     <p class="text-sm text-gray-500 mt-1 truncate">
                                         @if($lastMsg->sender_id === $userId)
-                                            <span class="text-gray-400">Siz: </span>
+                                            <span class="text-gray-400">{{ __('conversations.you') }}</span>
                                         @endif
                                         {{ $lastMsg->message }}
                                     </p>

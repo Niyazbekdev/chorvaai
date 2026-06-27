@@ -1,137 +1,415 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gray-50 pt-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+/* ── View tabs ── */
+.view-tab {
+    padding: 8px 20px; border-radius: 999px;
+    font-size: .85rem; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+    border: 1.5px solid #d1d5db;
+    background: white; color: #374151;
+}
+.view-tab.active { background: #10b981; color: white; border-color: #10b981; }
+.view-tab:not(.active):hover { border-color: #10b981; color: #10b981; }
 
-            {{-- Header --}}
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Marketplace</h1>
-                    <p class="text-gray-500 mt-1">Sotuvdagi chorva mollari</p>
-                </div>
+/* ── Map container ── */
+#map-view {
+    height: calc(100vh - 230px);
+    min-height: 520px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12);
+}
 
+/* ── Animal pin marker ── */
+.animal-marker-wrap { background: transparent !important; border: none !important; }
+
+.animal-pin {
+    position: relative;
+    width: 44px; height: 44px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,.28);
+    transition: transform .15s, box-shadow .15s;
+    cursor: pointer;
+}
+.animal-pin:hover {
+    transform: rotate(-45deg) scale(1.15);
+    box-shadow: 0 6px 20px rgba(0,0,0,.38);
+}
+.animal-pin span {
+    transform: rotate(45deg);
+    font-size: 22px;
+    line-height: 1;
+    display: block;
+    user-select: none;
+}
+
+/* category colour classes */
+.pin-qoramol  { background: #ffffff; border: 3px solid #10b981; } /* emerald */
+.pin-qoy      { background: #ffffff; border: 3px solid #3b82f6; } /* blue */
+.pin-ot       { background: #ffffff; border: 3px solid #f59e0b; } /* amber */
+.pin-default  { background: #ffffff; border: 3px solid #8b5cf6; } /* violet */
+
+/* ── Popup ── */
+.leaflet-popup-content-wrapper {
+    border-radius: 14px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.22) !important;
+    min-width: 200px;
+}
+.leaflet-popup-content { margin: 0 !important; }
+.map-popup-img {
+    width: 100%; height: 90px; object-fit: cover;
+    display: block;
+}
+.map-popup-img-placeholder {
+    width: 100%; height: 90px;
+    background: linear-gradient(135deg,#d1fae5,#a7f3d0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+}
+.map-popup-body { padding: 10px 12px 12px; }
+.map-popup-cat {
+    font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; color: #10b981; margin-bottom: 2px;
+}
+.map-popup-title { font-weight: 700; font-size: .9rem; color: #111827; line-height: 1.3; }
+.map-popup-price { color: #059669; font-weight: 800; font-size: 1rem; margin: 2px 0 4px; }
+.map-popup-loc { color: #6b7280; font-size: .75rem; }
+.map-popup-btn {
+    display: block; margin-top: 8px;
+    background: #10b981; color: white;
+    text-align: center; padding: 7px;
+    border-radius: 8px; font-size: .8rem; font-weight: 700;
+    text-decoration: none; transition: background .15s;
+}
+.map-popup-btn:hover { background: #059669; }
+
+/* ── Map legend ── */
+.map-legend {
+    background: white; border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
+    padding: 10px 14px;
+    font-size: .8rem;
+    line-height: 2;
+}
+.legend-dot {
+    display: inline-block; width: 12px; height: 12px;
+    border-radius: 50%; margin-right: 6px; vertical-align: middle;
+}
+</style>
+@endpush
+
+<div class="min-h-screen bg-gray-50 pt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        {{-- Header --}}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('products.page_title') }}</h1>
+                <p class="text-gray-500 mt-1">{{ __('products.subtitle') }}</p>
+            </div>
+            <div class="flex items-center gap-2">
                 <button onclick="document.getElementById('filterBox').classList.toggle('hidden')"
-                    class="border border-green-600 text-green-600 px-5 py-3 rounded-xl font-semibold hover:bg-green-50 text-sm self-start sm:self-auto">
-                    ☰ Filter
+                    class="border border-green-600 text-green-600 px-4 py-2.5 rounded-xl font-semibold hover:bg-green-50 text-sm">
+                    {{ __('products.filter_btn') }}
+                </button>
+                <button class="view-tab active" id="btn-cards" onclick="setView('cards')">
+                    {{ __('products.cards_view') }}
+                </button>
+                <button class="view-tab" id="btn-map" onclick="setView('map')">
+                    {{ __('products.map_view') }}
                 </button>
             </div>
+        </div>
 
-            {{-- Flash message --}}
-            @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl text-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            {{-- Filter panel --}}
-            <div id="filterBox" class="hidden bg-white rounded-2xl shadow p-6 mb-8">
-                <h2 class="text-lg font-bold mb-4">Qidiruv va filter</h2>
-
-                <form method="GET" action="{{ route('products.index') }}">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <select name="category"
-                            class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
-                            <option value="">Barcha kategoriyalar</option>
-                            @foreach($categories as $parent)
-                                <option value="{{ $parent->id }}" @selected(request('category') == $parent->id)
-                                    class="font-semibold">
-                                    {{ $parent->name }}
-                                </option>
-                                @foreach($parent->children as $child)
-                                    <option value="{{ $child->id }}" @selected(request('category') == $child->id)>
-                                        &nbsp;&nbsp;— {{ $child->name }}
-                                    </option>
-                                @endforeach
-                            @endforeach
-                        </select>
-
-                        <select name="region"
-                            class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
-                            <option value="">Barcha viloyatlar</option>
-                            @foreach($regions as $region)
-                                <option value="{{ $region->id }}" @selected(request('region') == $region->id)>
-                                    {{ $region->name }}
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <div class="flex gap-2">
-                            <input type="number" name="price_from" placeholder="Narxdan"
-                                value="{{ request('price_from') }}"
-                                class="w-1/2 rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
-                            <input type="number" name="price_to" placeholder="Narxgacha"
-                                value="{{ request('price_to') }}"
-                                class="w-1/2 rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
-                        </div>
-
-                        <div class="flex gap-2">
-                            <button type="submit"
-                                class="flex-1 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 text-sm py-2">
-                                Qidirish
-                            </button>
-                            <a href="{{ route('products.index') }}"
-                                class="flex-1 text-center border border-gray-300 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 text-sm py-2 flex items-center justify-center">
-                                Tozalash
-                            </a>
-                        </div>
-                    </div>
-                </form>
+        {{-- Flash --}}
+        @if(session('success'))
+            <div class="mb-4 bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl text-sm">
+                {{ session('success') }}
             </div>
+        @endif
 
-            {{-- Product cards --}}
+        {{-- Filter panel --}}
+        <div id="filterBox"
+             class="{{ request()->anyFilled(['category','region','price_from','price_to','gender']) ? '' : 'hidden' }}
+                    bg-white rounded-2xl shadow p-6 mb-6">
+            <h2 class="text-base font-bold mb-4 text-gray-800">{{ __('products.filter_title') }}</h2>
+            <form method="GET" action="{{ route('products.index') }}">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                    <select name="category"
+                        class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
+                        <option value="">{{ __('products.all_categories') }}</option>
+                        @foreach($categories as $parent)
+                            <option value="{{ $parent->id }}"
+                                @selected(request('category') == $parent->id)
+                                class="font-semibold">{{ $parent->name }}</option>
+                            @foreach($parent->children as $child)
+                                <option value="{{ $child->id }}"
+                                    @selected(request('category') == $child->id)>
+                                    &nbsp;&nbsp;— {{ $child->name }}
+                                </option>
+                            @endforeach
+                        @endforeach
+                    </select>
+
+                    <select name="region"
+                        class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
+                        <option value="">{{ __('products.all_regions') }}</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}" @selected(request('region') == $region->id)>
+                                {{ $region->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select name="gender"
+                        class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
+                        <option value="">{{ __('products.all_genders') }}</option>
+                        <option value="erkak"   @selected(request('gender') === 'erkak')>{{ __('products.male') }}</option>
+                        <option value="urgochi" @selected(request('gender') === 'urgochi')>{{ __('products.female') }}</option>
+                    </select>
+
+                    <div class="flex gap-2">
+                        <input type="number" name="price_from" placeholder="{{ __('products.price_from') }}"
+                            value="{{ request('price_from') }}"
+                            class="w-1/2 rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
+                        <input type="number" name="price_to" placeholder="{{ __('products.price_to') }}"
+                            value="{{ request('price_to') }}"
+                            class="w-1/2 rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
+                    </div>
+
+                    <div class="sm:col-span-2 lg:col-span-4 flex gap-2">
+                        <button type="submit"
+                            class="px-6 py-2 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 text-sm">
+                            {{ __('products.search') }}
+                        </button>
+                        <a href="{{ route('products.index') }}"
+                            class="px-6 py-2 border border-gray-300 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 text-sm flex items-center">
+                            {{ __('products.clear') }}
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {{-- ══════════════ CARDS VIEW ══════════════ --}}
+        <div id="cards-view">
             @if($products->isEmpty())
                 <div class="text-center py-24 text-gray-400">
                     <p class="text-5xl mb-4">🐄</p>
-                    <p class="text-xl font-semibold">E'lonlar topilmadi</p>
-                    <p class="text-sm mt-1">Filter shartlarini o'zgartiring yoki yangi e'lon qo'shing</p>
+                    <p class="text-xl font-semibold">{{ __('products.no_results') }}</p>
+                    <p class="text-sm mt-1">{{ __('products.no_results_hint') }}</p>
                 </div>
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach($products as $product)
-                        <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden flex flex-col">
-                            <div class="h-44 bg-gradient-to-br from-green-100 to-green-200 overflow-hidden">
-                                @if($product->image)
-                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                                        class="w-full h-full object-cover">
+                        <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden flex flex-col group">
+                            <div class="h-48 bg-gradient-to-br from-green-100 to-green-200 overflow-hidden relative">
+                                @if($product->primary_image_url)
+                                    <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center text-6xl">🐄</div>
+                                    <div class="w-full h-full flex items-center justify-center text-6xl">
+                                        {{ match(true) {
+                                            in_array($product->category?->name, ['Sigir','Buqa','Buzoq']) || $product->category?->parent?->name === 'Qoramol' => '🐄',
+                                            in_array($product->category?->name, ["Qo'y"]) => '🐑',
+                                            $product->category?->name === 'Echki' => '🐐',
+                                            $product->category?->name === 'Ot' => '🐴',
+                                            $product->category?->name === 'Tuya' => '🐪',
+                                            default => '🐾'
+                                        } }}
+                                    </div>
+                                @endif
+                                @if($product->gender)
+                                    <span class="absolute top-2 left-2 bg-white bg-opacity-90 text-gray-700 text-xs px-2 py-0.5 rounded-full font-semibold">
+                                        {{ $product->gender === 'erkak' ? '♂' : '♀' }}
+                                    </span>
                                 @endif
                             </div>
 
                             <div class="p-4 flex flex-col flex-1">
                                 <div class="flex justify-between items-center mb-2">
-                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-semibold">
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-semibold truncate max-w-[130px]">
                                         {{ $product->category?->name ?? '—' }}
                                     </span>
-                                    <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
-                                        {{ $product->status?->name ?? '—' }}
+                                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                                        {{ $product->created_at->diffForHumans() }}
                                     </span>
                                 </div>
 
-                                <h3 class="text-lg font-bold text-gray-900 leading-tight">{{ $product->name }}</h3>
+                                <h3 class="text-base font-bold text-gray-900 leading-tight line-clamp-2">{{ $product->name }}</h3>
+                                @if($product->breed)
+                                    <p class="text-xs text-gray-400 mt-0.5 truncate">{{ $product->breed }}</p>
+                                @endif
+                                <p class="text-green-600 font-bold text-xl mt-1">{{ $product->formatted_price }}</p>
 
-                                <p class="text-green-600 font-bold text-xl mt-1">
-                                    {{ $product->formatted_price }}
-                                </p>
-
-                                <div class="mt-3 text-gray-500 text-xs space-y-1">
-                                    <p>📍 {{ $product->city?->name }}, {{ $product->region?->name }}</p>
-                                    <p>⚖️ {{ $product->weight }} kg &nbsp;·&nbsp; {{ $product->age }} yosh</p>
-                                    <p>🎨 {{ $product->color?->name }} &nbsp;·&nbsp; {{ $product->type?->name }}</p>
+                                <div class="mt-2 text-gray-500 text-xs space-y-0.5">
+                                    <p>📍 {{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') ?: '—' }}</p>
+                                    <p>⚖️ {{ $product->weight }} kg &nbsp;·&nbsp; {{ $product->age }} {{ __('products.age_unit') }}</p>
                                 </div>
 
                                 <a href="{{ route('products.show', $product) }}"
                                     class="mt-4 block text-center border border-green-600 text-green-600 py-2 rounded-xl text-sm font-semibold hover:bg-green-600 hover:text-white transition">
-                                    Batafsil ko'rish
+                                    {{ __('products.view_detail') }}
                                 </a>
                             </div>
                         </div>
                     @endforeach
                 </div>
 
-                <div class="mt-8">
-                    {{ $products->withQueryString()->links() }}
-                </div>
+                <div class="mt-8">{{ $products->withQueryString()->links() }}</div>
             @endif
         </div>
+
+        {{-- ══════════════ MAP VIEW ══════════════ --}}
+        <div id="map-view" class="hidden relative">
+            {{-- Legend --}}
+            <div class="absolute top-3 right-3 z-[1000] map-legend" style="min-width:160px">
+                <p class="font-bold text-gray-700 mb-1 text-xs uppercase tracking-wide">{{ __('products.map_legend') }}</p>
+                <div><span class="legend-dot" style="background:#10b981"></span>🐄 Qoramol</div>
+                <div><span class="legend-dot" style="background:#3b82f6"></span>🐑 Qo'y &amp; Echki</div>
+                <div><span class="legend-dot" style="background:#f59e0b"></span>🐴 Ot &amp; Tuya</div>
+                <div><span class="legend-dot" style="background:#8b5cf6"></span>🐾 Boshqa</div>
+                <hr class="my-1.5 border-gray-100">
+                <p class="text-gray-400 text-xs" id="mapCount">
+                    {{ $mapProducts->count() }} {{ __('products.showing') }}
+                </p>
+            </div>
+        </div>
+
     </div>
+</div>
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const MAP_PRODUCTS = @json($mapProducts);
+const VIEW_DETAIL_TEXT = '{{ __('products.view_detail') }}';
+const ON_MAP_TEXT = '{{ __('products.on_map') }}';
+
+// ── Emoji & pin colour by category name ──────────────────
+const ANIMAL_MAP = {
+    // child categories
+    'Sigir':  { emoji: '🐄', cls: 'pin-qoramol' },
+    'Buqa':   { emoji: '🐄', cls: 'pin-qoramol' },
+    'Buzoq':  { emoji: '🐄', cls: 'pin-qoramol' },
+    "Qo'y":   { emoji: '🐑', cls: 'pin-qoy'     },
+    'Echki':  { emoji: '🐐', cls: 'pin-qoy'     },
+    'Ot':     { emoji: '🐴', cls: 'pin-ot'      },
+    'Tuya':   { emoji: '🐪', cls: 'pin-ot'      },
+    // parent categories (fallback)
+    'Qoramol':        { emoji: '🐄', cls: 'pin-qoramol' },
+    "Qo'y va echki":  { emoji: '🐑', cls: 'pin-qoy'     },
+    'Ot va tuya':     { emoji: '🐴', cls: 'pin-ot'      },
+};
+
+function getAnimal(category, parent) {
+    return ANIMAL_MAP[category] || ANIMAL_MAP[parent] || { emoji: '🐾', cls: 'pin-default' };
+}
+
+function createPin(emoji, cls) {
+    return L.divIcon({
+        html: `<div class="animal-pin ${cls}"><span>${emoji}</span></div>`,
+        className: 'animal-marker-wrap',
+        iconSize:    [44, 44],
+        iconAnchor:  [22, 44],
+        popupAnchor: [0, -48],
+    });
+}
+
+// ── Popup HTML ────────────────────────────────────────────
+function buildPopup(p) {
+    const imgHtml = p.img
+        ? `<img class="map-popup-img" src="${p.img}" alt="${p.title}">`
+        : `<div class="map-popup-img-placeholder">${getAnimal(p.category, p.parent).emoji}</div>`;
+
+    return `
+        <div style="width:210px">
+            ${imgHtml}
+            <div class="map-popup-body">
+                <div class="map-popup-cat">${p.category || p.parent || ''}</div>
+                <div class="map-popup-title">${p.title}</div>
+                <div class="map-popup-price">${p.price}</div>
+                ${p.loc ? `<div class="map-popup-loc">📍 ${p.loc}</div>` : ''}
+                <a class="map-popup-btn" href="${p.url}">${VIEW_DETAIL_TEXT} →</a>
+            </div>
+        </div>`;
+}
+
+// ── Map init ──────────────────────────────────────────────
+let mapInstance = null;
+
+function initMap() {
+    if (mapInstance) return;
+
+    mapInstance = L.map('map-view', { zoomControl: true })
+        .setView([41.2995, 69.2401], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+    }).addTo(mapInstance);
+
+    // Add markers
+    const bounds = [];
+    MAP_PRODUCTS.forEach(p => {
+        if (!p.lat || !p.lng) return;
+        const { emoji, cls } = getAnimal(p.category, p.parent);
+        const marker = L.marker([p.lat, p.lng], { icon: createPin(emoji, cls) })
+            .addTo(mapInstance)
+            .bindPopup(buildPopup(p), {
+                maxWidth: 230,
+                className: 'animal-popup',
+                closeButton: true,
+            });
+        bounds.push([p.lat, p.lng]);
+    });
+
+    // Fit map to markers if any
+    if (bounds.length > 0) {
+        mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+    }
+
+    // Update count label
+    document.getElementById('mapCount').textContent =
+        MAP_PRODUCTS.length + ' ' + ON_MAP_TEXT;
+}
+
+// ── Tab switch ────────────────────────────────────────────
+function setView(v) {
+    const cardsEl  = document.getElementById('cards-view');
+    const mapEl    = document.getElementById('map-view');
+    const btnCards = document.getElementById('btn-cards');
+    const btnMap   = document.getElementById('btn-map');
+
+    if (v === 'map') {
+        cardsEl.classList.add('hidden');
+        mapEl.classList.remove('hidden');
+        btnCards.classList.remove('active');
+        btnMap.classList.add('active');
+        // Wait for display before init (Leaflet needs visible container)
+        requestAnimationFrame(() => {
+            if (!mapInstance) initMap();
+            else mapInstance.invalidateSize();
+        });
+    } else {
+        cardsEl.classList.remove('hidden');
+        mapEl.classList.add('hidden');
+        btnCards.classList.add('active');
+        btnMap.classList.remove('active');
+    }
+}
+
+// ── Auto-open map if ?view=map ────────────────────────────
+@if(request('view') === 'map')
+document.addEventListener('DOMContentLoaded', () => setView('map'));
+@endif
+</script>
+@endpush
 </x-app-layout>

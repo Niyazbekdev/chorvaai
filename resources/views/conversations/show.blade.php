@@ -40,7 +40,7 @@
                     <p class="font-semibold text-gray-900 text-sm truncate">{{ $conversation->product?->name }}</p>
                     <p class="text-green-600 font-bold text-sm">{{ $conversation->product?->formatted_price }}</p>
                 </div>
-                <span class="ml-auto text-xs text-gray-400 flex-shrink-0">Ko'rish →</span>
+                <span class="ml-auto text-xs text-gray-400 flex-shrink-0">{{ __('conversations.view') }}</span>
             </a>
 
             {{-- Messages --}}
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="text-center text-gray-400 py-8 text-sm">Suhbat boshlang</div>
+                    <div class="text-center text-gray-400 py-8 text-sm">{{ __('conversations.start_chat') }}</div>
                 @endforelse
                 <div id="bottom"></div>
             </div>
@@ -76,7 +76,7 @@
                   class="bg-white rounded-2xl shadow p-3 flex gap-3 items-end sticky bottom-4">
                 @csrf
                 <textarea name="message" id="msgInput" rows="1" required
-                    placeholder="Xabar yozing..."
+                    placeholder="{{ __('conversations.write_message') }}"
                     onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();document.getElementById('msgForm').submit()}"
                     oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"
                     class="flex-1 rounded-xl border-gray-200 text-sm focus:ring-blue-500 focus:border-blue-500
@@ -85,7 +85,7 @@
                 <button type="submit"
                     class="bg-blue-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition
                            text-sm flex-shrink-0 self-end">
-                    Yuborish
+                    {{ __('conversations.send') }}
                 </button>
             </form>
 

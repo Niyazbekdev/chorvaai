@@ -1,18 +1,18 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="text-4xl mb-3">📱</div>
-        <h2 class="text-xl font-bold text-gray-800">Telefon raqamni tasdiqlang</h2>
+        <h2 class="text-xl font-bold text-gray-800">{{ __('auth.verify_title') }}</h2>
         <p class="text-sm text-gray-500 mt-1">
             <span class="font-medium text-gray-700">{{ auth()->user()->phone }}</span>
-            raqamiga 6 xonali kod yuborildi
+            {{ __('auth.verify_desc') }}
         </p>
     </div>
 
     {{-- Dev: OTP kodni ko'rsatish (faqat test/local muhitda) --}}
     @if(session('dev_otp'))
         <div class="mb-4 bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-xl text-sm text-center">
-            <p class="font-semibold">🛠 Test rejimi — SMS yuborilmadi</p>
-            <p class="mt-1">OTP kod: <span class="font-mono font-bold text-lg tracking-widest">{{ session('dev_otp') }}</span></p>
+            <p class="font-semibold">{{ __('auth.dev_otp_title') }}</p>
+            <p class="mt-1">{{ __('auth.dev_otp_code') }} <span class="font-mono font-bold text-lg tracking-widest">{{ session('dev_otp') }}</span></p>
         </div>
     @endif
 
@@ -28,7 +28,7 @@
         @csrf
 
         <div>
-            <x-input-label for="code" value="Tasdiqlash kodi" />
+            <x-input-label for="code" :value="__('auth.verify_code_label')" />
             <x-text-input
                 id="code"
                 name="code"
@@ -44,7 +44,7 @@
         </div>
 
         <x-primary-button class="w-full justify-center mt-5">
-            Tasdiqlash
+            {{ __('auth.verify_btn') }}
         </x-primary-button>
     </form>
 
@@ -57,7 +57,7 @@
                 id="resendBtn"
                 class="text-sm text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed"
                 {{ $resendSeconds > 0 ? 'disabled' : '' }}>
-                Kodni qayta yuborish
+                {{ __('auth.resend') }}
                 <span id="countdown" class="{{ $resendSeconds > 0 ? '' : 'hidden' }}">
                     (<span id="timer">{{ $resendSeconds }}</span>s)
                 </span>
@@ -69,7 +69,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="text-xs text-gray-400 hover:text-gray-600">
-                Boshqa akkaunt bilan kirish
+                {{ __('auth.switch_account') }}
             </button>
         </form>
     </div>
