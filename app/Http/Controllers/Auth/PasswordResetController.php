@@ -30,7 +30,9 @@ class PasswordResetController extends Controller
     {
         $request->validate(['phone' => ['required', 'string']]);
 
-        $phone = '+998' . preg_replace('/\D/', '', $request->phone);
+        $digits = preg_replace('/\D/', '', $request->phone);
+        // JS +998 qo'shib yuborsa, oxirgi 9 raqamni olamiz
+        $phone = '+998' . substr($digits, -9);
 
         if (!User::where('phone', $phone)->exists()) {
             return back()->withErrors(['phone' => __('auth.not_registered')]);
