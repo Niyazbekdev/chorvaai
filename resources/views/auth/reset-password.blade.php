@@ -1,8 +1,8 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="text-4xl mb-3">🔑</div>
-        <h2 class="text-xl font-bold text-gray-800">Yangi parol o'rnatish</h2>
-        <p class="text-sm text-gray-500 mt-1">Yangi parolni ikki marta kiriting</p>
+        <h2 class="text-xl font-bold text-gray-800">{{ __('auth.new_password_title') }}</h2>
+        <p class="text-sm text-gray-500 mt-1">{{ __('auth.new_password_desc') }}</p>
     </div>
 
     <form method="POST" action="{{ route('password.store') }}" class="space-y-4">
@@ -34,7 +34,7 @@
         </div>
 
         <x-primary-button class="w-full justify-center mt-2">
-            Parolni saqlash
+            {{ __('auth.save_password') }}
         </x-primary-button>
     </form>
 </x-guest-layout>

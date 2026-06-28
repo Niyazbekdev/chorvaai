@@ -33,13 +33,13 @@ class PasswordResetController extends Controller
         $phone = '+998' . preg_replace('/\D/', '', $request->phone);
 
         if (!User::where('phone', $phone)->exists()) {
-            return back()->withErrors(['phone' => "Bu telefon raqam ro'yxatdan o'tmagan."]);
+            return back()->withErrors(['phone' => __('auth.not_registered')]);
         }
 
         $resend = $this->otpService->canResend($phone);
         if (!$resend['can']) {
             return back()->withErrors([
-                'phone' => "{$resend['seconds']} soniyadan so'ng qayta urinib ko'ring.",
+                'phone' => $resend['seconds'] . ' ' . __('auth.resend_wait'),
             ]);
         }
 
@@ -106,7 +106,7 @@ class PasswordResetController extends Controller
 
         $resend = $this->otpService->canResend($phone);
         if (!$resend['can']) {
-            return back()->withErrors(['code' => "{$resend['seconds']} soniyadan so'ng qayta yuboring."]);
+            return back()->withErrors(['code' => $resend['seconds'] . ' ' . __('auth.resend_wait')]);
         }
 
         $code = $this->otpService->generate($phone);
@@ -125,7 +125,7 @@ class PasswordResetController extends Controller
     {
         if (!$this->hasValidResetSession($request)) {
             return redirect()->route('password.request')
-                ->withErrors(['phone' => 'Sessiya tugagan yoki noto\'g\'ri. Qaytadan boshlang.']);
+                ->withErrors(['phone' => __('auth.session_expired')]);
         }
 
         return view('auth.reset-password');
@@ -140,7 +140,7 @@ class PasswordResetController extends Controller
 
         if (!$this->hasValidResetSession($request)) {
             return redirect()->route('password.request')
-                ->withErrors(['phone' => 'Sessiya tugagan. Qaytadan boshlang.']);
+                ->withErrors(['phone' => __('auth.session_expired')]);
         }
 
         $phone = $request->session()->get('pwd_reset_verified_phone');
@@ -155,7 +155,7 @@ class PasswordResetController extends Controller
         $request->session()->forget(['pwd_reset_verified_phone', 'pwd_reset_expires']);
 
         return redirect()->route('login')
-            ->with('status', 'Parol muvaffaqiyatli yangilandi. Endi kira olasiz!');
+            ->with('status', __('auth.password_updated'));
     }
 
     private function hasValidResetSession(Request $request): bool

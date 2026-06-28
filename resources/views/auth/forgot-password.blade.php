@@ -1,8 +1,8 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <div class="text-4xl mb-3">🔐</div>
-        <h2 class="text-xl font-bold text-gray-800">Parolni tiklash</h2>
-        <p class="text-sm text-gray-500 mt-1">Telefon raqamingizni kiriting — SMS kod yuboramiz</p>
+        <h2 class="text-xl font-bold text-gray-800">{{ __('auth.forgot_title') }}</h2>
+        <p class="text-sm text-gray-500 mt-1">{{ __('auth.forgot_desc') }}</p>
     </div>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -33,13 +33,13 @@
         </div>
 
         <x-primary-button class="w-full justify-center mt-5">
-            SMS kod yuborish
+            {{ __('auth.send_sms') }}
         </x-primary-button>
     </form>
 
     <div class="mt-5 text-center">
         <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">
-            ← Kirishga qaytish
+            {{ __('auth.back_to_login') }}
         </a>
     </div>
 

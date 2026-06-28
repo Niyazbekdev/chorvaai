@@ -131,7 +131,10 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $data) {
             User::firstOrCreate(
                 ['phone' => $data['phone']],
-                array_merge($data, ['password' => Hash::make('password')])
+                array_merge($data, [
+                    'password'          => Hash::make('password'),
+                    'phone_verified_at' => now(),
+                ])
             );
         }
     }
