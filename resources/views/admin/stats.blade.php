@@ -5,209 +5,231 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 .tab-btn {
-    padding: 8px 20px; border-radius: 10px; font-size: .85rem; font-weight: 700;
+    padding: 9px 22px; border-radius: 10px; font-size: .85rem; font-weight: 700;
     cursor: pointer; border: 1.5px solid #e5e7eb; background: white; color: #6b7280;
     transition: all .15s;
 }
 .tab-btn.active { background: #10b981; color: white; border-color: #10b981; }
 .tab-btn:not(.active):hover { border-color: #10b981; color: #10b981; }
-.stat-card { background: white; border-radius: 16px; padding: 20px 24px; border: 1px solid #f3f4f6; }
+.scard { background: white; border-radius: 16px; padding: 20px 24px; border: 1px solid #f0fdf4; }
+.scard-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #9ca3af; }
+.scard-val   { font-size: 2rem; font-weight: 800; color: #111827; line-height: 1.1; margin-top: 4px; }
+.scard-icon  { width: 36px; height: 36px; border-radius: 10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; margin-bottom:10px; }
+[x-cloak] { display: none !important; }
 </style>
 @endpush
 
 @section('content')
+@php
+function fmtSum($n) {
+    if (!$n) return '0 so\'m';
+    if ($n >= 1_000_000_000) return number_format($n/1_000_000_000, 1).' mlrd so\'m';
+    if ($n >= 1_000_000)     return number_format($n/1_000_000, 1).' mln so\'m';
+    return number_format($n, 0, '.', ' ').' so\'m';
+}
+@endphp
+
 <div x-data="statsPage()" x-init="init()">
 
-    {{-- Tab tugmalari --}}
-    <div class="flex gap-2 mb-6 flex-wrap">
-        <button class="tab-btn" :class="{ active: tab === 'weekly'  }" @click="setTab('weekly')">Haftalik</button>
-        <button class="tab-btn" :class="{ active: tab === 'daily'   }" @click="setTab('daily')">Kunlik</button>
-        <button class="tab-btn" :class="{ active: tab === 'monthly' }" @click="setTab('monthly')">Oylik</button>
-        <button class="tab-btn" :class="{ active: tab === 'yearly'  }" @click="setTab('yearly')">Yillik</button>
+    {{-- ── Tab tugmalari ── --}}
+    <div class="flex gap-2 mb-7 flex-wrap">
+        <button class="tab-btn" :class="{ active: tab==='yearly'  }" @click="setTab('yearly')">Yillik</button>
+        <button class="tab-btn" :class="{ active: tab==='monthly' }" @click="setTab('monthly')">Oylik</button>
+        <button class="tab-btn" :class="{ active: tab==='custom'  }" @click="setTab('custom')">Belgilangan vaqt</button>
     </div>
 
-    {{-- ══ HAFTALIK ══════════════════════════════════════════════ --}}
-    <div x-show="tab === 'weekly'" x-cloak>
-        <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">7 kunlik jami</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $weeklyTotal }}</p>
-            </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Kunlik o'rtacha</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $weeklyTotal > 0 ? round($weeklyTotal / 7, 1) : 0 }}</p>
-            </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Eng ko'p bir kunda</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $weeklyTotal > 0 ? max($weeklyData) : 0 }}</p>
-            </div>
-        </div>
-        <div class="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-700 mb-4">So'nggi 7 kun — yangi e'lonlar</h3>
-            <canvas id="chart-weekly" height="100"></canvas>
-        </div>
-    </div>
-
-    {{-- ══ KUNLIK ════════════════════════════════════════════════ --}}
-    <div x-show="tab === 'daily'" x-cloak>
+    {{-- ══════════════ YILLIK ══════════════ --}}
+    <div x-show="tab==='yearly'" x-cloak>
         <form method="GET" action="{{ route('admin.stats') }}" class="flex items-center gap-3 mb-6">
-            <input type="hidden" name="tab" value="daily">
-            <label class="text-sm font-semibold text-gray-600">Kun tanlang:</label>
-            <input type="date" name="date" value="{{ $selectedDate }}" max="{{ today()->toDateString() }}"
-                   onchange="this.form.submit()"
-                   class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <input type="hidden" name="tab" value="yearly">
+            <label class="text-sm font-semibold text-gray-600">Yil:</label>
+            <select name="year" onchange="this.form.submit()"
+                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                @foreach($years as $y)
+                    <option value="{{ $y }}" {{ $y == $selYear ? 'selected' : '' }}>{{ $y }}</option>
+                @endforeach
+            </select>
         </form>
+
         <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">{{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }} jami</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $dailyTotal }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-emerald-100">📋</div>
+                <div class="scard-label">E'lonlar berildi</div>
+                <div class="scard-val text-emerald-600">{{ number_format($yTotalProducts) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Eng faol soat</p>
-                @php $maxHour = $dailyTotal > 0 ? array_search(max($dailyData), $dailyData) : null; @endphp
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $maxHour !== null ? sprintf('%02d:00', $maxHour) : '—' }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-orange-100">🤝</div>
+                <div class="scard-label">Sotildi</div>
+                <div class="scard-val text-orange-500">{{ number_format($yTotalSales) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Soatlik o'rtacha</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $dailyTotal > 0 ? round($dailyTotal / 24, 1) : 0 }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-blue-100">💰</div>
+                <div class="scard-label">Jami summa</div>
+                <div class="scard-val text-blue-600">{{ fmtSum($yTotalSum) }}</div>
             </div>
         </div>
+
         <div class="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-700 mb-4">{{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }} — soat bo'yicha e'lonlar</h3>
-            <canvas id="chart-daily" height="100"></canvas>
+            <h3 class="font-bold text-gray-700 mb-5">{{ $selYear }} — oylik ko'rsatkichlar</h3>
+            <canvas id="chart-yearly" height="90"></canvas>
+            <div class="flex items-center gap-6 mt-4 text-xs font-semibold text-gray-500">
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-emerald-500"></span> E'lonlar berildi</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-orange-400"></span> Sotildi</span>
+            </div>
         </div>
     </div>
 
-    {{-- ══ OYLIK ═════════════════════════════════════════════════ --}}
-    <div x-show="tab === 'monthly'" x-cloak>
+    {{-- ══════════════ OYLIK ══════════════ --}}
+    <div x-show="tab==='monthly'" x-cloak>
         <form method="GET" action="{{ route('admin.stats') }}" class="flex items-center gap-3 mb-6">
             <input type="hidden" name="tab" value="monthly">
-            <label class="text-sm font-semibold text-gray-600">Oy tanlang:</label>
+            <label class="text-sm font-semibold text-gray-600">Oy:</label>
             <input type="month" name="month_year"
-                   value="{{ sprintf('%04d-%02d', $selYear, $selMonth) }}"
+                   value="{{ sprintf('%04d-%02d', $mYear, $mMonth) }}"
                    max="{{ now()->format('Y-m') }}"
                    onchange="this.form.submit()"
                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
         </form>
+
         <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">{{ $monthNames[$selMonth - 1] }} {{ $selYear }} jami</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $monthlyTotal }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-emerald-100">📋</div>
+                <div class="scard-label">E'lonlar berildi</div>
+                <div class="scard-val text-emerald-600">{{ number_format($mTotalProducts) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Kunlik o'rtacha</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ count($monthlyData) > 0 ? round($monthlyTotal / count($monthlyData), 1) : 0 }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-orange-100">🤝</div>
+                <div class="scard-label">Sotildi</div>
+                <div class="scard-val text-orange-500">{{ number_format($mTotalSales) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Eng ko'p bir kunda</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $monthlyTotal > 0 ? max($monthlyData) : 0 }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-blue-100">💰</div>
+                <div class="scard-label">Jami summa</div>
+                <div class="scard-val text-blue-600">{{ fmtSum($mTotalSum) }}</div>
             </div>
         </div>
+
         <div class="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-700 mb-4">{{ $monthNames[$selMonth - 1] }} {{ $selYear }} — kunlik e'lonlar</h3>
-            <canvas id="chart-monthly" height="100"></canvas>
+            <h3 class="font-bold text-gray-700 mb-5">{{ $monthNames[$mMonth-1] }} {{ $mYear }} — kunlik ko'rsatkichlar</h3>
+            <canvas id="chart-monthly" height="90"></canvas>
+            <div class="flex items-center gap-6 mt-4 text-xs font-semibold text-gray-500">
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-emerald-500"></span> E'lonlar berildi</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-orange-400"></span> Sotildi</span>
+            </div>
         </div>
     </div>
 
-    {{-- ══ YILLIK ════════════════════════════════════════════════ --}}
-    <div x-show="tab === 'yearly'" x-cloak>
-        <form method="GET" action="{{ route('admin.stats') }}" class="flex items-center gap-3 mb-6">
-            <input type="hidden" name="tab" value="yearly">
-            <label class="text-sm font-semibold text-gray-600">Yil tanlang:</label>
-            <select name="yearly_year" onchange="this.form.submit()"
-                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
-                @foreach($years as $y)
-                    <option value="{{ $y }}" {{ $y == $selYearlyYear ? 'selected' : '' }}>{{ $y }}</option>
-                @endforeach
-            </select>
+    {{-- ══════════════ BELGILANGAN VAQT ══════════════ --}}
+    <div x-show="tab==='custom'" x-cloak>
+        <form method="GET" action="{{ route('admin.stats') }}" class="flex items-center gap-3 mb-6 flex-wrap">
+            <input type="hidden" name="tab" value="custom">
+            <label class="text-sm font-semibold text-gray-600">Dan:</label>
+            <input type="date" name="date_from" value="{{ $dateFrom }}" max="{{ today()->toDateString() }}"
+                   class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <label class="text-sm font-semibold text-gray-600">Gacha:</label>
+            <input type="date" name="date_to" value="{{ $dateTo }}" max="{{ today()->toDateString() }}"
+                   class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            <button type="submit"
+                    class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-sm font-bold transition">
+                Ko'rish
+            </button>
         </form>
+
         <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">{{ $selYearlyYear }} yil jami</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $yearlyTotal }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-emerald-100">📋</div>
+                <div class="scard-label">E'lonlar berildi</div>
+                <div class="scard-val text-emerald-600">{{ number_format($cTotalProducts) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Oylik o'rtacha</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $yearlyTotal > 0 ? round($yearlyTotal / 12, 1) : 0 }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-orange-100">🤝</div>
+                <div class="scard-label">Sotildi</div>
+                <div class="scard-val text-orange-500">{{ number_format($cTotalSales) }}</div>
             </div>
-            <div class="stat-card">
-                <p class="text-sm text-gray-400 font-medium">Eng faol oy</p>
-                @php $maxMonth = $yearlyTotal > 0 ? array_search(max($yearlyData), $yearlyData) : null; @endphp
-                <p class="text-3xl font-bold text-gray-900 mt-1">{{ $maxMonth !== null ? $monthNames[$maxMonth] : '—' }}</p>
+            <div class="scard">
+                <div class="scard-icon bg-blue-100">💰</div>
+                <div class="scard-label">Jami summa</div>
+                <div class="scard-val text-blue-600">{{ fmtSum($cTotalSum) }}</div>
             </div>
         </div>
+
         <div class="bg-white rounded-2xl border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-700 mb-4">{{ $selYearlyYear }} — oylik e'lonlar</h3>
-            <canvas id="chart-yearly" height="100"></canvas>
+            <h3 class="font-bold text-gray-700 mb-5">
+                {{ \Carbon\Carbon::parse($dateFrom)->format('d.m.Y') }} –
+                {{ \Carbon\Carbon::parse($dateTo)->format('d.m.Y') }}
+            </h3>
+            <canvas id="chart-custom" height="90"></canvas>
+            <div class="flex items-center gap-6 mt-4 text-xs font-semibold text-gray-500">
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-emerald-500"></span> E'lonlar berildi</span>
+                <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-orange-400"></span> Sotildi</span>
+            </div>
         </div>
     </div>
 
 </div>
+@endsection
 
 @push('scripts')
 <script>
-const WEEKLY_LABELS  = @json($weeklyLabels);
-const WEEKLY_DATA    = @json($weeklyData);
-const DAILY_LABELS   = @json($dailyLabels);
-const DAILY_DATA     = @json($dailyData);
-const MONTHLY_LABELS = @json($monthlyLabels);
-const MONTHLY_DATA   = @json($monthlyData);
-const YEARLY_LABELS  = @json($monthNames);
-const YEARLY_DATA    = @json($yearlyData);
-
-const ACTIVE_TAB = '{{ $tab }}';
-
-const chartDefaults = {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-        y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1, precision: 0 },
-            grid: { color: '#f3f4f6' }
-        },
-        x: { grid: { display: false } }
-    }
+const DATA = {
+    yearly: {
+        labels:    @json($monthNames),
+        products:  @json($yProductData),
+        sales:     @json($ySaleData),
+    },
+    monthly: {
+        labels:    @json($mLabels),
+        products:  @json($mProductData),
+        sales:     @json($mSaleData),
+    },
+    custom: {
+        labels:    @json($cLabels),
+        products:  @json($cProductData),
+        sales:     @json($cSaleData),
+    },
 };
 
-function makeBar(id, labels, data, color = '#10b981') {
+const ACTIVE_TAB = '{{ $tab }}';
+const charts = {};
+
+function makeGrouped(id, d) {
     const el = document.getElementById(id);
-    if (!el) return;
-    new Chart(el, {
+    if (!el || charts[id]) return;
+    charts[id] = new Chart(el, {
         type: 'bar',
         data: {
-            labels,
-            datasets: [{
-                data,
-                backgroundColor: color + '33',
-                borderColor: color,
-                borderWidth: 2,
-                borderRadius: 6,
-            }]
+            labels: d.labels,
+            datasets: [
+                {
+                    label: "E'lonlar berildi",
+                    data: d.products,
+                    backgroundColor: '#10b98133',
+                    borderColor: '#10b981',
+                    borderWidth: 2,
+                    borderRadius: 5,
+                },
+                {
+                    label: 'Sotildi',
+                    data: d.sales,
+                    backgroundColor: '#f97316aa',
+                    borderColor: '#f97316',
+                    borderWidth: 2,
+                    borderRadius: 5,
+                },
+            ]
         },
-        options: chartDefaults
-    });
-}
-
-function makeLine(id, labels, data, color = '#10b981') {
-    const el = document.getElementById(id);
-    if (!el) return;
-    new Chart(el, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                data,
-                borderColor: color,
-                backgroundColor: color + '18',
-                borderWidth: 2.5,
-                pointBackgroundColor: color,
-                pointRadius: 4,
-                fill: true,
-                tension: 0.35,
-            }]
-        },
-        options: chartDefaults
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, precision: 0 },
+                    grid: { color: '#f3f4f6' }
+                },
+                x: { grid: { display: false } }
+            }
+        }
     });
 }
 
@@ -217,19 +239,12 @@ function statsPage() {
         setTab(t) {
             this.tab = t;
             history.replaceState(null, '', '?tab=' + t);
-            this.$nextTick(() => this.drawChart(t));
+            this.$nextTick(() => makeGrouped('chart-' + t, DATA[t]));
         },
         init() {
-            this.$nextTick(() => this.drawChart(this.tab));
-        },
-        drawChart(t) {
-            if (t === 'weekly')  makeLine('chart-weekly',  WEEKLY_LABELS,  WEEKLY_DATA);
-            if (t === 'daily')   makeBar ('chart-daily',   DAILY_LABELS,   DAILY_DATA,   '#3b82f6');
-            if (t === 'monthly') makeBar ('chart-monthly', MONTHLY_LABELS, MONTHLY_DATA, '#f59e0b');
-            if (t === 'yearly')  makeLine('chart-yearly',  YEARLY_LABELS,  YEARLY_DATA,  '#8b5cf6');
+            this.$nextTick(() => makeGrouped('chart-' + this.tab, DATA[this.tab]));
         }
     };
 }
 </script>
 @endpush
-@endsection
