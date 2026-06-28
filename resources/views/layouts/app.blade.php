@@ -24,6 +24,7 @@
             @endisset
             <main>{{ $slot }}</main>
         </div>
+        <x-ai-chat-widget />
         @stack('scripts')
     </body>
 </html>

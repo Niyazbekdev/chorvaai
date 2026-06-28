@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\ContactEventController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FavoriteController;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::get('/', fn () => view('welcome'))->name('home');
+
+// AI Chat (guest va auth uchun)
+Route::post('/ai-chat/send', [AiChatController::class, 'send'])->name('ai-chat.send');
+Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai-chat.history');
 
 // Marketplace — public
 Route::get('/marketplace', [ProductController::class, 'index'])->name('products.index');
