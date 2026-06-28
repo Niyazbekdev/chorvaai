@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\EskizService;
 use App\Services\OtpService;
@@ -41,12 +42,15 @@ class RegisteredUserController extends Controller
             'phone.unique' => 'Bu telefon raqam allaqachon ro\'yxatdan o\'tgan.',
         ]);
 
+        $customerRole = Role::where('slug', 'customer')->first();
+
         $user = User::create([
             'first_name'        => $request->first_name,
             'last_name'         => $request->last_name,
             'phone'             => $request->phone,
             'password'          => Hash::make($request->password),
             'phone_verified_at' => null,
+            'role_id'           => $customerRole?->id,
         ]);
 
         $code = $this->otpService->generate($user->phone);

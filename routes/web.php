@@ -8,6 +8,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,16 @@ Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');
     Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
+});
+
+// Admin panel
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/',          [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users',     [AdminController::class, 'users'])->name('users');
+    Route::patch('/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('users.role');
+    Route::get('/products',  [AdminController::class, 'products'])->name('products');
+    Route::get('/contacts',  [AdminController::class, 'contacts'])->name('contacts');
+    Route::delete('/contacts/{contact}', [AdminController::class, 'deleteContact'])->name('contacts.delete');
 });
 
 require __DIR__ . '/auth.php';

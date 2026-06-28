@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\Region;
+use App\Models\Role;
 use App\Models\Status;
 use App\Models\Type;
 use App\Models\User;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->command->info('Lookup jadvallar...');
+        $this->seedRoles();
         $this->seedTypes();
         $this->seedColors();
         $this->seedStatuses();
@@ -34,6 +36,12 @@ class DatabaseSeeder extends Seeder
         Product::factory(10)->create();
 
         $this->command->info('Tayyor!');
+    }
+
+    private function seedRoles(): void
+    {
+        Role::firstOrCreate(['slug' => 'admin'],    ['name' => 'Admin']);
+        Role::firstOrCreate(['slug' => 'customer'], ['name' => 'Customer']);
     }
 
     private function seedTypes(): void
@@ -119,20 +127,23 @@ class DatabaseSeeder extends Seeder
 
     private function seedUsers(): void
     {
+        $adminRole    = Role::where('slug', 'admin')->first();
+        $customerRole = Role::where('slug', 'customer')->first();
+
         $users = [
-            ['first_name' => 'Admin',    'last_name' => 'User',      'phone' => '+998901234567'],
-            ['first_name' => 'Jasur',    'last_name' => 'Toshmatov', 'phone' => '+998901111111'],
-            ['first_name' => 'Nodira',   'last_name' => 'Karimova',  'phone' => '+998902222222'],
-            ['first_name' => 'Bobur',    'last_name' => "Yo'ldoshev", 'phone' => '+998903333333'],
-            ['first_name' => 'Malika',   'last_name' => 'Rahimova',  'phone' => '+998904444444'],
-            ['first_name' => 'Sanjar',   'last_name' => 'Usmonov',   'phone' => '+998905555555'],
+            ['first_name' => 'Admin',  'last_name' => 'User',       'phone' => '+998901234567', 'role_id' => $adminRole?->id],
+            ['first_name' => 'Jasur',  'last_name' => 'Toshmatov',  'phone' => '+998901111111', 'role_id' => $customerRole?->id],
+            ['first_name' => 'Nodira', 'last_name' => 'Karimova',   'phone' => '+998902222222', 'role_id' => $customerRole?->id],
+            ['first_name' => 'Bobur',  'last_name' => "Yo'ldoshev", 'phone' => '+998903333333', 'role_id' => $customerRole?->id],
+            ['first_name' => 'Malika', 'last_name' => 'Rahimova',   'phone' => '+998904444444', 'role_id' => $customerRole?->id],
+            ['first_name' => 'Sanjar', 'last_name' => 'Usmonov',    'phone' => '+998905555555', 'role_id' => $customerRole?->id],
         ];
 
         foreach ($users as $data) {
             User::firstOrCreate(
                 ['phone' => $data['phone']],
                 array_merge($data, [
-                    'password'          => 'password', // hashed cast avtomatik hash qiladi
+                    'password'          => 'password',
                     'phone_verified_at' => now(),
                 ])
             );
