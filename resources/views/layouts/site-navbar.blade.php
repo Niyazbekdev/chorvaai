@@ -95,8 +95,8 @@
         <nav class="site-links">
             <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
             <a href="{{ route('products.create') }}" class="site-announce-btn">{{ __('nav.post_ad') }}</a>
-            <a href="{{ url('/about') }}">{{ __('nav.about') }}</a>
-            <a href="{{ url('/contact') }}">{{ __('nav.contact') }}</a>
+            <a href="{{ url('/') }}#why">{{ __('nav.about') }}</a>
+            <a href="{{ url('/') }}#contact">{{ __('nav.contact') }}</a>
         </nav>
 
         <div class="site-auth">

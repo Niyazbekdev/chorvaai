@@ -8,12 +8,14 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::get('/', fn () => view('welcome'))->name('home');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // AI Chat (guest va auth uchun)
 Route::post('/ai-chat/send', [AiChatController::class, 'send'])->name('ai-chat.send');

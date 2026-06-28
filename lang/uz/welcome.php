@@ -26,4 +26,14 @@ return [
     'cta_desc'           => "Minglab fermerlar va xaridorlar bilan chorva bozorimizdaga qo'shiling.",
     'go_to_marketplace'  => "Bozorga o'tish",
     'get_started'        => "Bugun boshlash",
+
+    'contact_title'   => "Biz bilan bog'laning",
+    'contact_desc'    => "Savollaringiz bormi? Ism va telefon raqamingizni qoldiring — biz siz bilan tez orada bog'lanamiz.",
+    'contact_name'    => "Ism familiya",
+    'contact_phone'   => "Telefon raqam",
+    'contact_message' => "Xabar (ixtiyoriy)",
+    'contact_send'    => "Yuborish",
+    'contact_success' => "Xabaringiz qabul qilindi! Tez orada siz bilan bog'lanamiz.",
+    'contact_info_title' => "Aloqa ma'lumotlari",
+    'contact_working_hours' => "Ish vaqti: 9:00 – 18:00 (Dushanba – Shanba)",
 ];

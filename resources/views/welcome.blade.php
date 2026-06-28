@@ -36,7 +36,7 @@
 </section>
 
 {{-- ===== WHY CHOOSE ===== --}}
-<section class="py-20 bg-white">
+<section id="why" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-14">
             <h2 class="font-serif text-4xl font-bold text-[#011f13] mb-3">
@@ -173,6 +173,92 @@
             <a href="#" class="hover:text-emerald-500 transition-colors">📘</a>
             <a href="#" class="hover:text-emerald-500 transition-colors">▶️</a>
             <a href="#" class="hover:text-emerald-500 transition-colors">💼</a>
+        </div>
+    </div>
+</section>
+
+{{-- ===== CONTACT ===== --}}
+<section id="contact" class="py-20" style="background:#011f13">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+
+            {{-- Left: info --}}
+            <div class="text-white">
+                <h2 class="font-serif text-4xl font-bold mb-4">{{ __('welcome.contact_title') }}</h2>
+                <p class="text-white/70 text-lg leading-relaxed mb-10">{{ __('welcome.contact_desc') }}</p>
+
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl">📞</div>
+                        <div>
+                            <p class="text-white/50 text-sm">{{ __('nav.contact') }}</p>
+                            <p class="text-white font-semibold">+998 90 000 00 00</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl">✉️</div>
+                        <div>
+                            <p class="text-white/50 text-sm">Email</p>
+                            <p class="text-white font-semibold">info@chorvaai.uz</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl">🕐</div>
+                        <div>
+                            <p class="text-white/50 text-sm">{{ __('welcome.contact_info_title') }}</p>
+                            <p class="text-white font-semibold">{{ __('welcome.contact_working_hours') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Right: form --}}
+            <div class="bg-white rounded-2xl p-8 shadow-2xl">
+                @if(session('contact_success'))
+                    <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl px-5 py-4 mb-6">
+                        <span class="text-2xl">✅</span>
+                        <p class="font-semibold">{{ __('welcome.contact_success') }}</p>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('contact.store') }}" class="space-y-5">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            {{ __('welcome.contact_name') }} <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="name" value="{{ old('name') }}" required
+                               placeholder="Abdullayev Abdulloh"
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none @error('name') border-red-400 @enderror">
+                        @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            {{ __('welcome.contact_phone') }} <span class="text-red-500">*</span>
+                        </label>
+                        <input type="tel" name="phone" value="{{ old('phone') }}" required
+                               placeholder="+998 90 123 45 67"
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none @error('phone') border-red-400 @enderror">
+                        @error('phone')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            {{ __('welcome.contact_message') }}
+                        </label>
+                        <textarea name="message" rows="4"
+                                  placeholder="..."
+                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none">{{ old('message') }}</textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition text-sm tracking-wide">
+                        {{ __('welcome.contact_send') }}
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 </section>
