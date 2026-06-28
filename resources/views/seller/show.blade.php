@@ -16,7 +16,7 @@
 
                 {{-- Avatar --}}
                 @if($seller->avatar)
-                    <img src="{{ $seller->avatarUrl() }}" alt="{{ $seller->first_name }}"
+                    <img src="{{ $seller->avatar_url }}" alt="{{ $seller->first_name }}"
                          class="w-24 h-24 rounded-full object-cover border-4 border-emerald-100 shadow flex-shrink-0">
                 @else
                     <div class="w-24 h-24 rounded-full bg-gradient-to-br from-green-400 to-emerald-600

@@ -114,19 +114,20 @@ class Product extends Model
         return $this->favorites()->where('user_id', $userId)->exists();
     }
 
+    // Checks attributes first so withCount('favorites') result is not overridden by a query.
     public function getFavoritesCountAttribute(): int
     {
-        return $this->favorites()->count();
+        return (int) ($this->attributes['favorites_count'] ?? $this->favorites()->count());
     }
 
     public function getPhoneViewsCountAttribute(): int
     {
-        return $this->contactEvents()->where('type', 'phone_view')->count();
+        return (int) ($this->attributes['phone_views_count'] ?? $this->contactEvents()->where('type', 'phone_view')->count());
     }
 
     public function getConversationsCountAttribute(): int
     {
-        return $this->conversations()->count();
+        return (int) ($this->attributes['conversations_count'] ?? $this->conversations()->count());
     }
 
     public function isSold(): bool

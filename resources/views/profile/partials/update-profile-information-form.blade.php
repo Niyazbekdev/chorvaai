@@ -12,7 +12,7 @@
         <div class="flex items-center gap-5">
             <div class="relative group">
                 @if($user->avatar)
-                    <img src="{{ $user->avatarUrl() }}" alt="avatar"
+                    <img src="{{ $user->avatar_url }}" alt="avatar"
                          class="w-20 h-20 rounded-full object-cover border-2 border-emerald-200 shadow">
                 @else
                     <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-emerald-600

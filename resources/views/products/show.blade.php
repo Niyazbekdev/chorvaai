@@ -231,7 +231,7 @@
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{{ __('products.seller') }}</h3>
                     <div class="flex items-center gap-3">
                         @if($product->user?->avatar)
-                            <img src="{{ $product->user->avatarUrl() }}" alt="{{ $product->user->first_name }}"
+                            <img src="{{ $product->user->avatar_url }}" alt="{{ $product->user->first_name }}"
                                  class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200 group-hover:border-emerald-400 transition">
                         @else
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
