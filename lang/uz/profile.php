@@ -52,4 +52,13 @@ return [
     'saved'              => "Saqlandi",
     'profile_title'      => "Profil sozlamalari",
     'my_listings'        => "Mening e'lonlarim →",
+    // phone change
+    'phone_title'        => "Telefon raqamini o'zgartirish",
+    'phone_desc'         => "Yangi raqamga SMS kod yuboriladi va tasdiqlanganidan keyin o'zgaradi",
+    'current_phone'      => "Joriy raqam",
+    'change_btn'         => "O'zgartirish",
+    'new_phone'          => "Yangi telefon raqami",
+    'phone_updated'      => "Telefon raqami muvaffaqiyatli yangilandi",
+    'phone_same'         => "Bu allaqachon joriy raqamingiz",
+    'phone_taken'        => "Bu raqam boshqa foydalanuvchiga tegishli",
 ];

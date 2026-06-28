@@ -59,22 +59,6 @@
             <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
         </div>
 
-        {{-- Phone --}}
-        <div>
-            <x-input-label for="phone" :value="__('Phone Number')" />
-            <div class="flex mt-1">
-                <span class="inline-flex items-center px-3 border border-r-0 border-gray-200 bg-gray-100 rounded-l-xl text-gray-500 text-sm font-medium">
-                    +998
-                </span>
-                <x-text-input id="phone" name="phone" type="text"
-                    class="block w-full rounded-l-none"
-                    :value="old('phone', str_replace('+998', '', $user->phone))"
-                    placeholder="901234567" maxlength="9"
-                    inputmode="numeric" autocomplete="tel" />
-            </div>
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-        </div>
-
         <div class="flex items-center gap-4 pt-1">
             <x-primary-button>{{ __('profile.save') }}</x-primary-button>
 
@@ -107,16 +91,4 @@ function previewAvatar(input) {
     };
     reader.readAsDataURL(input.files[0]);
 }
-
-// Phone prefix handler
-document.getElementById('phone').addEventListener('input', function () {
-    this.value = this.value.replace(/\D/g, '').slice(0, 9);
-});
-document.querySelector('form[action="{{ route("profile.update") }}"]')
-    .addEventListener('submit', function () {
-        const p = document.getElementById('phone');
-        if (p.value && !p.value.startsWith('+998')) {
-            p.value = '+998' + p.value;
-        }
-    });
 </script>

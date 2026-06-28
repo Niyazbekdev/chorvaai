@@ -48,9 +48,14 @@ Route::middleware(['auth', 'phone.verified'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/my-products', [ProfileController::class, 'myProducts'])->name('profile.my-products');
     Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
+
+    // Phone change flow
+    Route::post('/profile/phone/request', [ProfileController::class, 'requestPhoneChange'])->name('profile.phone.request');
+    Route::post('/profile/phone/verify', [ProfileController::class, 'verifyPhoneChange'])->name('profile.phone.verify');
+    Route::post('/profile/phone/resend', [ProfileController::class, 'resendPhoneOtp'])->middleware('throttle:3,1')->name('profile.phone.resend');
+    Route::post('/profile/phone/cancel', [ProfileController::class, 'cancelPhoneChange'])->name('profile.phone.cancel');
 
     // Conversations & Messages
     Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
