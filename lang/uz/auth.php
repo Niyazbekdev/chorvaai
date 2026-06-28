@@ -34,4 +34,5 @@ return [
     'create_account'     => "Akkaunt yaratish",
     'create_account_desc'=> "ChorvaAI platformasiga qo'shiling",
     'Welcome back'       => "Xush kelibsiz",
+    'forgot_password'    => "Parolni unutdim?",
 ];

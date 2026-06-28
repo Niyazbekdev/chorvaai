@@ -34,4 +34,5 @@ return [
     'create_account'     => "Создать аккаунт",
     'create_account_desc'=> "Присоединяйтесь к платформе ChorvaAI",
     'Welcome back'       => "Добро пожаловать",
+    'forgot_password'    => "Забыли пароль?",
 ];
