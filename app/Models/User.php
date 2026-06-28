@@ -28,7 +28,16 @@ class User extends Authenticatable
         'phone',
         'password',
         'phone_verified_at',
+        'avatar',
     ];
+
+    public function avatarUrl(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+        return '';
+    }
 
     protected function casts(): array
     {

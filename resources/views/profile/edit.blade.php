@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Profil sozlamalari</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('profile.profile_title') }}</h2>
             <a href="{{ route('profile.my-products') }}"
                class="text-sm text-green-600 font-semibold hover:underline">
-                Mening e'lonlarim →
+                {{ __('profile.my_listings') }}
             </a>
         </div>
     </x-slot>

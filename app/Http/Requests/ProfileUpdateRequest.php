@@ -18,13 +18,14 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'phone' => [
+            'last_name'  => ['required', 'string', 'max:255'],
+            'phone'      => [
                 'required',
                 'string',
                 'regex:/^\+998(90|91|93|94|95|97|98|99|33|88|77)\d{7}$/',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'avatar'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

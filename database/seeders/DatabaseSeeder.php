@@ -132,7 +132,7 @@ class DatabaseSeeder extends Seeder
             User::firstOrCreate(
                 ['phone' => $data['phone']],
                 array_merge($data, [
-                    'password'          => Hash::make('password'),
+                    'password'          => 'password', // hashed cast avtomatik hash qiladi
                     'phone_verified_at' => now(),
                 ])
             );

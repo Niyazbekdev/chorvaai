@@ -229,10 +229,15 @@
                 <div class="bg-white rounded-2xl shadow p-5">
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{{ __('products.seller') }}</h3>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
-                                    flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                            {{ mb_strtoupper(mb_substr($product->user?->first_name ?? 'S', 0, 1)) }}
-                        </div>
+                        @if($product->user?->avatar)
+                            <img src="{{ $product->user->avatarUrl() }}" alt="{{ $product->user->first_name }}"
+                                 class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                        @else
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
+                                        flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                                {{ mb_strtoupper(mb_substr($product->user?->first_name ?? 'S', 0, 1)) }}
+                            </div>
+                        @endif
                         <div>
                             <p class="font-bold text-gray-900">
                                 {{ $product->user?->first_name }} {{ $product->user?->last_name }}

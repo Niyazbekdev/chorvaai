@@ -43,4 +43,13 @@ return [
     'no_favorites_hint'  => "Добавляйте объявления в избранное на маркетплейсе",
     'go_marketplace'     => "Маркетплейс",
     'view_detail'        => "Подробнее",
+    // profile edit
+    'info_title'         => "Личные данные",
+    'info_desc'          => "Обновите имя, номер телефона и фото профиля",
+    'avatar_label'       => "Фото профиля",
+    'avatar_hint'        => "JPG, PNG или WebP • Макс. 2 МБ",
+    'save'               => "Сохранить",
+    'saved'              => "Сохранено",
+    'profile_title'      => "Настройки профиля",
+    'my_listings'        => "Мои объявления →",
 ];

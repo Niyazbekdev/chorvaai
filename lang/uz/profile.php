@@ -43,4 +43,13 @@ return [
     'no_favorites_hint'  => "Marketplace da e'lonlarni sevimlilarga qo'shing",
     'go_marketplace'     => "Marketplace",
     'view_detail'        => "Batafsil ko'rish",
+    // profile edit
+    'info_title'         => "Shaxsiy ma'lumotlar",
+    'info_desc'          => "Ismingiz, telefon raqamingiz va profil rasmingizni yangilang",
+    'avatar_label'       => "Profil rasmi",
+    'avatar_hint'        => "JPG, PNG yoki WebP • Maks. 2 MB",
+    'save'               => "Saqlash",
+    'saved'              => "Saqlandi",
+    'profile_title'      => "Profil sozlamalari",
+    'my_listings'        => "Mening e'lonlarim →",
 ];
