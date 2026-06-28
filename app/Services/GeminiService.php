@@ -2,6 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Category;
+use App\Models\City;
+use App\Models\Color;
+use App\Models\Product;
+use App\Models\Region;
+use App\Models\Status;
+use App\Models\Type;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class GeminiService
@@ -55,6 +63,8 @@ class GeminiService
 
     private function systemPrompt(): string
     {
+        $ctx = $this->platformContext();
+
         return <<<PROMPT
 Siz ChorvaAI — O'zbekistondagi chorva mollar marketplace platformasining AI yordamchisisiz.
 
@@ -67,11 +77,80 @@ Foydalanuvchilarga quyidagi mavzularda yordam bering:
 - Zot tanlash va nasl yaxshilash
 - ChorvaAI platformasida qanday foydalanish
 
+=== PLATFORMA MA'LUMOTLARI (faqat o'qish uchun) ===
+{$ctx}
+=== MA'LUMOTLAR TUGADI ===
+
 Qoidalar:
+- Yuqoridagi ma'lumotlardan foydalanib aniq javob bering
+- Foydalanuvchi "qanday kategoriyalar bor", "qaysi viloyatlar bor", "narxi qancha" deb so'rasa, yuqoridagi haqiqiy ma'lumotlarni ko'rsating
 - Javoblaringiz qisqa, aniq va foydali bo'lsin (3-5 gap)
 - Foydalanuvchi qaysi tilda yozsa, o'sha tilda javob bering (o'zbek, rus yoki ingliz)
 - Faqat chorvachilik va platforma mavzularida yordam bering
 - Doktor yoki veterinar maslahatiga muhtoj bo'lgan jiddiy holatlarda mutaxassisga murojaat qilishni tavsiya eting
 PROMPT;
+    }
+
+    private function platformContext(): string
+    {
+        // 30 daqiqa kesh — bazaga har so'rovda ulanmaslik uchun
+        return Cache::remember('gemini_platform_context', 1800, function () {
+            $categories = Category::select('id', 'name', 'parent_id')
+                ->orderBy('parent_id')
+                ->get()
+                ->map(fn($c) => ($c->parent_id ? '  └ ' : '') . $c->name)
+                ->join("\n");
+
+            $regions = Region::select('name')->pluck('name')->join(', ');
+
+            $cities = City::select('name', 'region_id')
+                ->with('region:id,name')
+                ->get()
+                ->groupBy(fn($c) => $c->region?->name ?? 'Boshqa')
+                ->map(fn($cities, $region) => "$region: " . $cities->pluck('name')->join(', '))
+                ->join("\n");
+
+            $types   = Type::select('name')->pluck('name')->join(', ');
+            $colors  = Color::select('name')->pluck('name')->join(', ');
+            $statuses = Status::select('name')->pluck('name')->join(', ');
+
+            $stats = Product::selectRaw('
+                COUNT(*) as total,
+                MIN(price) as min_price,
+                MAX(price) as max_price,
+                ROUND(AVG(price)) as avg_price
+            ')->first();
+
+            $topProducts = Product::select('name', 'price', 'breed')
+                ->where('status_id', Status::where('name', 'like', '%aktiv%')->value('id'))
+                ->orderByDesc('views_count')
+                ->limit(10)
+                ->get()
+                ->map(fn($p) => "- {$p->name}" . ($p->breed ? " ({$p->breed})" : '') . ": {$p->price} so'm")
+                ->join("\n");
+
+            return <<<CTX
+Kategoriyalar:
+{$categories}
+
+Viloyatlar: {$regions}
+
+Shaharlar viloyatlar bo'yicha:
+{$cities}
+
+Hayvon turlari: {$types}
+Ranglar: {$colors}
+E'lon statuslari: {$statuses}
+
+Platforma statistikasi:
+- Jami e'lonlar soni: {$stats->total} ta
+- Minimal narx: {$stats->min_price} so'm
+- Maksimal narx: {$stats->max_price} so'm
+- O'rtacha narx: {$stats->avg_price} so'm
+
+Eng ko'p ko'rilgan aktiv e'lonlar:
+{$topProducts}
+CTX;
+        });
     }
 }

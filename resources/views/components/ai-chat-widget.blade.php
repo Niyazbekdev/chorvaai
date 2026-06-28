@@ -18,7 +18,12 @@
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-3 bg-green-600 text-white">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-sm">🐄</div>
+                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                        </svg>
+                    </div>
                 <div>
                     <p class="font-semibold text-sm">ChorvaAI Yordamchi</p>
                     <p class="text-xs text-green-100">Har doim tayyor</p>
@@ -39,7 +44,12 @@
             {{-- Welcome message --}}
             <template x-if="messages.length === 0">
                 <div class="flex items-start gap-2">
-                    <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-xs flex-shrink-0">🐄</div>
+                    <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                            </svg>
+                        </div>
                     <div class="bg-white rounded-2xl rounded-tl-none px-3 py-2 text-sm text-gray-700 shadow-sm max-w-[80%]">
                         Salom! Men ChorvaAI yordamchisiman. Chorva mollari, narxlar yoki parvarishlash haqida savollaringiz bo'lsa, bemalol so'rang! 🌿
                     </div>
@@ -49,7 +59,12 @@
             <template x-for="(msg, i) in messages" :key="i">
                 <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex items-start gap-2'">
                     <template x-if="msg.role === 'model'">
-                        <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-xs flex-shrink-0">🐄</div>
+                        <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                            </svg>
+                        </div>
                     </template>
                     <div
                         :class="msg.role === 'user'
@@ -63,7 +78,12 @@
             {{-- Typing indicator --}}
             <template x-if="loading">
                 <div class="flex items-start gap-2">
-                    <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-xs flex-shrink-0">🐄</div>
+                    <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                            </svg>
+                        </div>
                     <div class="bg-white rounded-2xl rounded-tl-none px-3 py-2 shadow-sm">
                         <div class="flex gap-1 items-center h-4">
                             <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0ms"></span>
@@ -101,19 +121,51 @@
     </div>
 
     {{-- Toggle button --}}
-    <button
-        @click="toggleChat()"
-        class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 relative"
-    >
-        <span x-show="!open" class="text-2xl">🐄</span>
-        <svg x-show="open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
-        <template x-if="unread > 0 && !open">
-            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" x-text="unread"></span>
-        </template>
-    </button>
+    <div class="relative">
+        {{-- To'lqin halqalari (faqat yopiq holatda) --}}
+        <span x-show="!open" class="absolute inset-0 rounded-full bg-green-500 ai-ripple-1" aria-hidden="true"></span>
+        <span x-show="!open" class="absolute inset-0 rounded-full bg-green-500 ai-ripple-2" aria-hidden="true"></span>
+        <span x-show="!open" class="absolute inset-0 rounded-full bg-green-500 ai-ripple-3" aria-hidden="true"></span>
+
+        <button
+            @click="toggleChat()"
+            class="relative z-10 w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
+        >
+            <span x-show="!open" class="ai-icon-sparkle">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                </svg>
+            </span>
+            <svg x-show="open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+            <template x-if="unread > 0 && !open">
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" x-text="unread"></span>
+            </template>
+        </button>
+    </div>
 </div>
+
+<style>
+@keyframes ai-ripple {
+    0%   { transform: scale(1);   opacity: 0.5; }
+    100% { transform: scale(2.6); opacity: 0;   }
+}
+@keyframes ai-sparkle {
+    0%, 100% { transform: scale(1)    rotate(0deg);  }
+    25%       { transform: scale(1.12) rotate(14deg); }
+    50%       { transform: scale(1)    rotate(0deg);  }
+    75%       { transform: scale(0.92) rotate(-10deg);}
+}
+.ai-ripple-1 { animation: ai-ripple 2.4s ease-out infinite;       }
+.ai-ripple-2 { animation: ai-ripple 2.4s ease-out infinite 0.8s;  }
+.ai-ripple-3 { animation: ai-ripple 2.4s ease-out infinite 1.6s;  }
+.ai-icon-sparkle {
+    display: inline-block;
+    animation: ai-sparkle 3s ease-in-out infinite;
+}
+</style>
 
 <script>
 function aiChat() {

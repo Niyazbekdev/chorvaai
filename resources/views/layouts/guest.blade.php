@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'ChorvaAI') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -39,9 +39,10 @@
 
             {{-- Form centered --}}
             <div class="flex flex-col items-center pt-4 pb-12">
+                {{-- ChorvaAI logo o'rniga --}}
                 <div>
-                    <a href="/">
-                        <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <a href="/" class="block text-center">
+                        <span class="text-3xl font-bold text-[#011f13]">Chorva<span class="text-emerald-500">AI</span></span>
                     </a>
                 </div>
 

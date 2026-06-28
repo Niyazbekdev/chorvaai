@@ -27,4 +27,11 @@ return [
     'Confirm Password'   => "Подтверждение пароля",
     'Already registered?' => "Уже зарегистрированы?",
     'Register'           => "Зарегистрироваться",
+    'sign_in'            => "Войти",
+    'sign_in_desc'       => "Войдите в свой аккаунт",
+    'no_account'         => "Нет аккаунта?",
+    'register_now'       => "Зарегистрируйтесь",
+    'create_account'     => "Создать аккаунт",
+    'create_account_desc'=> "Присоединяйтесь к платформе ChorvaAI",
+    'Welcome back'       => "Добро пожаловать",
 ];

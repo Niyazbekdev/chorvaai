@@ -27,4 +27,11 @@ return [
     'Confirm Password'   => "Parolni tasdiqlash",
     'Already registered?' => "Allaqachon ro'yxatdan o'tganmisiz?",
     'Register'           => "Ro'yxatdan o'tish",
+    'sign_in'            => "Kirish",
+    'sign_in_desc'       => "Akkauntingizga kiring",
+    'no_account'         => "Akkauntingiz yo'qmi?",
+    'register_now'       => "Ro'yxatdan o'ting",
+    'create_account'     => "Akkaunt yaratish",
+    'create_account_desc'=> "ChorvaAI platformasiga qo'shiling",
+    'Welcome back'       => "Xush kelibsiz",
 ];
