@@ -113,9 +113,34 @@
                 <h1 class="text-3xl font-bold text-gray-900">{{ __('products.page_title') }}</h1>
                 <p class="text-gray-500 mt-1">{{ __('products.subtitle') }}</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+                {{-- Compact search --}}
+                <form method="GET" action="{{ route('products.index') }}" class="flex items-center">
+                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                    @if(request('region'))   <input type="hidden" name="region"   value="{{ request('region') }}"> @endif
+                    @if(request('gender'))   <input type="hidden" name="gender"   value="{{ request('gender') }}"> @endif
+                    @if(request('price_from')) <input type="hidden" name="price_from" value="{{ request('price_from') }}"> @endif
+                    @if(request('price_to'))   <input type="hidden" name="price_to"   value="{{ request('price_to') }}"> @endif
+                    <div class="relative flex items-center">
+                        <svg class="absolute left-3 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
+                        </svg>
+                        <input type="text" name="q" value="{{ request('q') }}"
+                               placeholder="{{ __('products.search_placeholder') }}"
+                               class="pl-9 {{ request('q') ? 'pr-7' : 'pr-3' }} py-2 w-52 rounded-xl border border-gray-200 bg-white shadow-sm text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+                        @if(request('q'))
+                            <a href="{{ route('products.index', request()->except('q')) }}"
+                               class="absolute right-2 text-gray-400 hover:text-gray-600 transition">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+
                 <button onclick="document.getElementById('filterBox').classList.toggle('hidden')"
-                    class="border border-green-600 text-green-600 px-4 py-2.5 rounded-xl font-semibold hover:bg-green-50 text-sm">
+                    class="border border-green-600 text-green-600 px-4 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm">
                     {{ __('products.filter_btn') }}
                 </button>
                 <button class="view-tab active" id="btn-cards" onclick="setView('cards')">
@@ -126,35 +151,6 @@
                 </button>
             </div>
         </div>
-
-        {{-- Search bar --}}
-        <form method="GET" action="{{ route('products.index') }}" class="mb-5">
-            @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
-            @if(request('region'))   <input type="hidden" name="region"   value="{{ request('region') }}"> @endif
-            @if(request('gender'))   <input type="hidden" name="gender"   value="{{ request('gender') }}"> @endif
-            @if(request('price_from')) <input type="hidden" name="price_from" value="{{ request('price_from') }}"> @endif
-            @if(request('price_to'))   <input type="hidden" name="price_to"   value="{{ request('price_to') }}"> @endif
-            <div class="relative flex items-center">
-                <svg class="absolute left-4 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
-                </svg>
-                <input type="text" name="q" value="{{ request('q') }}"
-                       placeholder="{{ __('products.search_placeholder') }}"
-                       class="w-full pl-12 pr-28 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
-                @if(request('q'))
-                    <a href="{{ route('products.index', request()->except('q')) }}"
-                       class="absolute right-28 p-1.5 text-gray-400 hover:text-gray-600 transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </a>
-                @endif
-                <button type="submit"
-                        class="absolute right-2 px-5 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition">
-                    {{ __('products.search') }}
-                </button>
-            </div>
-        </form>
 
         {{-- Search result hint --}}
         @if(request('q'))
