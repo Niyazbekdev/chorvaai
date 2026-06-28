@@ -14,6 +14,18 @@ class ProductService
     {
         return Product::with(['category', 'user', 'type', 'color', 'region', 'city', 'status'])
             ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
+            ->when($filters['q'] ?? null, function ($q, $v) {
+                $term = '%' . $v . '%';
+                $q->where(function ($sub) use ($term) {
+                    $sub->where('name', 'like', $term)
+                        ->orWhere('description', 'like', $term)
+                        ->orWhere('breed', 'like', $term)
+                        ->orWhere('location', 'like', $term)
+                        ->orWhereHas('category', fn ($q2) => $q2->where('name', 'like', $term))
+                        ->orWhereHas('region', fn ($q2) => $q2->where('name', 'like', $term))
+                        ->orWhereHas('city', fn ($q2) => $q2->where('name', 'like', $term));
+                });
+            })
             ->when($filters['category'] ?? null, function ($q, $v) {
                 $q->where(function ($sub) use ($v) {
                     $sub->where('category_id', $v)

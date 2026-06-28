@@ -15,6 +15,8 @@ return [
     'price_from'          => "Цена от",
     'price_to'            => "Цена до",
     'search'              => "Найти",
+    'search_placeholder'  => "Поиск по названию, породе, местоположению...",
+    'search_results'      => "найдено :count объявлений",
     'clear'               => "Сбросить",
     'no_results'          => "Объявления не найдены",
     'no_results_hint'     => "Измените условия фильтра",

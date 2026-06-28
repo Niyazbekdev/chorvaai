@@ -15,6 +15,8 @@ return [
     'price_from'          => "Narxdan",
     'price_to'            => "Narxgacha",
     'search'              => "Qidirish",
+    'search_placeholder'  => "Nomi, zoti, joylashuvi bo'yicha qidirish...",
+    'search_results'      => ":count ta natija topildi",
     'clear'               => "Tozalash",
     'no_results'          => "E'lonlar topilmadi",
     'no_results_hint'     => "Filter shartlarini o'zgartiring",
