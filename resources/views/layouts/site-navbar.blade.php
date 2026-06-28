@@ -114,8 +114,7 @@
             </div>
 
             @guest
-                <a href="{{ route('login') }}" class="site-login">{{ __('nav.login') }}</a>
-                <a href="{{ route('register') }}" class="site-register">{{ __('nav.register') }}</a>
+                <a href="{{ route('login') }}" class="site-register">{{ __('nav.login') }}</a>
             @endguest
 
             @auth
