@@ -226,12 +226,13 @@
             <div class="space-y-4">
 
                 {{-- Seller card --}}
-                <div class="bg-white rounded-2xl shadow p-5">
+                <a href="{{ route('seller.show', $product->user) }}"
+                   class="block bg-white rounded-2xl shadow p-5 hover:shadow-lg transition group">
                     <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">{{ __('products.seller') }}</h3>
                     <div class="flex items-center gap-3">
                         @if($product->user?->avatar)
                             <img src="{{ $product->user->avatarUrl() }}" alt="{{ $product->user->first_name }}"
-                                 class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                                 class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200 group-hover:border-emerald-400 transition">
                         @else
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
                                         flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
@@ -239,7 +240,7 @@
                             </div>
                         @endif
                         <div>
-                            <p class="font-bold text-gray-900">
+                            <p class="font-bold text-gray-900 group-hover:text-emerald-600 transition">
                                 {{ $product->user?->first_name }} {{ $product->user?->last_name }}
                             </p>
                             <p class="text-xs text-gray-500">{{ __('products.advertiser') }}</p>
@@ -248,7 +249,10 @@
                     <p class="text-xs text-gray-400 mt-3">
                         {{ __('products.posted_on') }} {{ $product->created_at->format('d.m.Y') }}
                     </p>
-                </div>
+                    <p class="text-xs text-emerald-600 font-semibold mt-2 opacity-0 group-hover:opacity-100 transition">
+                        {{ __('products.view_seller') }} →
+                    </p>
+                </a>
 
                 {{-- Favorite button --}}
                 <button @click="toggleFav()" :disabled="loadingFav"

@@ -22,6 +22,7 @@ Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai-c
 // Marketplace — public
 Route::get('/marketplace', [ProductController::class, 'index'])->name('products.index');
 Route::get('/marketplace/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/seller/{seller}', [\App\Http\Controllers\SellerController::class, 'show'])->name('seller.show');
 
 // Contact event — guests can trigger too (viewer_id nullable)
 Route::post('/marketplace/{product}/contact-event', [ContactEventController::class, 'store'])

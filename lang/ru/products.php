@@ -37,6 +37,7 @@ return [
     'seller'              => "Продавец",
     'advertiser'          => "Автор объявления",
     'posted_on'           => "Дата размещения:",
+    'view_seller'         => "Профиль продавца",
     'add_favorite'        => "В избранное",
     'remove_favorite'     => "Убрать из избранного",
     'manage'              => "Управление",

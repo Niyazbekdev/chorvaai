@@ -37,6 +37,7 @@ return [
     'seller'              => "Sotuvchi",
     'advertiser'          => "E'lon beruvchi",
     'posted_on'           => "E'lon berilgan:",
+    'view_seller'         => "Sotuvchi profilini ko'rish",
     'add_favorite'        => "Sevimlilarga qo'shish",
     'remove_favorite'     => "Sevimlilardan olib tashlash",
     'manage'              => "Boshqaruv",
