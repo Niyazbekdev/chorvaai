@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel – ChorvaAI</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
     <style>
         .sidebar-link { display:flex; align-items:center; gap:10px; padding:10px 16px; border-radius:10px; color:#cbd5e1; font-size:.9rem; font-weight:600; text-decoration:none; transition:all .15s; }
         .sidebar-link:hover, .sidebar-link.active { background:#1e3a2f; color:#10b981; }
@@ -40,6 +41,11 @@
                class="sidebar-link {{ request()->routeIs('admin.contacts') ? 'active' : '' }}">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 Murojatlar
+            </a>
+            <a href="{{ route('admin.stats') }}"
+               class="sidebar-link {{ request()->routeIs('admin.stats') ? 'active' : '' }}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Statistika
             </a>
         </nav>
 
@@ -84,5 +90,6 @@
         </main>
     </div>
 
+@stack('scripts')
 </body>
 </html>

@@ -76,6 +76,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/products',  [AdminController::class, 'products'])->name('products');
     Route::get('/contacts',  [AdminController::class, 'contacts'])->name('contacts');
     Route::delete('/contacts/{contact}', [AdminController::class, 'deleteContact'])->name('contacts.delete');
+    Route::get('/stats',     [AdminController::class, 'stats'])->name('stats');
 });
 
 require __DIR__ . '/auth.php';
