@@ -22,6 +22,40 @@ class GeminiService
         $this->apiKey = config('services.gemini.key');
     }
 
+    public function chatWithFile(array $history, string $message, string $base64Data, string $mimeType): string
+    {
+        $contents = [];
+
+        foreach ($history as $msg) {
+            $contents[] = [
+                'role'  => $msg['role'],
+                'parts' => [['text' => $msg['content']]],
+            ];
+        }
+
+        $contents[] = [
+            'role'  => 'user',
+            'parts' => [
+                ['text' => $message],
+                ['inline_data' => ['mime_type' => $mimeType, 'data' => $base64Data]],
+            ],
+        ];
+
+        $response = Http::timeout(60)->post("{$this->endpoint}?key={$this->apiKey}", [
+            'system_instruction' => ['parts' => [['text' => $this->systemPrompt()]]],
+            'contents'           => $contents,
+            'generationConfig'   => ['maxOutputTokens' => 1000, 'temperature' => 0.7],
+        ]);
+
+        if ($response->failed()) {
+            \Log::error('Gemini file API error', ['status' => $response->status(), 'body' => $response->json()]);
+            return "Kechirasiz, faylni tahlil qilishda muammo yuz berdi.";
+        }
+
+        return $response->json('candidates.0.content.parts.0.text')
+            ?? "Kechirasiz, javob ololmadim.";
+    }
+
     public function chat(array $history, string $newMessage): string
     {
         $contents = [];

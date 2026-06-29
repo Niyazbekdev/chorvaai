@@ -12,4 +12,5 @@ return [
     'favorites'     => "Sevimlilar",
     'messages'      => "Xabarlar",
     'logout'        => "Chiqish",
+    'ai_assistant'  => "AI Yordamchi",
 ];

@@ -19,7 +19,10 @@ Route::get('/', fn () => view('welcome'))->name('home');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // AI Chat (guest va auth uchun)
+Route::get('/ai-assistant', [AiChatController::class, 'page'])->name('ai-assistant.index');
 Route::post('/ai-chat/send', [AiChatController::class, 'send'])->name('ai-chat.send');
+Route::post('/ai-chat/send-with-file', [AiChatController::class, 'sendWithFile'])->name('ai-chat.send-file');
+Route::post('/ai-chat/new', [AiChatController::class, 'newChat'])->name('ai-chat.new');
 Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai-chat.history');
 
 // Marketplace — public

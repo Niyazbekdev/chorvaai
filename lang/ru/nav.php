@@ -12,4 +12,5 @@ return [
     'favorites'     => "Избранное",
     'messages'      => "Сообщения",
     'logout'        => "Выйти",
+    'ai_assistant'  => "AI Помощник",
 ];

@@ -13,6 +13,13 @@
 .site-links { display: flex; gap: 24px; align-items: center; }
 .site-links a { color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: .85rem; letter-spacing: .04em; }
 .site-links a:hover { color: #10b981; }
+.site-nav-ai-btn {
+    background: rgba(16,185,129,.18); color: #6ee7b7 !important;
+    border: 1px solid rgba(16,185,129,.4); border-radius: 999px;
+    padding: 6px 14px; font-size: .8rem !important;
+    transition: background .2s, color .2s !important;
+}
+.site-nav-ai-btn:hover { background: rgba(16,185,129,.32) !important; color: white !important; }
 .site-announce-btn {
     background: #10b981; color: white !important; text-decoration: none;
     padding: 9px 20px; border-radius: 999px; font-weight: 700;
@@ -94,6 +101,10 @@
 
         <nav class="site-links">
             <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
+            <a href="{{ route('ai-assistant.index') }}" class="site-nav-ai-btn">
+                <svg style="width:15px;height:15px;display:inline;margin-right:5px;vertical-align:-2px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                {{ __('nav.ai_assistant') }}
+            </a>
             <a href="{{ route('products.create') }}" class="site-announce-btn">{{ __('nav.post_ad') }}</a>
             <a href="{{ url('/') }}#why">{{ __('nav.about') }}</a>
             <a href="{{ url('/') }}#contact">{{ __('nav.contact') }}</a>
