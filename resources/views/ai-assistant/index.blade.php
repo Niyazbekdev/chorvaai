@@ -685,10 +685,16 @@ function escHtml(str) {
 }
 
 function formatAiText(text) {
+    // Replace newlines with <br> first, then format markdown
     return escHtml(text)
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`(.+?)`/g, '<code style="background:#2a2a2a;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:.85em">$1</code>')
+        // Bold: **text** — must do before italic
+        .replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>')
+        // List bullets: lines starting with * or - or numbers
+        .replace(/(^|\n)(\* |• |- )/g, '$1• ')
+        .replace(/(^|\n)(\d+\.\s)/g, '$1<br><strong>$2</strong>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code style="background:#2a2a2a;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:.85em">$1</code>')
+        // Newlines to <br>
         .replace(/\n/g, '<br>');
 }
 </script>

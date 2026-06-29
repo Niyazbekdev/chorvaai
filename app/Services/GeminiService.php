@@ -24,15 +24,24 @@ class GeminiService
 
     public function chatWithFile(array $history, string $message, string $base64Data, string $mimeType): string
     {
+        $priceCtx = $this->priceContext();
+
+        $sysPrompt = <<<PROMPT
+Siz ChorvaAI — chorva mollari mutaxassisi va baholovchisisiz. Rasmlarni ko'rib tahlil qila olasiz.
+
+Chorva molining rasmini ko'rganda ALBATTA quyidagilarni bering:
+1. **Zoti** — ko'rinish belgilari asosida
+2. **Taxminiy yoshi** — tana o'lchami, shox, yelini asosida
+3. **Taxminiy vazni** — gavda tuzilishi, muskulatura asosida (kg)
+4. **Badan holati (BCS)** — 1-9 shkala
+5. **Taxminiy bozor bahosi** — quyidagi narxlar asosida (so'mda):
+{$priceCtx}
+6. **Tavsiya** — sotish/parvarish bo'yicha maslahat
+
+Foydalanuvchi tilida javob bering (o'zbek/rus/ingliz).
+PROMPT;
+
         $contents = [];
-
-        foreach ($history as $msg) {
-            $contents[] = [
-                'role'  => $msg['role'],
-                'parts' => [['text' => $msg['content']]],
-            ];
-        }
-
         $contents[] = [
             'role'  => 'user',
             'parts' => [
@@ -42,9 +51,9 @@ class GeminiService
         ];
 
         $response = Http::timeout(60)->post("{$this->endpoint}?key={$this->apiKey}", [
-            'system_instruction' => ['parts' => [['text' => $this->systemPrompt()]]],
+            'system_instruction' => ['parts' => [['text' => $sysPrompt]]],
             'contents'           => $contents,
-            'generationConfig'   => ['maxOutputTokens' => 1000, 'temperature' => 0.7],
+            'generationConfig'   => ['maxOutputTokens' => 8192, 'temperature' => 0.7],
         ]);
 
         if ($response->failed()) {
@@ -52,8 +61,37 @@ class GeminiService
             return "Kechirasiz, faylni tahlil qilishda muammo yuz berdi.";
         }
 
-        return $response->json('candidates.0.content.parts.0.text')
-            ?? "Kechirasiz, javob ololmadim.";
+        $json   = $response->json();
+        $text   = data_get($json, 'candidates.0.content.parts.0.text');
+        $finish = data_get($json, 'candidates.0.finishReason');
+
+        \Log::info('Gemini file response', ['finish' => $finish, 'len' => strlen($text ?? '')]);
+
+        if (! $text) {
+            \Log::warning('Gemini file no text', ['finish' => $finish, 'json' => $json]);
+            return "Kechirasiz, javob ololmadim.";
+        }
+
+        return $text;
+    }
+
+    private function priceContext(): string
+    {
+        return Cache::remember('gemini_price_context', 1800, function () {
+            $stats = \App\Models\Product::selectRaw('
+                COUNT(*) as total,
+                MIN(price) as min_price,
+                MAX(price) as max_price,
+                ROUND(AVG(price)) as avg_price
+            ')->first();
+
+            $top = \App\Models\Product::select('name','price','breed')
+                ->orderByDesc('views_count')->limit(5)->get()
+                ->map(fn($p) => "- {$p->name}" . ($p->breed ? " ({$p->breed})" : '') . ": {$p->price} so'm")
+                ->join("\n");
+
+            return "Minimal: {$stats->min_price} so'm | Maksimal: {$stats->max_price} so'm | O'rtacha: {$stats->avg_price} so'm\n{$top}";
+        });
     }
 
     public function chat(array $history, string $newMessage): string
@@ -100,7 +138,7 @@ class GeminiService
         $ctx = $this->platformContext();
 
         return <<<PROMPT
-Siz ChorvaAI — O'zbekistondagi chorva mollar marketplace platformasining AI yordamchisisiz.
+Siz ChorvaAI — O'zbekistondagi chorva mollar marketplace platformasining AI yordamchisisiz. Siz matn VA rasmlarni tahlil qila olasiz.
 
 Foydalanuvchilarga quyidagi mavzularda yordam bering:
 - Chorva mollari: sigir, qo'y, echki, ot, tuya, cho'chqa, parrandalar
@@ -111,6 +149,19 @@ Foydalanuvchilarga quyidagi mavzularda yordam bering:
 - Zot tanlash va nasl yaxshilash
 - ChorvaAI platformasida qanday foydalanish
 
+=== RASM TAHLIL QILISH (MUHIM) ===
+Foydalanuvchi chorva molining rasmini yuborganda ALBATTA quyidagilarni baholang:
+
+1. **Zoti** — rasmdan ko'rinadigan belgilar asosida zotini aniqlang (Holshteyn, Simmental, Qoraqo'l, mahalliy zot va h.k.)
+2. **Taxminiy yoshi** — tana o'lchami, shox holati, tish belgilari (ko'rinsa), umumiy ko'rinish asosida
+3. **Taxminiy vazni** — gavda tuzilishi, orqa-ko'krak kenglik, dumba muskulatura asosida (kg da)
+4. **Badan holati (BCS 1-9)** — semirishlik darajasi, qovurg'alar ko'rinishi, dumba to'liqligi
+5. **Taxminiy bozor bahosi** — yuqoridagi platforma ma'lumotlaridagi narxlar bilan solishtiring va o'zbek so'mida diapazon bering
+6. **Sotish maslahati** — yaxshi tomonlari va kamchiliklari, narxni oshirish yo'llari
+
+Agar rasm sifati past bo'lsa yoki aniq ko'rinmasa — ko'ringan belgilar asosida taxmin qiling va noaniqligini ayting.
+Hech qachon "rasmni ko'ra olmayman" demang — har doim ko'ringan narsalar asosida baholashga harakat qiling.
+
 === PLATFORMA MA'LUMOTLARI (faqat o'qish uchun) ===
 {$ctx}
 === MA'LUMOTLAR TUGADI ===
@@ -118,9 +169,8 @@ Foydalanuvchilarga quyidagi mavzularda yordam bering:
 Qoidalar:
 - Yuqoridagi ma'lumotlardan foydalanib aniq javob bering
 - Foydalanuvchi "qanday kategoriyalar bor", "qaysi viloyatlar bor", "narxi qancha" deb so'rasa, yuqoridagi haqiqiy ma'lumotlarni ko'rsating
-- Javoblaringiz qisqa, aniq va foydali bo'lsin (3-5 gap)
+- Javoblaringiz aniq va foydali bo'lsin
 - Foydalanuvchi qaysi tilda yozsa, o'sha tilda javob bering (o'zbek, rus yoki ingliz)
-- Faqat chorvachilik va platforma mavzularida yordam bering
 - Doktor yoki veterinar maslahatiga muhtoj bo'lgan jiddiy holatlarda mutaxassisga murojaat qilishni tavsiya eting
 PROMPT;
     }
