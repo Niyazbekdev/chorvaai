@@ -21,11 +21,19 @@
     </div>
 
     <div class="absolute bottom-16 left-0 w-full flex flex-col sm:flex-row justify-center gap-5 z-20 px-5 opacity-0 anim-4">
-        <a href="{{ url('/register') }}"
-           class="px-12 py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
-                  hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
-            {{ __('welcome.start_selling') }}
-        </a>
+        @auth
+            <a href="{{ route('products.create') }}"
+               class="px-12 py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
+                      hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
+                {{ __('welcome.start_selling') }}
+            </a>
+        @else
+            <a href="{{ route('login') }}"
+               class="px-12 py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
+                      hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
+                {{ __('welcome.start_selling') }}
+            </a>
+        @endauth
         <a href="{{ url('/marketplace') }}"
            class="px-12 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/80 text-white rounded-full font-semibold
                   uppercase tracking-widest text-sm hover:bg-white hover:text-[#011f13] hover:-translate-y-1
@@ -48,9 +56,10 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Tasdiqlangan ishonch — Qo'ylar --}}
             <div class="relative h-96 rounded-2xl overflow-hidden shadow-lg group cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                     style="background-image: url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop')"></div>
+                     style="background-image: url('{{ asset('storage/products/qoy-0.jpg') }}')"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10
                             group-hover:from-emerald-900/90 group-hover:via-emerald-800/30 transition-all duration-300"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 text-white z-10">
@@ -62,23 +71,34 @@
                 </div>
             </div>
 
-            <div class="relative h-96 rounded-2xl overflow-hidden shadow-lg group cursor-pointer">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                     style="background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop')"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10
-                            group-hover:from-emerald-900/90 group-hover:via-emerald-800/30 transition-all duration-300"></div>
+            {{-- AI yordamchi --}}
+            <a href="{{ route('ai-assistant.index') }}" class="relative h-96 rounded-2xl overflow-hidden shadow-lg group cursor-pointer block">
+                <div class="absolute inset-0 transition-all duration-700"
+                     style="background: linear-gradient(135deg, #022c1a 0%, #065f46 40%, #064e3b 70%, #022c1a 100%)"></div>
+                {{-- Animated pattern --}}
+                <div class="absolute inset-0 opacity-10"
+                     style="background-image: radial-gradient(circle, #10b981 1px, transparent 1px); background-size: 28px 28px;"></div>
+                <div class="absolute inset-0 group-hover:opacity-80 opacity-0 transition-opacity duration-500"
+                     style="background: radial-gradient(ellipse at center, rgba(16,185,129,0.25) 0%, transparent 70%)"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 text-white z-10">
-                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-2xl mb-5 border border-white/30">
-                        🚚
+                    <div class="w-14 h-14 bg-emerald-500/30 backdrop-blur-sm rounded-full flex items-center justify-center mb-5 border border-emerald-400/40 group-hover:bg-emerald-500/50 transition-colors duration-300">
+                        <svg class="w-7 h-7 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/>
+                        </svg>
                     </div>
-                    <h3 class="text-2xl font-bold mb-2">{{ __('welcome.delivery_title') }}</h3>
-                    <p class="text-sm opacity-75">{{ __('welcome.delivery_desc') }}</p>
+                    <h3 class="text-2xl font-bold mb-2">{{ __('welcome.ai_title') }}</h3>
+                    <p class="text-sm opacity-75">{{ __('welcome.ai_desc') }}</p>
+                    <span class="inline-block mt-4 text-xs text-emerald-300 font-semibold tracking-wider uppercase group-hover:text-emerald-200 transition-colors">
+                        Sinab ko'rish →
+                    </span>
                 </div>
-            </div>
+            </a>
 
+            {{-- Adolatli narxlar — Sigirlar --}}
             <div class="relative h-96 rounded-2xl overflow-hidden shadow-lg group cursor-pointer">
                 <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                     style="background-image: url('https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=2070&auto=format&fit=crop')"></div>
+                     style="background-image: url('{{ asset('storage/products/sigir-0.jpg') }}')"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10
                             group-hover:from-emerald-900/90 group-hover:via-emerald-800/30 transition-all duration-300"></div>
                 <div class="absolute bottom-0 left-0 w-full p-8 text-white z-10">
@@ -132,47 +152,6 @@
                 <h3 class="text-lg font-bold mb-2">{{ __('welcome.step4_title') }}</h3>
                 <p class="text-gray-500 text-sm">{{ __('welcome.step4_desc') }}</p>
             </div>
-        </div>
-    </div>
-</section>
-
-{{-- ===== STAY CONNECTED ===== --}}
-<section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="font-serif text-4xl font-bold text-[#011f13] text-center mb-10">{{ __('welcome.stay_connected') }}</h2>
-
-        <div class="flex flex-col md:flex-row gap-5" style="height: auto; min-height: 320px;">
-            <div class="flex-1 relative overflow-hidden rounded-2xl cursor-pointer group" style="min-height: 300px;">
-                <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Livestock">
-                <div class="absolute inset-0 bg-[#011f13]/75 text-white flex flex-col justify-center p-8
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p class="text-lg mb-4">"Veterinary verification has never been faster. Our new digital health records are live."</p>
-                    <span class="text-sm opacity-75">@CHORVAI</span>
-                </div>
-            </div>
-
-            <div class="flex-1 bg-[#011f13] rounded-2xl flex flex-col justify-center p-8 text-white" style="min-height: 300px;">
-                <p class="text-lg mb-4">"When Little Dove sat down mid-walk, her owner knew something was off. A swift response from our vet team saved the day."</p>
-                <span class="text-sm opacity-75">@CHORVAI</span>
-            </div>
-
-            <div class="flex-1 relative overflow-hidden rounded-2xl cursor-pointer group" style="min-height: 300px;">
-                <img src="https://images.pexels.com/photos/4207906/pexels-photo-4207906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Farmer">
-                <div class="absolute inset-0 bg-[#011f13]/75 text-white flex flex-col justify-center p-8
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <p class="text-lg mb-4">"Empowering the next generation of agricultural entrepreneurs through technology."</p>
-                    <span class="text-sm opacity-75">@CHORVAI</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex justify-center gap-8 mt-10 text-gray-400 text-2xl">
-            <a href="#" class="hover:text-emerald-500 transition-colors">📸</a>
-            <a href="#" class="hover:text-emerald-500 transition-colors">📘</a>
-            <a href="#" class="hover:text-emerald-500 transition-colors">▶️</a>
-            <a href="#" class="hover:text-emerald-500 transition-colors">💼</a>
         </div>
     </div>
 </section>
