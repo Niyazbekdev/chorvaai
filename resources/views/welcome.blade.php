@@ -251,15 +251,15 @@
         <h2 class="font-serif text-4xl font-bold mb-4">{{ __('welcome.cta_title') }}</h2>
         <p class="text-white/75 text-xl mb-10">{{ __('welcome.cta_desc') }}</p>
         @auth
-            <a href="{{ url('/marketplace') }}"
+            <a href="{{ route('products.create') }}"
                class="inline-block px-12 py-4 bg-white text-emerald-800 rounded-full font-bold text-sm uppercase
                       tracking-widest hover:-translate-y-1 transition-transform duration-300 shadow-lg">
-                {{ __('welcome.go_to_marketplace') }}
+                {{ __('welcome.start_selling') }}
             </a>
         @else
             <a href="{{ url('/register') }}"
-               class="inline-block px-12 py-4 bg-emerald-500 text-white rounded-full font-bold text-sm uppercase
-                      tracking-widest hover:bg-emerald-400 hover:-translate-y-1 transition-all duration-300 shadow-lg">
+               class="inline-block px-12 py-4 bg-white text-emerald-800 rounded-full font-bold text-sm uppercase
+                      tracking-widest hover:-translate-y-1 transition-transform duration-300 shadow-lg">
                 {{ __('welcome.get_started') }}
             </a>
         @endauth

@@ -24,8 +24,8 @@ return [
     'step4_title'        => "4. Bitim",
     'step4_desc'         => "Xavfsiz to'lov va yetkazib berish tartiboti.",
     'stay_connected'     => "Aloqada bo'ling",
-    'cta_title'          => "Dehqonchilikni o'zgartrishga tayyormisiz?",
-    'cta_desc'           => "Minglab fermerlar va xaridorlar bilan chorva bozorimizdaga qo'shiling.",
+    'cta_title'          => "Chorva biznesingizni rivojlantirishga tayyormisiz?",
+    'cta_desc'           => "Minglab fermerlar va xaridorlar bilan O'zbekistoning yirik chorva bozoriga qo'shiling.",
     'go_to_marketplace'  => "Bozorga o'tish",
     'get_started'        => "Bugun boshlash",
 
