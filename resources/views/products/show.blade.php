@@ -197,10 +197,53 @@
                         </div>
                     </div>
 
-                    {{-- Map mini --}}
-                    @if($product->latitude && $product->longitude)
-                        <div class="mt-4 rounded-xl overflow-hidden" style="height:200px" id="miniMap"></div>
-                    @endif
+                    {{-- Location map --}}
+                    @php
+                        $address = collect([$product->city?->name, $product->region?->name])->filter()->implode(', ');
+                    @endphp
+                    <div class="mt-5 rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
+                        @if($product->latitude && $product->longitude)
+                            <div id="miniMap" style="height:280px"></div>
+                        @else
+                            <div class="flex items-center justify-center bg-gray-100" style="height:140px">
+                                <div class="text-center text-gray-400">
+                                    <div class="text-4xl mb-2">📍</div>
+                                    <p class="text-sm font-medium">{{ $address ?: __('products.no_location') }}</p>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="p-3 bg-white flex gap-2">
+                            @if($product->latitude && $product->longitude)
+                                <a href="https://www.google.com/maps/dir/?api=1&destination={{ $product->latitude }},{{ $product->longitude }}"
+                                   target="_blank" rel="noopener"
+                                   class="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white py-3.5 rounded-xl font-bold text-sm hover:bg-blue-700 active:bg-blue-800 transition select-none">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                    </svg>
+                                    Yo'l ko'rsatish
+                                </a>
+                                <a href="https://yandex.com/maps/?rtext=~{{ $product->latitude }},{{ $product->longitude }}&rtt=auto"
+                                   target="_blank" rel="noopener"
+                                   class="flex items-center justify-center gap-1.5 border border-gray-300 text-gray-700 px-4 py-3.5 rounded-xl font-semibold text-sm hover:bg-gray-50 active:bg-gray-100 transition select-none whitespace-nowrap">
+                                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    Yandex
+                                </a>
+                            @elseif($address)
+                                <a href="https://www.google.com/maps/search/{{ urlencode($address) }}"
+                                   target="_blank" rel="noopener"
+                                   class="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white py-3.5 rounded-xl font-bold text-sm hover:bg-blue-700 active:bg-blue-800 transition select-none">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    Xaritada ko'rish
+                                </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -418,13 +461,37 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const map = L.map('miniMap', { zoomControl: false, scrollWheelZoom: false })
-        .setView([{{ $product->latitude }}, {{ $product->longitude }}], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    L.marker([{{ $product->latitude }}, {{ $product->longitude }}])
+    const isMobile = window.innerWidth < 768;
+    const map = L.map('miniMap', {
+        scrollWheelZoom: false,
+        dragging: !isMobile,
+        tap: false,
+        zoomControl: !isMobile,
+    }).setView([{{ $product->latitude }}, {{ $product->longitude }}], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const icon = L.divIcon({
+        className: '',
+        html: '<div style="background:#2563eb;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)"></div>',
+        iconSize: [16, 16],
+        iconAnchor: [8, 8],
+    });
+
+    L.marker([{{ $product->latitude }}, {{ $product->longitude }}], { icon })
         .addTo(map)
-        .bindPopup('{{ e($product->name) }}')
+        .bindPopup('<b>{{ e($product->name) }}</b><br><span style="font-size:.8rem;color:#6b7280">{{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') }}</span>')
         .openPopup();
+
+    // Mobilda xaritaga turtish → Google Maps ochish
+    if (isMobile) {
+        document.getElementById('miniMap').addEventListener('click', function () {
+            window.open('https://www.google.com/maps/dir/?api=1&destination={{ $product->latitude }},{{ $product->longitude }}', '_blank');
+        });
+        document.getElementById('miniMap').style.cursor = 'pointer';
+    }
 });
 </script>
 @endpush
