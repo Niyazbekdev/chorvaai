@@ -90,7 +90,7 @@
                     <h3 class="text-2xl font-bold mb-2">{{ __('welcome.ai_title') }}</h3>
                     <p class="text-sm opacity-75">{{ __('welcome.ai_desc') }}</p>
                     <span class="inline-block mt-4 text-xs text-emerald-300 font-semibold tracking-wider uppercase group-hover:text-emerald-200 transition-colors">
-                        Sinab ko'rish →
+                        {{ __('welcome.try_it') }}
                     </span>
                 </div>
             </a>

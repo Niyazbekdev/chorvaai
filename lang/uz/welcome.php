@@ -8,6 +8,7 @@ return [
     'why_desc'           => "Chorva mollarini xavfsizroq, tezroq va shaffofroq savdo qilish tajribasini his eting.",
     'trust_title'        => "Tasdiqlangan ishonch",
     'trust_desc'         => "Har bir fermer tekshiriladi. Haqiqiy odamlar va haqiqiy chorva mollari bilan savdo qilishingizga ishonch hosil qilamiz.",
+    'try_it'             => "Sinab ko'rish →",
     'ai_title'           => "AI yordamchi",
     'ai_desc'            => "Sigir rasmini yuboring — AI zoti, taxminiy vazni, yoshi va bozor bahosini bir zumda aniqlaydi.",
     'delivery_title'     => "Xavfsiz yetkazib berish",

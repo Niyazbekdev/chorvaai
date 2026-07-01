@@ -203,9 +203,9 @@
                          style="height:300px"></div>
                     <p class="text-xs mt-1 {{ $errors->has('latitude') ? 'text-red-500 font-medium' : 'text-gray-400' }}" id="mapCoords">
                         @if(old('latitude') && old('longitude'))
-                            ✓ {{ __('products.selected') }} {{ old('latitude') }}, {{ old('longitude') }}
+                            {{ __('products.selected') }} {{ old('latitude') }}, {{ old('longitude') }}
                         @elseif($errors->has('latitude'))
-                            ⚠ Xaritadan aniq joyni belgilang
+                            {{ __('products.map_location_required') }}
                         @else
                             {{ __('products.map_point_hint') }}
                         @endif
