@@ -334,9 +334,9 @@
                         <div class="suggestion-card-title">Narxlar</div>
                         <div class="suggestion-card-desc">Sigir narxlari hozir qanday?</div>
                     </div>
-                    <div class="suggestion-card" onclick="sendSuggestion('Qo\'y parvarishlash bo\'yicha maslahat bering')">
+                    <div class="suggestion-card" onclick="sendSuggestion('Chorva mollarni parvarishlash bo\'yicha umumiy maslahat bering')">
                         <div class="suggestion-card-title">Parvarish</div>
-                        <div class="suggestion-card-desc">Qo'y parvarishlash bo'yicha maslahat bering</div>
+                        <div class="suggestion-card-desc">Chorva mollarni parvarishlash bo'yicha umumiy maslahat bering</div>
                     </div>
                     <div class="suggestion-card" onclick="sendSuggestion('Platformada qanday kategoriyalar bor?')">
                         <div class="suggestion-card-title">Kategoriyalar</div>
