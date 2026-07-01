@@ -14,6 +14,7 @@ class ProductService
     {
         return Product::with(['category', 'user', 'color', 'region', 'city', 'status'])
             ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
+            ->when(auth()->id(), fn ($q, $id) => $q->where('user_id', '!=', $id))
             ->when($filters['q'] ?? null, function ($q, $v) {
                 $term = '%' . $v . '%';
                 $q->where(function ($sub) use ($term) {
