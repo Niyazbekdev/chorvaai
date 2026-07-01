@@ -195,11 +195,17 @@
                 <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
 
                 <div>
-                    <p class="text-sm text-gray-500 mb-2">{{ __('products.map_pick_hint') }}</p>
-                    <div id="pickMap" class="rounded-xl overflow-hidden border border-gray-200" style="height:280px"></div>
-                    <p class="text-xs text-gray-400 mt-1" id="mapCoords">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('products.map_pick_hint') }} <span class="text-red-500">*</span>
+                    </label>
+                    <div id="pickMap"
+                         class="rounded-xl overflow-hidden border-2 {{ $errors->has('latitude') ? 'border-red-400' : 'border-gray-200' }}"
+                         style="height:300px"></div>
+                    <p class="text-xs mt-1 {{ $errors->has('latitude') ? 'text-red-500 font-medium' : 'text-gray-400' }}" id="mapCoords">
                         @if(old('latitude') && old('longitude'))
-                            {{ __('products.selected') }} {{ old('latitude') }}, {{ old('longitude') }}
+                            ✓ {{ __('products.selected') }} {{ old('latitude') }}, {{ old('longitude') }}
+                        @elseif($errors->has('latitude'))
+                            ⚠ Xaritadan aniq joyni belgilang
                         @else
                             {{ __('products.map_point_hint') }}
                         @endif

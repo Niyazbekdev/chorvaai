@@ -18,9 +18,8 @@ trait HasProductRules
             'weight'        => ['required', 'integer', 'min:0'],
             'region_id'     => ['required', 'exists:regions,id'],
             'city_id'       => ['required', 'exists:cities,id'],
-            'location'      => ['nullable', 'string', 'max:500'],
-            'latitude'      => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude'     => ['nullable', 'numeric', 'between:-180,180'],
+            'latitude'      => ['required', 'numeric', 'between:-90,90'],
+            'longitude'     => ['required', 'numeric', 'between:-180,180'],
 
             'images'        => ['nullable', 'array', 'max:8'],
             'images.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
@@ -40,6 +39,8 @@ trait HasProductRules
             'weight'        => 'vazn',
             'region_id'     => 'viloyat',
             'city_id'       => 'shahar/tuman',
+            'latitude'      => 'xaritada belgi',
+            'longitude'     => 'xaritada belgi',
             'images'        => 'rasmlar',
         ];
     }
