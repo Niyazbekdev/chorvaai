@@ -15,10 +15,10 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'description', 'price', 'image', 'images',
-        'category_id', 'user_id', 'type_id', 'color_id',
-        'breed', 'gender', 'health_status', 'contact_phone',
+        'category_id', 'user_id', 'color_id',
+        'gender', 'contact_phone',
         'age', 'weight', 'region_id', 'city_id', 'status_id',
-        'location', 'latitude', 'longitude', 'views_count',
+        'latitude', 'longitude', 'views_count',
     ];
 
     protected $casts = [
@@ -39,11 +39,6 @@ class Product extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function type(): BelongsTo
-    {
-        return $this->belongsTo(Type::class);
     }
 
     public function color(): BelongsTo

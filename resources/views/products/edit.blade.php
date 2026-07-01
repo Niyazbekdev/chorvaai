@@ -93,39 +93,12 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.breed') }}</label>
-                        <input type="text" name="breed" value="{{ old('breed', $product->breed) }}"
-                            class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm"
-                            placeholder="Masalan: Holstein">
-                    </div>
-
-                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.gender_label') }}</label>
                         <select name="gender"
                             class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm">
                             <option value="">{{ __('products.choose') }}</option>
                             <option value="erkak" @selected(old('gender', $product->gender) === 'erkak')>{{ __('products.male') }}</option>
                             <option value="urgochi" @selected(old('gender', $product->gender) === 'urgochi')>{{ __('products.female') }}</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.health_status') }}</label>
-                        <input type="text" name="health_status" value="{{ old('health_status', $product->health_status) }}"
-                            class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.type_label2') }}</label>
-                        <select name="type_id"
-                            class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm">
-                            <option value="">{{ __('products.choose') }}</option>
-                            @foreach($types as $type)
-                                <option value="{{ $type->id }}"
-                                    @selected(old('type_id', $product->type_id) == $type->id)>
-                                    {{ $type->name }}
-                                </option>
-                            @endforeach
                         </select>
                     </div>
 
@@ -210,12 +183,6 @@
                         </select>
                         @error('city_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.exact_location') }}</label>
-                    <input type="text" name="location" id="locationText" value="{{ old('location', $product->location) }}"
-                        class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm">
                 </div>
 
                 <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $product->latitude) }}">

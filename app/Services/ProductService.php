@@ -12,15 +12,13 @@ class ProductService
 {
     public function getFiltered(array $filters): LengthAwarePaginator
     {
-        return Product::with(['category', 'user', 'type', 'color', 'region', 'city', 'status'])
+        return Product::with(['category', 'user', 'color', 'region', 'city', 'status'])
             ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
             ->when($filters['q'] ?? null, function ($q, $v) {
                 $term = '%' . $v . '%';
                 $q->where(function ($sub) use ($term) {
                     $sub->where('name', 'like', $term)
                         ->orWhere('description', 'like', $term)
-                        ->orWhere('breed', 'like', $term)
-                        ->orWhere('location', 'like', $term)
                         ->orWhereHas('category', fn ($q2) => $q2->where('name', 'like', $term))
                         ->orWhereHas('region', fn ($q2) => $q2->where('name', 'like', $term))
                         ->orWhereHas('city', fn ($q2) => $q2->where('name', 'like', $term));
@@ -34,7 +32,6 @@ class ProductService
             })
             ->when($filters['region'] ?? null, fn ($q, $v) => $q->where('region_id', $v))
             ->when($filters['city'] ?? null, fn ($q, $v) => $q->where('city_id', $v))
-            ->when($filters['type'] ?? null, fn ($q, $v) => $q->where('type_id', $v))
             ->when($filters['price_from'] ?? null, fn ($q, $v) => $q->where('price', '>=', $v))
             ->when($filters['price_to'] ?? null, fn ($q, $v) => $q->where('price', '<=', $v))
             ->when($filters['gender'] ?? null, fn ($q, $v) => $q->where('gender', $v))

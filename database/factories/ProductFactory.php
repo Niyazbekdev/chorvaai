@@ -7,7 +7,6 @@ use App\Models\City;
 use App\Models\Color;
 use App\Models\Region;
 use App\Models\Status;
-use App\Models\Type;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -42,7 +41,6 @@ class ProductFactory extends Factory
             'image'       => null,
             'category_id' => fn () => Category::whereNotNull('parent_id')->inRandomOrder()->value('id'),
             'user_id'     => fn () => User::inRandomOrder()->value('id'),
-            'type_id'     => fn () => Type::inRandomOrder()->value('id'),
             'color_id'    => fn () => Color::inRandomOrder()->value('id'),
             'age'         => fake()->numberBetween(1, 12),
             'weight'      => fake()->numberBetween(30, 700),

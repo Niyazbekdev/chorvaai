@@ -167,12 +167,6 @@
 
                     {{-- Details grid --}}
                     <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                        @if($product->breed)
-                            <div class="stat-card">
-                                <p class="text-gray-400 text-xs mb-0.5">{{ __('products.breed') }}</p>
-                                <p class="font-semibold text-gray-800">{{ $product->breed }}</p>
-                            </div>
-                        @endif
                         @if($product->gender)
                             <div class="stat-card">
                                 <p class="text-gray-400 text-xs mb-0.5">{{ __('products.gender_label') }}</p>
@@ -189,28 +183,16 @@
                             <p class="text-gray-400 text-xs mb-0.5">{{ __('products.weight_label') }}</p>
                             <p class="font-semibold text-gray-800">{{ $product->weight }} kg</p>
                         </div>
-                        @if($product->type)
-                            <div class="stat-card">
-                                <p class="text-gray-400 text-xs mb-0.5">{{ __('products.type_label') }}</p>
-                                <p class="font-semibold text-gray-800">{{ $product->type->name }}</p>
-                            </div>
-                        @endif
                         @if($product->color)
                             <div class="stat-card">
                                 <p class="text-gray-400 text-xs mb-0.5">{{ __('products.color_label') }}</p>
                                 <p class="font-semibold text-gray-800">{{ $product->color->name }}</p>
                             </div>
                         @endif
-                        @if($product->health_status)
-                            <div class="stat-card col-span-2 sm:col-span-3">
-                                <p class="text-gray-400 text-xs mb-0.5">{{ __('products.health_label') }}</p>
-                                <p class="font-semibold text-gray-800">{{ $product->health_status }}</p>
-                            </div>
-                        @endif
                         <div class="stat-card col-span-2 sm:col-span-3">
                             <p class="text-gray-400 text-xs mb-0.5">{{ __('products.location_label') }}</p>
                             <p class="font-semibold text-gray-800">
-                                {{ collect([$product->city?->name, $product->region?->name, $product->location])->filter()->implode(', ') ?: '—' }}
+                                {{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') ?: '—' }}
                             </p>
                         </div>
                     </div>

@@ -11,7 +11,6 @@ use App\Models\Conversation;
 use App\Models\Product;
 use App\Models\Region;
 use App\Models\Status;
-use App\Models\Type;
 use App\Services\ProductService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +26,7 @@ class ProductController extends Controller
     public function index(Request $request): View
     {
         $products = $this->productService->getFiltered($request->only([
-            'q', 'category', 'region', 'city', 'type', 'price_from', 'price_to',
+            'q', 'category', 'region', 'city', 'price_from', 'price_to',
             'lat', 'lng', 'radius',
         ]));
 
@@ -35,7 +34,7 @@ class ProductController extends Controller
             ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
-            ->select(['id', 'name', 'price', 'image', 'images', 'latitude', 'longitude', 'location', 'region_id', 'city_id', 'category_id'])
+            ->select(['id', 'name', 'price', 'image', 'images', 'latitude', 'longitude', 'region_id', 'city_id', 'category_id'])
             ->limit(500)
             ->get()
             ->map(fn ($p) => [
@@ -62,7 +61,7 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
-        $product->load(['category', 'user', 'type', 'color', 'region', 'city', 'status']);
+        $product->load(['category', 'user', 'color', 'region', 'city', 'status']);
 
         Product::withoutTimestamps(fn () => $product->increment('views_count'));
 
@@ -135,10 +134,9 @@ class ProductController extends Controller
     {
         return [
             'categories' => Category::whereNull('parent_id')->with('children')->get(),
-            'types'      => Type::all(),
             'colors'     => Color::all(),
             'regions'    => Region::all(),
-            'cities'     => City::all(),
+            'cities'     => City::orderBy('name')->get(),
             'statuses'   => Status::where('name', '!=', 'Sotildi')->get(),
         ];
     }
