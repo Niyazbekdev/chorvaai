@@ -118,7 +118,7 @@
                 <form method="GET" action="{{ route('products.index') }}" class="flex items-center">
                     @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
                     @if(request('region'))   <input type="hidden" name="region"   value="{{ request('region') }}"> @endif
-                    @if(request('gender'))   <input type="hidden" name="gender"   value="{{ request('gender') }}"> @endif
+                    @if(request('city'))     <input type="hidden" name="city"     value="{{ request('city') }}"> @endif
                     @if(request('price_from')) <input type="hidden" name="price_from" value="{{ request('price_from') }}"> @endif
                     @if(request('price_to'))   <input type="hidden" name="price_to"   value="{{ request('price_to') }}"> @endif
                     <div class="relative flex items-center">
@@ -169,7 +169,7 @@
 
         {{-- Filter panel --}}
         <div id="filterBox"
-             class="{{ request()->anyFilled(['category','region','price_from','price_to','gender']) ? '' : 'hidden' }}
+             class="{{ request()->anyFilled(['category','region','city','price_from','price_to']) ? '' : 'hidden' }}
                     bg-white rounded-2xl shadow p-6 mb-6">
             <h2 class="text-base font-bold mb-4 text-gray-800">{{ __('products.filter_title') }}</h2>
             <form method="GET" action="{{ route('products.index') }}">
@@ -192,7 +192,7 @@
                         @endforeach
                     </select>
 
-                    <select name="region"
+                    <select name="region" id="regionSelect"
                         class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
                         <option value="">{{ __('products.all_regions') }}</option>
                         @foreach($regions as $region)
@@ -202,12 +202,40 @@
                         @endforeach
                     </select>
 
-                    <select name="gender"
+                    <select name="city" id="citySelect"
                         class="rounded-xl border-gray-300 text-sm focus:ring-green-500 focus:border-green-500">
-                        <option value="">{{ __('products.all_genders') }}</option>
-                        <option value="erkak"   @selected(request('gender') === 'erkak')>{{ __('products.male') }}</option>
-                        <option value="urgochi" @selected(request('gender') === 'urgochi')>{{ __('products.female') }}</option>
+                        <option value="">{{ __('products.all_cities') }}</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city->id }}"
+                                data-region="{{ $city->region_id }}"
+                                @selected(request('city') == $city->id)>
+                                {{ $city->name }}
+                            </option>
+                        @endforeach
                     </select>
+
+                    <script>
+                    (function () {
+                        const regionSel = document.getElementById('regionSelect');
+                        const citySel   = document.getElementById('citySelect');
+                        const allOpts   = Array.from(citySel.querySelectorAll('option'));
+
+                        function filterCities(regionId) {
+                            allOpts.forEach(opt => {
+                                if (!opt.value) return; // "Barcha tumanlar"
+                                opt.hidden = regionId && opt.dataset.region != regionId;
+                            });
+                            // tanlangan shahar boshqa viloyatga tegishli bo'lsa reset
+                            const sel = citySel.querySelector('option:checked');
+                            if (sel && sel.value && sel.dataset.region != regionId && regionId) {
+                                citySel.value = '';
+                            }
+                        }
+
+                        regionSel.addEventListener('change', () => filterCities(regionSel.value));
+                        filterCities(regionSel.value); // sahifa yuklanganda ham ishlaydi
+                    })();
+                    </script>
 
                     <div class="flex gap-2">
                         <input type="number" name="price_from" placeholder="{{ __('products.price_from') }}"

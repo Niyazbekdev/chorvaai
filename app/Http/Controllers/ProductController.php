@@ -27,7 +27,7 @@ class ProductController extends Controller
     public function index(Request $request): View
     {
         $products = $this->productService->getFiltered($request->only([
-            'q', 'category', 'region', 'city', 'type', 'price_from', 'price_to', 'gender',
+            'q', 'category', 'region', 'city', 'type', 'price_from', 'price_to',
             'lat', 'lng', 'radius',
         ]));
 
@@ -56,6 +56,7 @@ class ProductController extends Controller
             'mapProducts' => $mapProducts,
             'categories'  => Category::with('children')->whereNull('parent_id')->get(),
             'regions'     => Region::all(),
+            'cities'      => City::orderBy('name')->get(),
         ]);
     }
 
