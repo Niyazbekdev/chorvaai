@@ -2,16 +2,6 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-/* ── View tabs ── */
-.view-tab {
-    padding: 8px 20px; border-radius: 999px;
-    font-size: .85rem; font-weight: 600;
-    cursor: pointer; transition: all .2s;
-    border: 1.5px solid #d1d5db;
-    background: white; color: #374151;
-}
-.view-tab.active { background: #10b981; color: white; border-color: #10b981; }
-.view-tab:not(.active):hover { border-color: #10b981; color: #10b981; }
 
 /* ── Map container ── */
 #map-view {
@@ -143,11 +133,10 @@
                     class="border border-green-600 text-green-600 px-4 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm">
                     {{ __('products.filter_btn') }}
                 </button>
-                <button class="view-tab active" id="btn-cards" onclick="setView('cards')">
-                    {{ __('products.cards_view') }}
-                </button>
-                <button class="view-tab" id="btn-map" onclick="setView('map')">
-                    {{ __('products.map_view') }}
+                <button id="btn-toggle-view" onclick="toggleView()"
+                    class="border border-green-600 text-green-600 px-4 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm flex items-center gap-1.5">
+                    <span id="toggle-icon">🗺</span>
+                    <span id="toggle-label">{{ __('products.map_view') }}</span>
                 </button>
             </div>
         </div>
@@ -443,19 +432,22 @@ function initMap() {
         MAP_PRODUCTS.length + ' ' + ON_MAP_TEXT;
 }
 
-// ── Tab switch ────────────────────────────────────────────
+// ── View toggle ───────────────────────────────────────────
+let currentView = 'cards';
+
 function setView(v) {
-    const cardsEl  = document.getElementById('cards-view');
-    const mapEl    = document.getElementById('map-view');
-    const btnCards = document.getElementById('btn-cards');
-    const btnMap   = document.getElementById('btn-map');
+    const cardsEl = document.getElementById('cards-view');
+    const mapEl   = document.getElementById('map-view');
+    const icon    = document.getElementById('toggle-icon');
+    const label   = document.getElementById('toggle-label');
+
+    currentView = v;
 
     if (v === 'map') {
         cardsEl.classList.add('hidden');
         mapEl.classList.remove('hidden');
-        btnCards.classList.remove('active');
-        btnMap.classList.add('active');
-        // Wait for display before init (Leaflet needs visible container)
+        icon.textContent  = '▦';
+        label.textContent = '{{ __('products.cards_view') }}';
         requestAnimationFrame(() => {
             if (!mapInstance) initMap();
             else mapInstance.invalidateSize();
@@ -463,12 +455,15 @@ function setView(v) {
     } else {
         cardsEl.classList.remove('hidden');
         mapEl.classList.add('hidden');
-        btnCards.classList.add('active');
-        btnMap.classList.remove('active');
+        icon.textContent  = '🗺';
+        label.textContent = '{{ __('products.map_view') }}';
     }
 }
 
-// ── Auto-open map if ?view=map ────────────────────────────
+function toggleView() {
+    setView(currentView === 'cards' ? 'map' : 'cards');
+}
+
 @if(request('view') === 'map')
 document.addEventListener('DOMContentLoaded', () => setView('map'));
 @endif
