@@ -342,7 +342,7 @@
 
         {{-- Primary CTA --}}
         <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">
-            + {{ __('nav.post_ad') }}
+            {{ __('nav.post_ad') }}
         </a>
 
         @auth

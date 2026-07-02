@@ -4,6 +4,11 @@
     class="fixed z-50"
     :class="isMobile && open ? 'inset-0 flex flex-col justify-end' : 'bottom-6 right-6 flex flex-col items-end'"
 >
+    {{-- Backdrop overlay (mobile only, when open) --}}
+    <div x-show="isMobile && open"
+         class="absolute inset-0"
+         style="background:rgba(0,0,0,0.55)"
+         @click="open = false"></div>
     {{-- Chat panel --}}
     <div
         x-show="open"
@@ -13,7 +18,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-        class="bg-white flex flex-col overflow-hidden"
+        class="bg-white flex flex-col overflow-hidden relative z-10"
         :class="isMobile
             ? 'w-full rounded-t-2xl shadow-2xl border border-gray-200'
             : 'mb-3 w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200'"
