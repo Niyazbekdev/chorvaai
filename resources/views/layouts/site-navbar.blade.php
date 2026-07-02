@@ -8,7 +8,7 @@
     height: 76px; display: flex; align-items: center; justify-content: space-between;
     max-width: 1280px; margin: 0 auto; padding: 0 40px;
 }
-.site-logo { color: white; text-decoration: none; font-size: 26px; font-weight: 700; }
+.site-logo { color: white; text-decoration: none; font-size: 26px; font-weight: 700; flex-shrink: 0; }
 .site-logo span { color: #10b981; }
 .site-links { display: flex; gap: 24px; align-items: center; }
 .site-links a { color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: .85rem; letter-spacing: .04em; }
@@ -93,9 +93,99 @@
     box-shadow: 0 1px 4px rgba(0,0,0,.18);
 }
 .lang-flag { font-size: 1rem; line-height: 1; }
+
+/* ── Hamburger (mobile only) ── */
+.mobile-menu-btn {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    color: white; padding: 6px; border-radius: 8px;
+    align-items: center; justify-content: center;
+    transition: background .15s;
+    flex-shrink: 0;
+}
+.mobile-menu-btn:hover { background: rgba(255,255,255,.1); }
+
+/* ── Mobile nav panel ── */
+.mobile-nav {
+    background: rgba(1,31,19,.97); backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding: 8px 20px 24px;
+    overflow-y: auto;
+    max-height: calc(100dvh - 64px);
+}
+.mobile-nav-link {
+    display: flex; align-items: center; gap: 10px;
+    color: white; text-decoration: none; font-weight: 600;
+    font-size: .95rem; padding: 14px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    text-transform: uppercase; letter-spacing: .04em;
+    transition: color .15s;
+}
+.mobile-nav-link:hover { color: #10b981; }
+.mobile-nav-link:last-child { border-bottom: none; }
+.mobile-nav-ai { color: #6ee7b7 !important; }
+.mobile-nav-post {
+    display: block; text-align: center;
+    background: #10b981; color: white !important;
+    padding: 13px; border-radius: 12px;
+    font-weight: 700; font-size: .9rem;
+    text-decoration: none; margin-top: 4px;
+    text-transform: uppercase; letter-spacing: .05em;
+}
+.mobile-nav-post:hover { background: #059669; }
+.mobile-user-header {
+    padding: 16px 4px 12px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    margin-bottom: 4px;
+}
+.mobile-nav-secondary {
+    display: flex; align-items: center; gap: 10px;
+    color: rgba(255,255,255,.75); text-decoration: none;
+    font-size: .9rem; font-weight: 500;
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    transition: color .15s;
+}
+.mobile-nav-secondary:hover { color: white; }
+.mobile-nav-logout {
+    display: block; width: 100%; text-align: center;
+    background: rgba(220,38,38,.15); color: #f87171;
+    border: 1px solid rgba(220,38,38,.3);
+    padding: 13px; border-radius: 12px;
+    font-weight: 700; font-size: .9rem; cursor: pointer;
+    margin-top: 12px; transition: background .15s;
+}
+.mobile-nav-logout:hover { background: rgba(220,38,38,.25); }
+.mobile-nav-login {
+    display: block; text-align: center;
+    background: #10b981; color: white;
+    padding: 13px; border-radius: 12px;
+    font-weight: 700; font-size: .9rem;
+    text-decoration: none; margin-top: 12px;
+}
+
+/* ── Responsive breakpoints ── */
+@media (max-width: 900px) {
+    .site-navbar-inner { padding: 0 20px; }
+    .site-links { gap: 14px; }
+    .site-links a { font-size: .78rem; }
+}
+
+@media (max-width: 768px) {
+    .site-navbar-inner { padding: 0 16px; height: 64px; }
+    .site-links { display: none; }
+    .site-auth .site-register,
+    .site-auth .profile-wrap { display: none; }
+    .mobile-menu-btn { display: flex; }
+}
+
+@media (min-width: 769px) {
+    .mobile-nav { display: none !important; }
+    .mobile-menu-btn { display: none !important; }
+}
 </style>
 
-<header class="site-navbar">
+<header class="site-navbar" x-data="{ mobileOpen: false }" @keydown.escape.window="mobileOpen = false">
     <div class="site-navbar-inner">
         <a href="{{ url('/') }}" class="site-logo">Chorva<span>AI</span></a>
 
@@ -169,7 +259,100 @@
                     </div>
                 </div>
             @endauth
+
+            {{-- Hamburger button (mobile only) --}}
+            <button class="mobile-menu-btn" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()">
+                <svg x-show="!mobileOpen" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                <svg x-show="mobileOpen" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
+    </div>
+
+    {{-- Mobile menu --}}
+    <div class="mobile-nav"
+         x-show="mobileOpen"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-1"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-1">
+
+        @auth
+            {{-- User info --}}
+            <div class="mobile-user-header">
+                <p style="color:white;font-weight:700;font-size:1rem">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
+                <p style="color:rgba(255,255,255,.5);font-size:.82rem;margin-top:2px">{{ Auth::user()->phone }}</p>
+            </div>
+        @endauth
+
+        {{-- Nav links --}}
+        <a href="{{ url('/marketplace') }}" class="mobile-nav-link" @click="mobileOpen = false">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            {{ __('nav.marketplace') }}
+        </a>
+        <a href="{{ route('ai-assistant.index') }}" class="mobile-nav-link mobile-nav-ai" @click="mobileOpen = false">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+            {{ __('nav.ai_assistant') }}
+        </a>
+        <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {{ __('nav.about') }}
+        </a>
+        <a href="{{ url('/') }}#contact" class="mobile-nav-link" @click="mobileOpen = false">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            {{ __('nav.contact') }}
+        </a>
+
+        @auth
+            {{-- Auth quick links --}}
+            <a href="{{ route('profile.edit') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                {{ __('nav.profile_settings') }}
+            </a>
+            <a href="{{ route('profile.my-products') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                {{ __('nav.my_ads') }}
+            </a>
+            <a href="{{ route('profile.favorites') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                {{ __('nav.favorites') }}
+                @php $__favCount = auth()->user()?->favorites()->count() ?? 0; @endphp
+                @if($__favCount > 0)
+                    <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:auto">{{ $__favCount }}</span>
+                @endif
+            </a>
+            <a href="{{ route('conversations.index') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                {{ __('nav.messages') }}
+                @php
+                    $__unread = \App\Models\Message::whereHas('conversation', fn($q) =>
+                        $q->where('buyer_id', auth()->id())->orWhere('seller_id', auth()->id())
+                    )->where('sender_id', '!=', auth()->id())->whereNull('read_at')->count();
+                @endphp
+                @if($__unread > 0)
+                    <span style="background:#2563eb;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:auto">{{ $__unread }}</span>
+                @endif
+            </a>
+        @endauth
+
+        {{-- Primary CTA --}}
+        <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">
+            + {{ __('nav.post_ad') }}
+        </a>
+
+        @auth
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="mobile-nav-logout">{{ __('nav.logout') }}</button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="mobile-nav-login" @click="mobileOpen = false">{{ __('nav.login') }}</a>
+        @endauth
     </div>
 </header>
 

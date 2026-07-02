@@ -8,10 +8,14 @@
 .contact-reveal { animation: fadeIn .3s ease; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
 .stat-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:10px 14px; }
+.product-gallery-main { height: 420px; }
+@media (max-width: 640px) {
+    .product-gallery-main { height: 260px; }
+}
 </style>
 @endpush
 
-<div class="min-h-screen bg-gray-50 pt-24 pb-16"
+<div class="min-h-screen bg-gray-50 pt-16 sm:pt-24 pb-16"
      x-data="{
         activeImg: 0,
         favorited: {{ $isFavorited ? 'true' : 'false' }},
@@ -104,7 +108,7 @@
                 @endphp
                 <div class="bg-white rounded-2xl shadow overflow-hidden">
                     {{-- Main image --}}
-                    <div class="relative bg-gradient-to-br from-green-100 to-green-200" style="height:420px">
+                    <div class="relative bg-gradient-to-br from-green-100 to-green-200 product-gallery-main">
                         @if(count($gallery) > 0)
                             @foreach($gallery as $i => $img)
                                 <img src="{{ Storage::url($img) }}" alt="{{ $product->name }}"

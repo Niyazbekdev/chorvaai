@@ -94,51 +94,53 @@
 </style>
 @endpush
 
-<div class="min-h-screen bg-gray-50 pt-24">
+<div class="min-h-screen bg-gray-50 pt-16 sm:pt-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">{{ __('products.page_title') }}</h1>
-                <p class="text-gray-500 mt-1">{{ __('products.subtitle') }}</p>
+        <div class="mb-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __('products.page_title') }}</h1>
+                    <p class="text-gray-500 mt-0.5 text-sm sm:text-base">{{ __('products.subtitle') }}</p>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <button onclick="document.getElementById('filterBox').classList.toggle('hidden')"
+                        class="border border-green-600 text-green-600 px-3 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                        <span class="hidden sm:inline">{{ __('products.filter_btn') }}</span>
+                    </button>
+                    <button id="btn-toggle-view" onclick="toggleView()"
+                        class="border border-green-600 text-green-600 px-3 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm flex items-center gap-1.5">
+                        <span id="toggle-icon">🗺</span>
+                        <span class="hidden sm:inline" id="toggle-label">{{ __('products.map_view') }}</span>
+                    </button>
+                </div>
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                {{-- Compact search --}}
-                <form method="GET" action="{{ route('products.index') }}" class="flex items-center">
-                    @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
-                    @if(request('region'))   <input type="hidden" name="region"   value="{{ request('region') }}"> @endif
-                    @if(request('city'))     <input type="hidden" name="city"     value="{{ request('city') }}"> @endif
-                    @if(request('price_from')) <input type="hidden" name="price_from" value="{{ request('price_from') }}"> @endif
-                    @if(request('price_to'))   <input type="hidden" name="price_to"   value="{{ request('price_to') }}"> @endif
-                    <div class="relative flex items-center">
-                        <svg class="absolute left-3 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
-                        </svg>
-                        <input type="text" name="q" value="{{ request('q') }}"
-                               placeholder="{{ __('products.search_placeholder') }}"
-                               class="pl-9 {{ request('q') ? 'pr-7' : 'pr-3' }} py-2 w-52 rounded-xl border border-gray-200 bg-white shadow-sm text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
-                        @if(request('q'))
-                            <a href="{{ route('products.index', request()->except('q')) }}"
-                               class="absolute right-2 text-gray-400 hover:text-gray-600 transition">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </a>
-                        @endif
-                    </div>
-                </form>
-
-                <button onclick="document.getElementById('filterBox').classList.toggle('hidden')"
-                    class="border border-green-600 text-green-600 px-4 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm">
-                    {{ __('products.filter_btn') }}
-                </button>
-                <button id="btn-toggle-view" onclick="toggleView()"
-                    class="border border-green-600 text-green-600 px-4 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm flex items-center gap-1.5">
-                    <span id="toggle-icon">🗺</span>
-                    <span id="toggle-label">{{ __('products.map_view') }}</span>
-                </button>
-            </div>
+            {{-- Search - full width on mobile --}}
+            <form method="GET" action="{{ route('products.index') }}" class="flex items-center w-full">
+                @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+                @if(request('region'))   <input type="hidden" name="region"   value="{{ request('region') }}"> @endif
+                @if(request('city'))     <input type="hidden" name="city"     value="{{ request('city') }}"> @endif
+                @if(request('price_from')) <input type="hidden" name="price_from" value="{{ request('price_from') }}"> @endif
+                @if(request('price_to'))   <input type="hidden" name="price_to"   value="{{ request('price_to') }}"> @endif
+                <div class="relative flex items-center w-full">
+                    <svg class="absolute left-3 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
+                    </svg>
+                    <input type="text" name="q" value="{{ request('q') }}"
+                           placeholder="{{ __('products.search_placeholder') }}"
+                           class="pl-9 {{ request('q') ? 'pr-7' : 'pr-3' }} py-2.5 w-full rounded-xl border border-gray-200 bg-white shadow-sm text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+                    @if(request('q'))
+                        <a href="{{ route('products.index', request()->except('q')) }}"
+                           class="absolute right-2 text-gray-400 hover:text-gray-600 transition">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            </form>
         </div>
 
         {{-- Search result hint --}}
@@ -258,10 +260,10 @@
                     <p class="text-sm mt-1">{{ __('products.no_results_hint') }}</p>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
                     @foreach($products as $product)
                         <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden flex flex-col group">
-                            <div class="h-48 bg-gradient-to-br from-green-100 to-green-200 overflow-hidden relative">
+                            <div class="h-36 sm:h-48 bg-gradient-to-br from-green-100 to-green-200 overflow-hidden relative">
                                 @if($product->primary_image_url)
                                     <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
@@ -284,29 +286,26 @@
                                 @endif
                             </div>
 
-                            <div class="p-4 flex flex-col flex-1">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-semibold truncate max-w-[130px]">
+                            <div class="p-3 sm:p-4 flex flex-col flex-1">
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-semibold truncate max-w-[90px] sm:max-w-[130px]">
                                         {{ $product->category?->name ?? '—' }}
                                     </span>
-                                    <span class="text-xs text-gray-400 whitespace-nowrap">
+                                    <span class="text-xs text-gray-400 whitespace-nowrap hidden sm:inline">
                                         {{ $product->created_at->diffForHumans() }}
                                     </span>
                                 </div>
 
-                                <h3 class="text-base font-bold text-gray-900 leading-tight line-clamp-2">{{ $product->name }}</h3>
-                                @if($product->breed)
-                                    <p class="text-xs text-gray-400 mt-0.5 truncate">{{ $product->breed }}</p>
-                                @endif
-                                <p class="text-green-600 font-bold text-xl mt-1">{{ $product->formatted_price }}</p>
+                                <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight line-clamp-2">{{ $product->name }}</h3>
+                                <p class="text-green-600 font-bold text-base sm:text-xl mt-1">{{ $product->formatted_price }}</p>
 
-                                <div class="mt-2 text-gray-500 text-xs space-y-0.5">
-                                    <p>📍 {{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') ?: '—' }}</p>
-                                    <p>⚖️ {{ $product->weight }} kg &nbsp;·&nbsp; {{ $product->age }} {{ __('products.age_unit') }}</p>
+                                <div class="mt-1 text-gray-500 text-xs space-y-0.5">
+                                    <p class="truncate">📍 {{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') ?: '—' }}</p>
+                                    <p class="hidden sm:block">⚖️ {{ $product->weight }} kg · {{ $product->age }} {{ __('products.age_unit') }}</p>
                                 </div>
 
                                 <a href="{{ route('products.show', $product) }}"
-                                    class="mt-4 block text-center border border-green-600 text-green-600 py-2 rounded-xl text-sm font-semibold hover:bg-green-600 hover:text-white transition">
+                                    class="mt-3 block text-center border border-green-600 text-green-600 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold hover:bg-green-600 hover:text-white transition active:bg-green-700 active:text-white">
                                     {{ __('products.view_detail') }}
                                 </a>
                             </div>

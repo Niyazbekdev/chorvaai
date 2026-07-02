@@ -9,33 +9,33 @@
          style="background: linear-gradient(to bottom, rgba(1,31,19,.85) 0%, rgba(1,31,19,.4) 50%, rgba(1,31,19,.9) 100%)">
     </div>
 
-    <div class="relative z-10 h-full flex flex-col justify-center px-[5%] max-w-[900px] text-white">
-        <h1 class="font-serif text-5xl lg:text-6xl font-bold leading-tight mb-6 opacity-0 anim-1"
+    <div class="relative z-10 h-full flex flex-col justify-center px-5 sm:px-[5%] max-w-[900px] text-white">
+        <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 opacity-0 anim-1"
             style="text-shadow: 0 2px 10px rgba(0,0,0,.3)">
             {{ __('welcome.hero_title') }}
         </h1>
         <div class="w-20 h-[3px] bg-emerald-500 mb-6 opacity-0 anim-2"></div>
-        <p class="text-xl font-light leading-relaxed max-w-xl opacity-0 anim-3">
+        <p class="text-base sm:text-xl font-light leading-relaxed max-w-xl opacity-0 anim-3">
             {{ __('welcome.hero_desc') }}
         </p>
     </div>
 
-    <div class="absolute bottom-16 left-0 w-full flex flex-col sm:flex-row justify-center gap-5 z-20 px-5 opacity-0 anim-4">
+    <div class="absolute bottom-8 sm:bottom-16 left-0 w-full flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 z-20 px-5 opacity-0 anim-4">
         @auth
             <a href="{{ route('products.create') }}"
-               class="px-12 py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
+               class="px-8 sm:px-12 py-3.5 sm:py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
                       hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
                 {{ __('welcome.start_selling') }}
             </a>
         @else
             <a href="{{ route('login') }}"
-               class="px-12 py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
+               class="px-8 sm:px-12 py-3.5 sm:py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
                       hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
                 {{ __('welcome.start_selling') }}
             </a>
         @endauth
         <a href="{{ url('/marketplace') }}"
-           class="px-12 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/80 text-white rounded-full font-semibold
+           class="px-8 sm:px-12 py-3.5 sm:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/80 text-white rounded-full font-semibold
                   uppercase tracking-widest text-sm hover:bg-white hover:text-[#011f13] hover:-translate-y-1
                   transition-all duration-300 shadow-lg text-center">
             {{ __('welcome.browse_livestock') }}

@@ -1,7 +1,8 @@
 <div
     x-data="aiChat()"
     x-init="init()"
-    class="fixed bottom-6 right-6 z-50 flex flex-col items-end"
+    class="fixed z-50"
+    :class="isMobile && open ? 'inset-0 flex flex-col justify-end' : 'bottom-6 right-6 flex flex-col items-end'"
 >
     {{-- Chat panel --}}
     <div
@@ -12,8 +13,11 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-        class="mb-3 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
-        style="height: 480px;"
+        class="bg-white flex flex-col overflow-hidden"
+        :class="isMobile
+            ? 'w-full rounded-t-2xl shadow-2xl border border-gray-200'
+            : 'mb-3 w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200'"
+        :style="isMobile ? 'height: 85dvh' : 'height: 480px'"
     >
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-3 bg-green-600 text-white">
@@ -120,8 +124,8 @@
         </div>
     </div>
 
-    {{-- Toggle button --}}
-    <div class="relative">
+    {{-- Toggle button (hidden on mobile when open) --}}
+    <div class="relative" x-show="!isMobile || !open">
         {{-- To'lqin halqalari (faqat yopiq holatda) --}}
         <span x-show="!open" class="absolute inset-0 rounded-full bg-green-500 ai-ripple-1" aria-hidden="true"></span>
         <span x-show="!open" class="absolute inset-0 rounded-full bg-green-500 ai-ripple-2" aria-hidden="true"></span>
@@ -175,9 +179,12 @@ function aiChat() {
         input: '',
         loading: false,
         unread: 0,
+        isMobile: window.innerWidth < 640,
 
         init() {
             this.loadHistory();
+            const onResize = () => { this.isMobile = window.innerWidth < 640; };
+            window.addEventListener('resize', onResize);
         },
 
         async loadHistory() {
