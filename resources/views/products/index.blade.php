@@ -3,6 +3,33 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 
+/* ── Filter bottom sheet (mobile) ── */
+@media (max-width: 767px) {
+    #filterBox {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 9998;
+        border-radius: 20px 20px 0 0;
+        max-height: 82dvh;
+        overflow-y: auto;
+        margin: 0;
+        box-shadow: 0 -4px 30px rgba(0,0,0,.18);
+        transition: transform .28s ease, opacity .28s ease;
+    }
+    #filterBox.hidden {
+        display: block !important;
+        transform: translateY(110%);
+        opacity: 0;
+        pointer-events: none;
+    }
+    #filter-backdrop {
+        display: none;
+        position: fixed; inset: 0; z-index: 9997;
+        background: rgba(0,0,0,.45);
+    }
+    #filter-backdrop.open { display: block; }
+}
+
 /* ── Map container ── */
 #map-view {
     height: calc(100vh - 230px);
@@ -105,7 +132,7 @@
                     <p class="text-gray-500 mt-0.5 text-sm sm:text-base">{{ __('products.subtitle') }}</p>
                 </div>
                 <div class="flex items-center gap-2 flex-shrink-0">
-                    <button onclick="document.getElementById('filterBox').classList.toggle('hidden')"
+                    <button onclick="toggleFilter()"
                         class="border border-green-600 text-green-600 px-3 py-2 rounded-xl font-semibold hover:bg-green-50 text-sm flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
                         <span class="hidden sm:inline">{{ __('products.filter_btn') }}</span>
@@ -158,11 +185,21 @@
             </div>
         @endif
 
+        {{-- Filter backdrop (mobile only) --}}
+        <div id="filter-backdrop" onclick="toggleFilter()"></div>
+
         {{-- Filter panel --}}
         <div id="filterBox"
              class="{{ request()->anyFilled(['category','region','city','price_from','price_to']) ? '' : 'hidden' }}
                     bg-white rounded-2xl shadow p-6 mb-6">
-            <h2 class="text-base font-bold mb-4 text-gray-800">{{ __('products.filter_title') }}</h2>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-bold text-gray-800">{{ __('products.filter_title') }}</h2>
+                <button onclick="toggleFilter()" class="sm:hidden text-gray-400 hover:text-gray-600 p-1 -mr-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
             <form method="GET" action="{{ route('products.index') }}">
                 @if(request('q')) <input type="hidden" name="q" value="{{ request('q') }}"> @endif
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -339,6 +376,31 @@
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// ── Filter toggle ─────────────────────────────────────────
+function toggleFilter() {
+    const box      = document.getElementById('filterBox');
+    const backdrop = document.getElementById('filter-backdrop');
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+        const isHidden = box.classList.contains('hidden');
+        box.classList.toggle('hidden');
+        backdrop.classList.toggle('open', isHidden);
+        // prevent body scroll when filter open on mobile
+        document.body.style.overflow = isHidden ? 'hidden' : '';
+    } else {
+        box.classList.toggle('hidden');
+    }
+}
+
+// ── Close filter on Escape ────────────────────────────────
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        const box = document.getElementById('filterBox');
+        if (!box.classList.contains('hidden')) toggleFilter();
+    }
+});
+
 const MAP_PRODUCTS = @json($mapProducts);
 const VIEW_DETAIL_TEXT = '{{ __('products.view_detail') }}';
 const ON_MAP_TEXT = '{{ __('products.on_map') }}';
