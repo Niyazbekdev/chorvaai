@@ -5,14 +5,12 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Color;
-use App\Models\Product;
 use App\Models\Region;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\Type;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -31,9 +29,6 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Mahsulotlar (rasmli)...');
         $this->call(ProductSeeder::class);
-
-        $this->command->info('Qo\'shimcha fake mahsulotlar (factory)...');
-        Product::factory(10)->create();
 
         $this->command->info('Tayyor!');
     }
