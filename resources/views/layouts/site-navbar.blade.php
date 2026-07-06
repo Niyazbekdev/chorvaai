@@ -164,6 +164,11 @@
     text-decoration: none; margin-top: 12px;
 }
 
+/* ── Main content offset below fixed navbar ── */
+.site-main-offset { padding-top: 76px; }
+/* Hero sections that should fill viewport behind the navbar */
+.site-hero-fullscreen { margin-top: -76px; }
+
 /* ── Responsive breakpoints ── */
 @media (max-width: 900px) {
     .site-navbar-inner { padding: 0 20px; }
@@ -177,6 +182,8 @@
     .site-auth .site-register,
     .site-auth .profile-wrap { display: none; }
     .mobile-menu-btn { display: flex; }
+    .site-main-offset { padding-top: 64px; }
+    .site-hero-fullscreen { margin-top: -64px; }
 }
 
 @media (min-width: 769px) {

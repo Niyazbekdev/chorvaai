@@ -1,7 +1,7 @@
 <x-app-layout>
 
 {{-- ===== HERO ===== --}}
-<section class="relative h-screen overflow-hidden bg-[#011f13]">
+<section class="relative h-screen overflow-hidden bg-[#011f13] site-hero-fullscreen">
     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[10s] ease-in-out hover:scale-105"
          style="background-image: url('https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=2070&auto=format&fit=crop')">
     </div>

@@ -22,7 +22,7 @@
                     </div>
                 </header>
             @endisset
-            <main>{{ $slot }}</main>
+            <main class="site-main-offset">{{ $slot }}</main>
         </div>
         {{-- ===== FOOTER ===== --}}
         <footer style="background:#011f13; border-top:1px solid rgba(255,255,255,0.06);">
