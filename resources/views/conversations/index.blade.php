@@ -1,10 +1,7 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('conversations.title') }}</h2>
-    </x-slot>
-
-    <div class="py-10 bg-gray-50 min-h-screen">
+    <div class="pt-4 pb-10 bg-gray-50 min-h-screen">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">{{ __('conversations.title') }}</h2>
 
             @if($conversations->isEmpty())
                 <div class="bg-white rounded-2xl shadow p-16 text-center text-gray-400">
