@@ -1,28 +1,30 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <a href="{{ route('conversations.index') }}" class="text-gray-400 hover:text-gray-600 text-lg">←</a>
-                @php $other = $conversation->other($user); @endphp
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
-                            flex items-center justify-center text-white font-bold text-base flex-shrink-0">
-                    {{ mb_strtoupper(mb_substr($other->first_name, 0, 1)) }}
-                </div>
-                <div>
-                    <p class="font-semibold text-gray-900 text-base leading-tight">
-                        {{ $other->first_name }} {{ $other->last_name }}
-                    </p>
-                    <p class="text-xs text-gray-400">{{ $other->phone }}</p>
-                </div>
-            </div>
-            <a href="{{ route('products.show', $conversation->product) }}"
-               class="text-xs text-green-600 font-medium hover:underline hidden sm:block truncate max-w-xs">
-                📦 {{ $conversation->product?->name }}
-            </a>
-        </div>
-    </x-slot>
-
     <div class="bg-gray-50 min-h-screen">
+
+        {{-- Chat header bar --}}
+        @php $other = $conversation->other($user); @endphp
+        <div class="bg-white border-b border-gray-200 sticky top-[64px] sm:top-[76px] z-40">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('conversations.index') }}" class="text-gray-400 hover:text-gray-600 text-lg">←</a>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-emerald-600
+                                flex items-center justify-center text-white font-bold text-base flex-shrink-0">
+                        {{ mb_strtoupper(mb_substr($other->first_name, 0, 1)) }}
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 text-base leading-tight">
+                            {{ $other->first_name }} {{ $other->last_name }}
+                        </p>
+                        <p class="text-xs text-gray-400">{{ $other->phone }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('products.show', $conversation->product) }}"
+                   class="text-xs text-green-600 font-medium hover:underline hidden sm:block truncate max-w-xs">
+                    📦 {{ $conversation->product?->name }}
+                </a>
+            </div>
+        </div>
+
         <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex flex-col" style="min-height: calc(100vh - 120px)">
 
             {{-- Product info banner --}}
