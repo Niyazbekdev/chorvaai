@@ -246,22 +246,36 @@
                     (function () {
                         const regionSel = document.getElementById('regionSelect');
                         const citySel   = document.getElementById('citySelect');
-                        const allOpts   = Array.from(citySel.querySelectorAll('option'));
+
+                        // Barcha city optionlarni sahifa yuklanishida saqlab qo'yamiz
+                        const savedOpts = Array.from(citySel.querySelectorAll('option')).map(opt => ({
+                            value:    opt.value,
+                            text:     opt.textContent,
+                            regionId: opt.dataset.region || '',
+                        }));
 
                         function filterCities(regionId) {
-                            allOpts.forEach(opt => {
-                                if (!opt.value) return; // "Barcha tumanlar"
-                                opt.hidden = regionId && opt.dataset.region != regionId;
+                            const currentVal = citySel.value;
+                            citySel.innerHTML = '';
+
+                            savedOpts.forEach(data => {
+                                if (!data.value || !regionId || data.regionId == regionId) {
+                                    const opt = document.createElement('option');
+                                    opt.value = data.value;
+                                    opt.textContent = data.text;
+                                    if (data.regionId) opt.dataset.region = data.regionId;
+                                    // avvalgi tanlov hali ko'rinsa, saqlab qo'yamiz
+                                    if (data.value && data.value == currentVal &&
+                                        (!regionId || data.regionId == regionId)) {
+                                        opt.selected = true;
+                                    }
+                                    citySel.appendChild(opt);
+                                }
                             });
-                            // tanlangan shahar boshqa viloyatga tegishli bo'lsa reset
-                            const sel = citySel.querySelector('option:checked');
-                            if (sel && sel.value && sel.dataset.region != regionId && regionId) {
-                                citySel.value = '';
-                            }
                         }
 
                         regionSel.addEventListener('change', () => filterCities(regionSel.value));
-                        filterCities(regionSel.value); // sahifa yuklanganda ham ishlaydi
+                        filterCities(regionSel.value); // sahifa yuklanishida ham ishlaydi
                     })();
                     </script>
 
