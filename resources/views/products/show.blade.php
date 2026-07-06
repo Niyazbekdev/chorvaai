@@ -15,7 +15,7 @@
 </style>
 @endpush
 
-<div class="min-h-screen bg-gray-50 pt-16 sm:pt-24 pb-16"
+<div class="min-h-screen bg-gray-50 pt-6 pb-16"
      x-data="{
         activeImg: 0,
         favorited: {{ $isFavorited ? 'true' : 'false' }},

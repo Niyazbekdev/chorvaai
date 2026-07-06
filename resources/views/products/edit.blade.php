@@ -1,5 +1,5 @@
 <x-app-layout>
-<div class="min-h-screen bg-gray-50 pt-16 sm:pt-24 pb-16">
+<div class="min-h-screen bg-gray-50 pt-6 pb-16">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="mb-6">
