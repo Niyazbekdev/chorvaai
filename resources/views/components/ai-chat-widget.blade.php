@@ -8,6 +8,7 @@
     <div x-show="isMobile && open"
          class="absolute inset-0"
          style="background:rgba(0,0,0,0.55)"
+         @touchmove.prevent
          @click="open = false"></div>
     {{-- Chat panel --}}
     <div
@@ -48,7 +49,7 @@
         {{-- Messages --}}
         <div
             x-ref="messagesContainer"
-            class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"
+            class="flex-1 overflow-y-auto overscroll-y-contain p-4 space-y-3 bg-gray-50"
         >
             {{-- Welcome message --}}
             <template x-if="messages.length === 0">
@@ -188,8 +189,14 @@ function aiChat() {
 
         init() {
             this.loadHistory();
-            const onResize = () => { this.isMobile = window.innerWidth < 640; };
+            const onResize = () => {
+                this.isMobile = window.innerWidth < 640;
+                if (!this.isMobile) document.body.style.overflow = '';
+            };
             window.addEventListener('resize', onResize);
+            this.$watch('open', val => {
+                if (this.isMobile) document.body.style.overflow = val ? 'hidden' : '';
+            });
         },
 
         async loadHistory() {
