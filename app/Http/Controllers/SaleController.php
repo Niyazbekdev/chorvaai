@@ -22,6 +22,10 @@ class SaleController extends Controller
             'source'     => ['nullable', 'in:platform_chat,phone_call,outside'],
         ]);
 
+        if ($product->sale()->exists()) {
+            return redirect()->back()->with('error', 'Bu mahsulot allaqachon sotildi deb belgilangan.');
+        }
+
         $soldStatus = Status::where('name', 'Sotildi')->first();
 
         if (!$soldStatus) {

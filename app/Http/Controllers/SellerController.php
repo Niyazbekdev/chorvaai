@@ -19,6 +19,8 @@ class SellerController extends Controller
             ->whereHas('status', fn ($q) => $q->where('name', 'Faol'))
             ->count();
 
-        return view('seller.show', compact('seller', 'products', 'totalActive'));
+        $totalProducts = $seller->products()->count();
+
+        return view('seller.show', compact('seller', 'products', 'totalActive', 'totalProducts'));
     }
 }

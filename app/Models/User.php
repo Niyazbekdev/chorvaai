@@ -79,9 +79,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Product::class, 'favorites')->withPivot('created_at');
     }
 
-    public function conversations(): HasMany
+    public function buyerConversations(): HasMany
     {
-        return $this->hasMany(Conversation::class, 'buyer_id')
-            ->orWhere('seller_id', $this->id);
+        return $this->hasMany(Conversation::class, 'buyer_id');
+    }
+
+    public function sellerConversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'seller_id');
     }
 }

@@ -61,9 +61,6 @@
                             </div>
 
                             <h3 class="text-base font-bold text-gray-900 leading-tight line-clamp-2">{{ $product->name }}</h3>
-                            @if($product->breed)
-                                <p class="text-xs text-gray-400 mt-0.5">{{ $product->breed }}</p>
-                            @endif
                             <p class="text-green-600 font-bold text-xl mt-1">{{ $product->formatted_price }}</p>
 
                             <div class="mt-2 text-gray-500 text-xs">

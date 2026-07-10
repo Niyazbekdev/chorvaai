@@ -38,7 +38,7 @@
                             <p class="text-xs text-gray-400">{{ __('seller.active_listings') }}</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-2xl font-bold text-gray-700">{{ $seller->products()->count() }}</p>
+                            <p class="text-2xl font-bold text-gray-700">{{ $totalProducts }}</p>
                             <p class="text-xs text-gray-400">{{ __('seller.total_listings') }}</p>
                         </div>
                     </div>
@@ -92,9 +92,6 @@
                             </div>
 
                             <h3 class="text-base font-bold text-gray-900 leading-tight line-clamp-2">{{ $product->name }}</h3>
-                            @if($product->breed)
-                                <p class="text-xs text-gray-400 mt-0.5 truncate">{{ $product->breed }}</p>
-                            @endif
                             <p class="text-green-600 font-bold text-xl mt-1">{{ $product->formatted_price }}</p>
 
                             <div class="mt-2 text-gray-500 text-xs space-y-0.5">

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class AiChatController extends Controller
 {
-    public function page()
+    public function page(): \Illuminate\View\View
     {
         return view('ai-assistant.index');
     }

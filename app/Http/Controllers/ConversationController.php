@@ -19,7 +19,7 @@ class ConversationController extends Controller
                 'product',
                 'buyer',
                 'seller',
-                'messages' => fn ($q) => $q->latest()->limit(1),
+                'messages' => fn ($q) => $q->latest(),
             ])
             ->where('buyer_id', $userId)
             ->orWhere('seller_id', $userId)

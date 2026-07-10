@@ -83,7 +83,6 @@
                             </label>
                         </div>
                     </label>
-                    <input type="file" name="images[]" multiple accept="image/*" class="hidden" id="hiddenInput">
                 </div>
                 @error('images') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 @error('images.*') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -306,12 +305,7 @@ function imageUpload() {
         syncInput() {
             const dt = new DataTransfer();
             this.files.forEach(f => dt.items.add(f));
-            // Update the hidden file input
-            const hidden = document.getElementById('hiddenInput');
-            hidden.files = dt.files;
-            // Also update the visible input for form submission
-            const visibleInputs = document.querySelectorAll('input[name="images[]"]');
-            visibleInputs.forEach(inp => { if (!inp.classList.contains('hidden')) inp.files = dt.files; });
+            this.$refs.fileInput.files = dt.files;
         }
     };
 }

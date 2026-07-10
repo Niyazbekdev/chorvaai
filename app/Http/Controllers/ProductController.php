@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function index(Request $request): View
     {
         $products = $this->productService->getFiltered($request->only([
-            'q', 'category', 'region', 'city', 'price_from', 'price_to',
+            'q', 'category', 'region', 'city', 'gender', 'price_from', 'price_to',
             'lat', 'lng', 'radius',
         ]));
 

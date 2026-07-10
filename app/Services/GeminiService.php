@@ -85,9 +85,9 @@ PROMPT;
                 ROUND(AVG(price)) as avg_price
             ')->first();
 
-            $top = \App\Models\Product::select('name','price','breed')
+            $top = \App\Models\Product::select('name','price')
                 ->orderByDesc('views_count')->limit(5)->get()
-                ->map(fn($p) => "- {$p->name}" . ($p->breed ? " ({$p->breed})" : '') . ": {$p->price} so'm")
+                ->map(fn($p) => "- {$p->name}: {$p->price} so'm")
                 ->join("\n");
 
             return "Minimal: {$stats->min_price} so'm | Maksimal: {$stats->max_price} so'm | O'rtacha: {$stats->avg_price} so'm\n{$top}";
@@ -205,12 +205,12 @@ PROMPT;
                 ROUND(AVG(price)) as avg_price
             ')->first();
 
-            $topProducts = Product::select('name', 'price', 'breed')
+            $topProducts = Product::select('name', 'price')
                 ->where('status_id', Status::where('name', 'like', '%aktiv%')->value('id'))
                 ->orderByDesc('views_count')
                 ->limit(10)
                 ->get()
-                ->map(fn($p) => "- {$p->name}" . ($p->breed ? " ({$p->breed})" : '') . ": {$p->price} so'm")
+                ->map(fn($p) => "- {$p->name}: {$p->price} so'm")
                 ->join("\n");
 
             return <<<CTX
