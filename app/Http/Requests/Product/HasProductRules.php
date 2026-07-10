@@ -8,7 +8,7 @@ trait HasProductRules
     {
         return [
             'name'          => ['required', 'string', 'max:255'],
-            'description'   => ['required', 'string', 'max:5000'],
+            'description'   => ['nullable', 'string', 'max:5000'],
             'price'         => ['required', 'integer', 'min:0'],
             'category_id'   => ['required', 'exists:categories,id'],
             'color_id'      => ['nullable', 'exists:colors,id'],
@@ -18,8 +18,8 @@ trait HasProductRules
             'weight'        => ['required', 'integer', 'min:0'],
             'region_id'     => ['required', 'exists:regions,id'],
             'city_id'       => ['required', 'exists:cities,id'],
-            'latitude'      => ['required', 'numeric', 'between:-90,90'],
-            'longitude'     => ['required', 'numeric', 'between:-180,180'],
+            'latitude'      => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude'     => ['nullable', 'numeric', 'between:-180,180'],
 
             'images'        => ['nullable', 'array', 'max:8'],
             'images.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],

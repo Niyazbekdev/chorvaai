@@ -167,7 +167,9 @@
                     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
                     <p class="text-green-600 font-bold text-3xl mt-2">{{ $product->formatted_price }}</p>
 
-                    <p class="text-gray-600 text-sm mt-4 leading-relaxed whitespace-pre-line">{{ $product->description }}</p>
+                    @if($product->description)
+                        <p class="text-gray-600 text-sm mt-4 leading-relaxed whitespace-pre-line">{{ $product->description }}</p>
+                    @endif
 
                     {{-- Details grid --}}
                     <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">

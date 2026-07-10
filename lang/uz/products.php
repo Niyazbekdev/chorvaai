@@ -70,7 +70,7 @@ return [
     'confirm'             => "Tasdiqlash",
     // create
     'new_ad'              => "Yangi e'lon berish",
-    'all_required'        => "Barcha majburiy (*) maydonlarni to'ldiring",
+    'all_required'        => "bilan belgilangan maydonlar majburiy",
     // edit
     'edit_ad'             => "E'lonni tahrirlash",
     // shared form
@@ -80,8 +80,8 @@ return [
     'price_label'         => "Narx (so'm)",
     'contact_phone_label' => "Bog'lanish uchun telefon",
     'images_section'      => "Rasmlar",
-    'images_hint'         => "Maksimal 8 ta rasm (har biri 4MB gacha). Birinchi rasm asosiy hisoblanadi.",
-    'images_hint_edit'    => "Maksimal 8 ta rasm, har biri 4MB gacha",
+    'images_hint'         => "Maksimal 8 ta rasm (har biri 5MB gacha). Birinchi rasm asosiy hisoblanadi.",
+    'images_hint_edit'    => "Maksimal 8 ta rasm, har biri 5MB gacha",
     'current_images_hint' => "Joriy rasmlar. Yangi rasmlar yuklasangiz ularni almashtiradi.",
     'drag_images'         => "Rasmlarni shu yerga torting yoki",
     'select_images'       => "tanlang",
@@ -101,8 +101,8 @@ return [
     'city_label'          => "Shahar/tuman",
     'choose_region_first' => "Avval viloyatni tanlang",
     'exact_location'      => "Aniq manzil",
-    'map_pick_hint'          => "Xaritadan aniq joyni belgilang",
-    'map_pick_hint_edit'     => "Xaritadan aniq joyni belgilang",
+    'map_pick_hint'          => "Xaritadan joy belgilang",
+    'map_pick_hint_edit'     => "Xaritadan joy belgilang",
     'map_point_hint'         => "Xaritada nuqtani bosib joy belgilang",
     'map_location_required'  => "⚠ Xaritadan aniq joyni belgilang",
     'selected'               => "✓ Tanlandi:",

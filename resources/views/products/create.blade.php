@@ -4,7 +4,7 @@
 
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900">{{ __('products.new_ad') }}</h1>
-            <p class="text-gray-500 text-sm mt-1">{{ __('products.all_required') }}</p>
+            <p class="text-gray-500 text-sm mt-1">* {{ __('products.all_required') }}</p>
         </div>
 
         <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data"
@@ -24,7 +24,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.description_label') }} <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('products.description_label') }} <span class="text-gray-400 font-normal text-xs">(ixtiyoriy)</span></label>
                     <textarea name="description" rows="5"
                         class="w-full rounded-xl border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm"
                         placeholder="Hayvon haqida batafsil ma'lumot...">{{ old('description') }}</textarea>
@@ -218,16 +218,14 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ __('products.map_pick_hint') }} <span class="text-red-500">*</span>
+                        {{ __('products.map_pick_hint') }} <span class="text-gray-400 font-normal text-xs">(ixtiyoriy)</span>
                     </label>
                     <div id="pickMap"
-                         class="rounded-xl overflow-hidden border-2 {{ $errors->has('latitude') ? 'border-red-400' : 'border-gray-200' }}"
+                         class="rounded-xl overflow-hidden border-2 border-gray-200"
                          style="height:300px"></div>
-                    <p class="text-xs mt-1 {{ $errors->has('latitude') ? 'text-red-500 font-medium' : 'text-gray-400' }}" id="mapCoords">
+                    <p class="text-xs mt-1 text-gray-400" id="mapCoords">
                         @if(old('latitude') && old('longitude'))
                             {{ __('products.selected') }} {{ old('latitude') }}, {{ old('longitude') }}
-                        @elseif($errors->has('latitude'))
-                            {{ __('products.map_location_required') }}
                         @else
                             {{ __('products.map_point_hint') }}
                         @endif
