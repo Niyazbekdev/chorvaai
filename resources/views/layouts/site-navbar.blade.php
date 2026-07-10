@@ -378,4 +378,28 @@ document.addEventListener('click', function (e) {
         document.getElementById('profileMenu')?.classList.remove('open');
     }
 });
+
+// ── Navbardagi linklar history yig'masin (mobil "orqaga" tugma muammosi) ──
+// Asosiy bo'limlar o'rtasida o'tganda history.replace ishlatiladi —
+// yangi entry yaratmaydi, orqaga bosganda faqat oldingi "muhim" sahifaga qaytadi.
+(function () {
+    // Desktop: site-links ichidagi linklar (Post Ad tugmasi bundan mustasno)
+    document.querySelectorAll('.site-links a:not(.site-announce-btn), .profile-menu a')
+        .forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                location.replace(this.href);
+            });
+        });
+
+    // Mobil: .mobile-nav-link va .mobile-nav-secondary linklar
+    // (Alpine @click="mobileOpen=false" element darajasida ishlaydi,
+    //  keyin event document ga ko'tarilib replaceState ishga tushadi)
+    document.addEventListener('click', function (e) {
+        const link = e.target.closest('.mobile-nav-link, .mobile-nav-secondary');
+        if (!link || !link.href) return;
+        e.preventDefault();
+        location.replace(link.href);
+    });
+})();
 </script>
