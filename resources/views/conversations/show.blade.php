@@ -56,7 +56,7 @@
                             @endif
                             <div class="px-4 py-2.5 rounded-2xl text-sm leading-relaxed
                                 {{ $isMe
-                                    ? 'bg-blue-600 text-white rounded-br-sm'
+                                    ? 'bg-green-600 text-white rounded-br-sm'
                                     : 'bg-white shadow text-gray-800 rounded-bl-sm' }}">
                                 {{ $msg->message }}
                             </div>
@@ -73,20 +73,19 @@
             </div>
 
             {{-- Message input --}}
-            <form method="POST" action="{{ route('messages.store', $conversation) }}"
-                  id="msgForm"
+            <form id="msgForm"
+                  action="{{ route('messages.store', $conversation) }}"
                   class="bg-white rounded-2xl shadow p-3 flex gap-3 items-end sticky bottom-4">
                 @csrf
                 <textarea name="message" id="msgInput" rows="1" required
                     placeholder="{{ __('conversations.write_message') }}"
-                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();document.getElementById('msgForm').submit()}"
                     oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"
-                    class="flex-1 rounded-xl border-gray-200 text-sm focus:ring-blue-500 focus:border-blue-500
+                    class="flex-1 rounded-xl border-gray-200 text-sm focus:ring-green-500 focus:border-green-500
                            resize-none overflow-hidden leading-relaxed"
                     style="min-height: 40px;"></textarea>
-                <button type="submit"
-                    class="bg-blue-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition
-                           text-sm flex-shrink-0 self-end">
+                <button type="submit" id="sendBtn"
+                    class="bg-green-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-green-700 transition
+                           text-sm flex-shrink-0 self-end disabled:opacity-50 disabled:cursor-not-allowed">
                     {{ __('conversations.send') }}
                 </button>
             </form>
@@ -97,45 +96,99 @@
 
 @push('scripts')
 <script>
-const MY_ID       = {{ $user->id }};
-const CONV_ID     = {{ $conversation->id }};
-const msgList     = document.getElementById('messageList');
-const bottom      = document.getElementById('bottom');
+const MY_ID   = {{ $user->id }};
+const CONV_ID = {{ $conversation->id }};
+const msgList = document.getElementById('messageList');
+const bottom  = document.getElementById('bottom');
+const msgForm = document.getElementById('msgForm');
+const msgInput = document.getElementById('msgInput');
+const sendBtn  = document.getElementById('sendBtn');
 
 function scrollDown() {
     bottom.scrollIntoView({ behavior: 'smooth' });
 }
 scrollDown();
 
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 function buildBubble(data) {
     const isMe = data.sender_id === MY_ID;
     return `
     <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
         <div class="max-w-xs sm:max-w-sm lg:max-w-md">
-            ${!isMe ? `<p class="text-xs text-gray-400 mb-1 ml-1">${data.sender_name}</p>` : ''}
+            ${!isMe ? `<p class="text-xs text-gray-400 mb-1 ml-1">${escHtml(data.sender_name)}</p>` : ''}
             <div class="px-4 py-2.5 rounded-2xl text-sm leading-relaxed
-                ${isMe ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white shadow text-gray-800 rounded-bl-sm'}">
+                ${isMe ? 'bg-green-600 text-white rounded-br-sm' : 'bg-white shadow text-gray-800 rounded-bl-sm'}">
                 ${escHtml(data.message)}
             </div>
             <p class="text-xs text-gray-400 mt-1 ${isMe ? 'text-right mr-1' : 'ml-1'}">
-                ${data.created_at}${isMe ? ' · ✓' : ''}
+                ${escHtml(data.created_at)}${isMe ? ' · ✓' : ''}
             </p>
         </div>
     </div>`;
 }
 
-function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function appendBubble(data) {
+    const div = document.createElement('div');
+    div.innerHTML = buildBubble(data);
+    bottom.before(div.firstElementChild);
+    scrollDown();
 }
 
+// AJAX form submit — sahifa yangilanmaydi
+msgForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const text = msgInput.value.trim();
+    if (!text) return;
+
+    sendBtn.disabled = true;
+    msgInput.disabled = true;
+
+    try {
+        const res = await fetch(msgForm.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ message: text }),
+        });
+
+        if (!res.ok) throw new Error('send_failed');
+
+        const data = await res.json();
+        msgInput.value = '';
+        msgInput.style.height = 'auto';
+        appendBubble(data);
+    } catch (_) {
+        alert('Xabar yuborishda xatolik. Qaytadan urinib ko\'ring.');
+    } finally {
+        sendBtn.disabled = false;
+        msgInput.disabled = false;
+        msgInput.focus();
+    }
+});
+
+// Enter tugmasi (Shift+Enter yangi qator)
+msgInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        msgForm.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+});
+
+// Pusher — boshqa tomonning xabarlarini real-time qabul qilish
 if (window.Echo) {
     window.Echo.private(`conversation.${CONV_ID}`)
         .listen('.MessageSent', (e) => {
-            if (e.sender_id === MY_ID) return; // o'zimizniki form submit orqali chiqadi
-            const div = document.createElement('div');
-            div.innerHTML = buildBubble(e);
-            bottom.before(div.firstElementChild);
-            scrollDown();
+            if (e.sender_id === MY_ID) return; // o'z xabarimiz AJAX orqali allaqachon ko'rsatildi
+            appendBubble(e);
         });
 }
 </script>
