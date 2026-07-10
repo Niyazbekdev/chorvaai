@@ -56,14 +56,31 @@
 
                 <div x-data="imageUpload()" class="space-y-3">
                     <label class="block w-full border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-400 transition"
+                           :class="compressing ? 'pointer-events-none opacity-60' : ''"
                            @dragover.prevent @drop.prevent="handleDrop($event)">
                         <input type="file" name="images[]" multiple accept="image/*"
                                class="hidden" @change="handleFiles($event)" ref="fileInput">
-                        <div x-show="previews.length === 0">
+
+                        {{-- Compressing state --}}
+                        <div x-show="compressing" class="py-3">
+                            <div class="flex items-center justify-center gap-2 text-green-600">
+                                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                                </svg>
+                                <span class="text-sm font-medium">Rasmlar optimallashtirilmoqda...</span>
+                            </div>
+                        </div>
+
+                        {{-- Empty state --}}
+                        <div x-show="!compressing && previews.length === 0">
                             <p class="text-3xl mb-2">📷</p>
                             <p class="text-sm text-gray-500">{{ __('products.drag_images') }} <span class="text-green-600 font-semibold">{{ __('products.select_images') }}</span></p>
+                            <p class="text-xs text-gray-400 mt-1">Rasmlar avtomatik siqiladi — sifat saqlanadi</p>
                         </div>
-                        <div x-show="previews.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2" @click.prevent>
+
+                        {{-- Preview grid --}}
+                        <div x-show="!compressing && previews.length > 0" class="grid grid-cols-3 sm:grid-cols-4 gap-2" @click.prevent>
                             <template x-for="(src, i) in previews" :key="i">
                                 <div class="relative rounded-lg overflow-hidden" style="aspect-ratio:1">
                                     <img :src="src" class="w-full h-full object-cover">
@@ -83,6 +100,12 @@
                             </label>
                         </div>
                     </label>
+
+                    {{-- Size savings info --}}
+                    <p x-show="savedMb > 0.05" x-cloak
+                       class="text-xs text-green-600 font-medium">
+                        ✓ <span x-text="savedMb.toFixed(1)"></span> MB tejaldi (avtomatik siqildi)
+                    </p>
                 </div>
                 @error('images') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 @error('images.*') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
@@ -272,36 +295,67 @@ map.on('click', function (e) {
     else marker = L.marker(e.latlng).addTo(map);
 });
 
-// Alpine image upload component
+// Compress image via canvas: max 1920px, 85% JPEG — like Telegram/WhatsApp
+function compressImage(file) {
+    return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            const MAX = 1920;
+            let w = img.naturalWidth, h = img.naturalHeight;
+            if (w > MAX || h > MAX) {
+                const r = Math.min(MAX / w, MAX / h);
+                w = Math.round(w * r);
+                h = Math.round(h * r);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const name = file.name.replace(/\.[^.]+$/, '.jpg');
+            canvas.toBlob(blob => {
+                resolve(new File([blob], name, { type: 'image/jpeg' }));
+            }, 'image/jpeg', 0.85);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+        img.src = url;
+    });
+}
+
 function imageUpload() {
     return {
         previews: [],
         files: [],
-        handleFiles(e) {
-            const input = e.target;
-            this.addFiles(Array.from(input.files));
-            // Keep the files for form submit by syncing hidden input
+        compressing: false,
+        savedMb: 0,
+
+        async handleFiles(e) { await this.addFiles(Array.from(e.target.files)); },
+        async handleDrop(e) { await this.addFiles(Array.from(e.dataTransfer.files)); },
+
+        async addFiles(newFiles) {
+            this.compressing = true;
+            for (const f of newFiles) {
+                if (this.files.length >= 8) break;
+                if (!f.type.startsWith('image/')) continue;
+                const compressed = await compressImage(f);
+                this.savedMb += (f.size - compressed.size) / 1048576;
+                this.files.push(compressed);
+                await new Promise(res => {
+                    const reader = new FileReader();
+                    reader.onload = ev => { this.previews.push(ev.target.result); res(); };
+                    reader.readAsDataURL(compressed);
+                });
+            }
+            this.compressing = false;
             this.syncInput();
         },
-        handleDrop(e) {
-            this.addFiles(Array.from(e.dataTransfer.files));
-            this.syncInput();
-        },
-        addFiles(newFiles) {
-            newFiles.forEach(f => {
-                if (this.files.length >= 8) return;
-                if (!f.type.startsWith('image/')) return;
-                this.files.push(f);
-                const reader = new FileReader();
-                reader.onload = ev => this.previews.push(ev.target.result);
-                reader.readAsDataURL(f);
-            });
-        },
+
         removeImage(i) {
             this.previews.splice(i, 1);
             this.files.splice(i, 1);
             this.syncInput();
         },
+
         syncInput() {
             const dt = new DataTransfer();
             this.files.forEach(f => dt.items.add(f));

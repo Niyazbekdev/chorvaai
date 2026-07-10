@@ -22,7 +22,7 @@ trait HasProductRules
             'longitude'     => ['required', 'numeric', 'between:-180,180'],
 
             'images'        => ['nullable', 'array', 'max:8'],
-            'images.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'images.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 

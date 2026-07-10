@@ -62,9 +62,10 @@
                     <p class="text-xs text-gray-400">{{ __('products.current_images_hint') }}</p>
                 @endif
 
-                <input type="file" name="images[]" multiple accept="image/*"
+                <input type="file" name="images[]" id="editImages" multiple accept="image/*"
                     class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                <p class="text-xs text-gray-400">{{ __('products.images_hint_edit') }}</p>
+                <p class="text-xs text-gray-400">{{ __('products.images_hint_edit') }} — rasmlar avtomatik siqiladi</p>
+                <p id="editImgStatus" class="text-xs text-green-600 font-medium hidden"></p>
                 @error('images') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
             </div>
 
@@ -226,6 +227,66 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// Image compression — max 1920px, 85% JPEG
+function compressImage(file) {
+    return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            const MAX = 1920;
+            let w = img.naturalWidth, h = img.naturalHeight;
+            if (w > MAX || h > MAX) {
+                const r = Math.min(MAX / w, MAX / h);
+                w = Math.round(w * r); h = Math.round(h * r);
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const name = file.name.replace(/\.[^.]+$/, '.jpg');
+            canvas.toBlob(blob => {
+                resolve(new File([blob], name, { type: 'image/jpeg' }));
+            }, 'image/jpeg', 0.85);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+        img.src = url;
+    });
+}
+
+(function () {
+    const form    = document.querySelector('form');
+    const input   = document.getElementById('editImages');
+    const status  = document.getElementById('editImgStatus');
+    const saveBtn = form.querySelector('[type="submit"]');
+
+    form.addEventListener('submit', async function (e) {
+        if (!input.files.length) return;
+        e.preventDefault();
+
+        const origText    = saveBtn.textContent;
+        saveBtn.disabled  = true;
+        saveBtn.textContent = 'Rasmlar siqilmoqda...';
+
+        let savedBytes = 0;
+        const dt = new DataTransfer();
+        for (const f of Array.from(input.files)) {
+            const c = await compressImage(f);
+            savedBytes += f.size - c.size;
+            dt.items.add(c);
+        }
+        input.files = dt.files;
+
+        if (savedBytes > 51200) {
+            status.textContent = `✓ ${(savedBytes / 1048576).toFixed(1)} MB tejaldi`;
+            status.classList.remove('hidden');
+        }
+
+        saveBtn.textContent = origText;
+        saveBtn.disabled    = false;
+        form.submit();
+    });
+})();
+
 const regionSelect = document.getElementById('region_id');
 const citySelect   = document.querySelector('[name="city_id"]');
 const allOptions   = Array.from(citySelect.options);
