@@ -22,7 +22,7 @@
 
     <div class="absolute bottom-8 sm:bottom-16 left-0 w-full flex flex-col sm:flex-row justify-center gap-3 sm:gap-5 z-20 px-5 opacity-0 anim-4">
         @auth
-            <a href="{{ route('products.create') }}"
+            <a href="{{ route('profile.my-products') }}"
                class="px-8 sm:px-12 py-3.5 sm:py-4 bg-emerald-500 text-white rounded-full font-semibold uppercase tracking-widest text-sm
                       hover:bg-[#0e8a60] hover:-translate-y-1 transition-all duration-300 shadow-lg text-center">
                 {{ __('welcome.start_selling') }}
@@ -251,7 +251,7 @@
         <h2 class="font-serif text-4xl font-bold mb-4">{{ __('welcome.cta_title') }}</h2>
         <p class="text-white/75 text-xl mb-10">{{ __('welcome.cta_desc') }}</p>
         @auth
-            <a href="{{ route('products.create') }}"
+            <a href="{{ route('profile.my-products') }}"
                class="inline-block px-12 py-4 bg-white text-emerald-800 rounded-full font-bold text-sm uppercase
                       tracking-widest hover:-translate-y-1 transition-transform duration-300 shadow-lg">
                 {{ __('welcome.start_selling') }}
