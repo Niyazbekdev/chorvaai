@@ -75,6 +75,7 @@
             {{-- Message input --}}
             <form id="msgForm"
                   action="{{ route('messages.store', $conversation) }}"
+                  method="post"
                   class="bg-white rounded-2xl shadow p-3 flex gap-3 items-end sticky bottom-4">
                 @csrf
                 <textarea name="message" id="msgInput" rows="1" required
