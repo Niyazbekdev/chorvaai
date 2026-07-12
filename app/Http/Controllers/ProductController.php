@@ -93,7 +93,7 @@ class ProductController extends Controller
             $request->user()->id
         );
 
-        return redirect()->route('products.show', $product)
+        return redirect()->route('profile.my-products')
             ->with('success', "E'lon muvaffaqiyatli joylashtirildi.");
     }
 
