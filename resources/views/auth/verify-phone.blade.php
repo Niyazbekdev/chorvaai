@@ -8,11 +8,12 @@
         </p>
     </div>
 
-    {{-- Dev: OTP kodni ko'rsatish (faqat test/local muhitda) --}}
+    {{-- SMS kodni ekranda ko'rsatish --}}
     @if(session('dev_otp'))
-        <div class="mb-4 bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-xl text-sm text-center">
-            <p class="font-semibold">{{ __('auth.dev_otp_title') }}</p>
-            <p class="mt-1">{{ __('auth.dev_otp_code') }} <span class="font-mono font-bold text-lg tracking-widest">{{ session('dev_otp') }}</span></p>
+        <div class="mb-4 bg-amber-50 border-2 border-amber-400 text-amber-900 px-4 py-4 rounded-xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">Tasdiqlash kodi</p>
+            <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_otp') }}</p>
+            <p class="text-xs text-amber-600 mt-1">Quyidagi maydonga shu kodni kiriting</p>
         </div>
     @endif
 

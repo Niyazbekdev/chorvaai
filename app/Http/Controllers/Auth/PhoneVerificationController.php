@@ -58,6 +58,8 @@ class PhoneVerificationController extends Controller
         $code = $this->otpService->generate($user->phone);
         $this->eskizService->send($user->phone, "ChorvaAI: tasdiqlash kodingiz: $code. Amal qilish muddati 5 daqiqa.");
 
+        session(['dev_otp' => $code]);
+
         return back()->with('status', 'Kod qayta yuborildi.');
     }
 }
