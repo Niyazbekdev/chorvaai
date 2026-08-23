@@ -6,6 +6,7 @@ use App\Models\AiChatSession;
 use App\Services\GeminiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AiChatController extends Controller
 {
@@ -22,10 +23,13 @@ class AiChatController extends Controller
 
     public function sendWithFile(Request $request, GeminiService $gemini): JsonResponse
     {
-        $request->validate([
+        $v = Validator::make($request->all(), [
             'message' => 'nullable|string|max:2000',
             'file'    => 'required|file|max:10240|mimes:jpeg,jpg,png,gif,webp,pdf',
         ]);
+        if ($v->fails()) {
+            return response()->json(['errors' => $v->errors()], 422);
+        }
 
         $session = $this->getOrCreateSession($request);
 
@@ -59,7 +63,10 @@ class AiChatController extends Controller
 
     public function send(Request $request, GeminiService $gemini): JsonResponse
     {
-        $request->validate(['message' => 'required|string|max:1000']);
+        $v = Validator::make($request->all(), ['message' => 'required|string|max:1000']);
+        if ($v->fails()) {
+            return response()->json(['errors' => $v->errors()], 422);
+        }
 
         $session = $this->getOrCreateSession($request);
 
