@@ -11,13 +11,15 @@ use App\Models\Status;
 use App\Models\Type;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Collection;
+use App\Services\ProductRetrieverService;
 
 class GeminiService
 {
     private string $apiKey;
     private string $endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
-    public function __construct()
+    public function __construct(private ProductRetrieverService $retriever)
     {
         $this->apiKey = config('services.gemini.key');
     }
@@ -96,6 +98,10 @@ PROMPT;
 
     public function chat(array $history, string $newMessage): string
     {
+        // RAG: so'rovga mos e'lonlarni DB dan olish
+        $retrieved   = $this->retriever->search($newMessage);
+        $ragContext  = $this->retriever->formatForContext($retrieved);
+
         $contents = [];
 
         foreach ($history as $msg) {
@@ -112,7 +118,7 @@ PROMPT;
 
         $response = Http::timeout(30)->post("{$this->endpoint}?key={$this->apiKey}", [
             'system_instruction' => [
-                'parts' => [['text' => $this->systemPrompt()]],
+                'parts' => [['text' => $this->systemPrompt($ragContext)]],
             ],
             'contents'           => $contents,
             'generationConfig'   => [
@@ -133,9 +139,13 @@ PROMPT;
             ?? "Kechirasiz, javob ololmadim. Iltimos, qaytadan urinib ko'ring.";
     }
 
-    private function systemPrompt(): string
+    private function systemPrompt(string $ragContext = ''): string
     {
         $ctx = $this->platformContext();
+
+        $ragSection = $ragContext
+            ? "\n\n=== FOYDALANUVCHI SO'ROVIGA MOS E'LONLAR (RAG) ===\n{$ragContext}\nYuqoridagi e'lonlardan foydalanib aniq javob bering. Narx, joylashuv, xususiyatlar haqida so'ralganda shu ma'lumotlarga suyaning.\n=== RAG TUGADI ===\n"
+            : '';
 
         return <<<PROMPT
 Siz ChorvaAI — O'zbekistondagi chorva mollar marketplace platformasining AI yordamchisisiz. Siz matn VA rasmlarni tahlil qila olasiz.
@@ -164,11 +174,12 @@ Hech qachon "rasmni ko'ra olmayman" demang — har doim ko'ringan narsalar asosi
 
 === PLATFORMA MA'LUMOTLARI (faqat o'qish uchun) ===
 {$ctx}
-=== MA'LUMOTLAR TUGADI ===
+=== MA'LUMOTLAR TUGADI ==={$ragSection}
 
 Qoidalar:
 - Yuqoridagi ma'lumotlardan foydalanib aniq javob bering
 - Foydalanuvchi "qanday kategoriyalar bor", "qaysi viloyatlar bor", "narxi qancha" deb so'rasa, yuqoridagi haqiqiy ma'lumotlarni ko'rsating
+- RAG bo'limidagi e'lonlar mavjud bo'lsa, ulardan aniq narx va joylashuvni ko'rsating
 - Javoblaringiz aniq va foydali bo'lsin
 - Foydalanuvchi qaysi tilda yozsa, o'sha tilda javob bering (o'zbek, rus yoki ingliz)
 - Doktor yoki veterinar maslahatiga muhtoj bo'lgan jiddiy holatlarda mutaxassisga murojaat qilishni tavsiya eting
