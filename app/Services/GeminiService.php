@@ -26,7 +26,14 @@ class GeminiService
 
     public function chatWithFile(array $history, string $message, string $base64Data, string $mimeType): string
     {
-        $priceCtx = $this->priceContext();
+        // #1 fix: RAG context for file-based messages
+        $retrieved  = $this->retriever->search($message);
+        $ragContext = $this->retriever->formatForContext($retrieved);
+        $priceCtx   = $this->priceContext();
+
+        $ragSection = $ragContext
+            ? "\n\nSaytdagi tegishli e'lonlar:\n{$ragContext}\n"
+            : '';
 
         $sysPrompt = <<<PROMPT
 Siz ChorvaAI — chorva mollari mutaxassisi va baholovchisisiz. Rasmlarni ko'rib tahlil qila olasiz.
@@ -37,13 +44,21 @@ Chorva molining rasmini ko'rganda ALBATTA quyidagilarni bering:
 3. **Taxminiy vazni** — gavda tuzilishi, muskulatura asosida (kg)
 4. **Badan holati (BCS)** — 1-9 shkala
 5. **Taxminiy bozor bahosi** — quyidagi narxlar asosida (so'mda):
-{$priceCtx}
+{$priceCtx}{$ragSection}
 6. **Tavsiya** — sotish/parvarish bo'yicha maslahat
 
 Foydalanuvchi tilida javob bering (o'zbek/rus/ingliz).
 PROMPT;
 
+        // #2 fix: include conversation history for multi-turn context
         $contents = [];
+        foreach ($history as $msg) {
+            $contents[] = [
+                'role'  => $msg['role'],
+                'parts' => [['text' => $msg['content']]],
+            ];
+        }
+
         $contents[] = [
             'role'  => 'user',
             'parts' => [
