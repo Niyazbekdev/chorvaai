@@ -1,39 +1,28 @@
 <x-guest-layout>
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" id="loginForm">
+    <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Phone -->
+        <!-- Email yoki Telefon -->
         <div>
-            <x-input-label for="phone" :value="__('Phone Number')" />
-
-            <div class="flex mt-1">
-                <span class="inline-flex items-center px-3 border border-r-0 border-gray-300 bg-gray-100 rounded-l-md text-gray-600">
-                    +998
-                </span>
-
-                <x-text-input
-                    id="phone"
-                    class="block w-full rounded-l-none"
-                    type="text"
-                    name="phone"
-                    :value="old('phone') ? str_replace('+998', '', old('phone')) : ''"
-                    placeholder="901234567"
-                    maxlength="9"
-                    required
-                    autofocus
-                    autocomplete="tel" />
-            </div>
-
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+            <x-input-label for="login" :value="__('auth.login_identifier')" />
+            <x-text-input
+                id="login"
+                class="block mt-1 w-full"
+                type="text"
+                name="login"
+                :value="old('login')"
+                required
+                autofocus
+                autocomplete="username"
+                placeholder="{{ __('auth.login_placeholder') }}" />
+            <x-input-error :messages="$errors->get('login')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
             <x-text-input
                 id="password"
                 class="block mt-1 w-full"
@@ -41,7 +30,6 @@
                 name="password"
                 required
                 autocomplete="current-password" />
-
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
@@ -53,10 +41,7 @@
                     type="checkbox"
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                     name="remember">
-
-                <span class="ms-2 text-sm text-gray-600">
-                    {{ __('Remember me') }}
-                </span>
+                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
         </div>
 
@@ -77,19 +62,4 @@
             </a>
         </div>
     </form>
-
-    <script>
-        const phoneInput = document.getElementById('phone');
-        const loginForm = document.getElementById('loginForm');
-
-        phoneInput.addEventListener('input', function () {
-            this.value = this.value.replace(/\D/g, '').slice(0, 9);
-        });
-
-        loginForm.addEventListener('submit', function () {
-            if (phoneInput.value && !phoneInput.value.startsWith('+998')) {
-                phoneInput.value = '+998' + phoneInput.value;
-            }
-        });
-    </script>
 </x-guest-layout>

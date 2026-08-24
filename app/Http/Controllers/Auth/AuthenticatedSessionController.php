@@ -35,13 +35,19 @@ class AuthenticatedSessionController extends Controller
             if ($resend['can']) {
                 $code = $this->otpService->generate($user->phone);
                 $this->eskizService->send($user->phone, "ChorvaAI: tasdiqlash kodingiz: $code. Amal qilish muddati 5 daqiqa.");
-
-                if (config('services.eskiz.test_mode') || app()->environment('local')) {
-                    \Illuminate\Support\Facades\Log::info('OTP (test)', ['phone' => $user->phone, 'code' => $code]);
-                    session(['dev_otp' => $code]);
-                }
+                session(['dev_otp' => $code]);
             }
             return redirect()->route('phone.verify');
+        }
+
+        if (!$user->hasVerifiedEmail()) {
+            $resend = $this->otpService->canResendEmail($user->email);
+            if ($resend['can']) {
+                $code = $this->otpService->generateForEmail($user->email);
+                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpMail($code));
+                session(['dev_email_otp' => $code]);
+            }
+            return redirect()->route('email.otp.verify');
         }
 
         return redirect()->intended(route('products.index'));

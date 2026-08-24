@@ -30,8 +30,10 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'phone',
+        'email',
         'password',
         'phone_verified_at',
+        'email_verified_at',
         'avatar',
         'role_id',
     ];
@@ -55,6 +57,7 @@ class User extends Authenticatable
     {
         return [
             'phone_verified_at' => 'datetime',
+            'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
     }
@@ -62,6 +65,11 @@ class User extends Authenticatable
     public function hasVerifiedPhone(): bool
     {
         return !is_null($this->phone_verified_at);
+    }
+
+    public function hasVerifiedEmail(): bool
+    {
+        return is_null($this->email) || !is_null($this->email_verified_at);
     }
 
     public function products(): HasMany
