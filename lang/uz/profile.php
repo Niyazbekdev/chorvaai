@@ -61,4 +61,12 @@ return [
     'phone_updated'      => "Telefon raqami muvaffaqiyatli yangilandi",
     'phone_same'         => "Bu allaqachon joriy raqamingiz",
     'phone_taken'        => "Bu raqam boshqa foydalanuvchiga tegishli",
+    // email change
+    'email_title'        => "Email manzilini o'zgartirish",
+    'email_desc'         => "Yangi email manzilingizga tasdiqlash kodi yuboriladi",
+    'current_email'      => "Joriy email",
+    'new_email'          => "Yangi email manzil",
+    'email_updated'      => "Email manzil muvaffaqiyatli yangilandi",
+    'email_same'         => "Bu allaqachon joriy email manzilingiz",
+    'email_taken'        => "Bu email boshqa foydalanuvchiga tegishli",
 ];
