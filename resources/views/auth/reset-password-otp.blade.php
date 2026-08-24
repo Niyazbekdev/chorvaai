@@ -1,17 +1,24 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <div class="text-4xl mb-3">📱</div>
+        <div class="text-4xl mb-3">{{ $type === 'email' ? '✉️' : '📱' }}</div>
         <h2 class="text-xl font-bold text-gray-800">{{ __('auth.enter_code_title') }}</h2>
         <p class="text-sm text-gray-500 mt-1">
-            <span class="font-medium text-gray-700">{{ $phone }}</span>
+            <span class="font-medium text-gray-700">{{ $identifier }}</span>
             {{ __('auth.enter_code_desc') }}
         </p>
     </div>
 
     @if(session('dev_otp'))
-        <div class="mb-4 bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-xl text-sm text-center">
-            <p class="font-semibold">{{ __('auth.dev_otp_title') }}</p>
-            <p class="mt-1">{{ __('auth.dev_otp_code') }} <span class="font-mono font-bold text-lg tracking-widest">{{ session('dev_otp') }}</span></p>
+        <div class="mb-4 bg-amber-50 border-2 border-amber-400 text-amber-900 px-4 py-4 rounded-xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">SMS tasdiqlash kodi</p>
+            <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_otp') }}</p>
+        </div>
+    @endif
+
+    @if(session('dev_email_otp'))
+        <div class="mb-4 bg-blue-50 border-2 border-blue-400 text-blue-900 px-4 py-4 rounded-xl text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 mb-1">Email tasdiqlash kodi</p>
+            <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_email_otp') }}</p>
         </div>
     @endif
 
@@ -66,27 +73,29 @@
             {{ __('auth.back_to_phone') }}
         </a>
     </div>
-
-    <script>
-    let seconds = {{ $resendSeconds }};
-    const timerEl   = document.getElementById('timer');
-    const countdown = document.getElementById('countdown');
-    const resendBtn = document.getElementById('resendBtn');
-
-    if (seconds > 0) {
-        const interval = setInterval(() => {
-            seconds--;
-            timerEl.textContent = seconds;
-            if (seconds <= 0) {
-                clearInterval(interval);
-                countdown.classList.add('hidden');
-                resendBtn.disabled = false;
-            }
-        }, 1000);
-    }
-
-    document.getElementById('code').addEventListener('input', function () {
-        this.value = this.value.replace(/\D/g, '').slice(0, 6);
-    });
-    </script>
 </x-guest-layout>
+
+@push('scripts')
+<script>
+let seconds = {{ $resendSeconds }};
+const timerEl   = document.getElementById('timer');
+const countdown = document.getElementById('countdown');
+const resendBtn = document.getElementById('resendBtn');
+
+if (seconds > 0) {
+    const interval = setInterval(() => {
+        seconds--;
+        timerEl.textContent = seconds;
+        if (seconds <= 0) {
+            clearInterval(interval);
+            countdown.classList.add('hidden');
+            resendBtn.disabled = false;
+        }
+    }, 1000);
+}
+
+document.getElementById('code').addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+});
+</script>
+@endpush
