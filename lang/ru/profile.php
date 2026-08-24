@@ -61,4 +61,12 @@ return [
     'phone_updated'      => "Номер телефона успешно обновлён",
     'phone_same'         => "Это уже ваш текущий номер",
     'phone_taken'        => "Этот номер принадлежит другому пользователю",
+    // email change
+    'email_title'        => "Изменение email адреса",
+    'email_desc'         => "На новый email будет отправлен код подтверждения",
+    'current_email'      => "Текущий email",
+    'new_email'          => "Новый email адрес",
+    'email_updated'      => "Email адрес успешно обновлён",
+    'email_same'         => "Это уже ваш текущий email адрес",
+    'email_taken'        => "Этот email принадлежит другому пользователю",
 ];

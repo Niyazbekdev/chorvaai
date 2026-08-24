@@ -36,8 +36,9 @@ return [
     'Welcome back'       => "Добро пожаловать",
     'forgot_password'         => "Забыли пароль?",
     'forgot_title'            => "Восстановление пароля",
-    'forgot_desc'             => "Введите номер телефона — отправим SMS с кодом",
+    'forgot_desc'             => "Введите email или номер телефона — отправим код",
     'send_sms'                => "Отправить SMS код",
+    'send_code'               => "Отправить код",
     'back_to_login'           => "← Вернуться к входу",
     'enter_code_title'        => "Введите код",
     'enter_code_desc'         => "на номер отправлен 6-значный код",
@@ -54,4 +55,7 @@ return [
     'resend_wait'             => "секунд до повторной отправки.",
     'session_expired'         => "Сессия истекла. Начните заново.",
     'password_updated'        => "Пароль успешно обновлён. Теперь вы можете войти!",
+    'email'                   => "Email адрес",
+    'login_identifier'        => "Email или номер телефона",
+    'login_placeholder'       => "email@example.com или 901234567",
 ];
