@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChorvaAI — Taqdimot</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .slides-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    padding: 40px;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Slide 1 — Title */
+  .slide-title {
+    background: linear-gradient(135deg, #0d1a0f 0%, #0a2e1a 50%, #0d1a0f 100%);
+    text-align: center;
+  }
+
+  .slide-title .logo {
+    font-size: 72px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+
+  .slide-title .logo span { color: #22c55e; }
+
+  .slide-title .tagline {
+    font-size: 22px;
+    color: #86efac;
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+
+  .slide-title .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #4ade80;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .slide-title .decorative-dots {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(34,197,94,0.08);
+  }
+
+  /* Slide 2 — Bosh sahifa */
+  .slide-2col {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+    background: #111;
+  }
+
+  .slide-info {
+    flex: 1;
+    max-width: 420px;
+  }
+
+  .slide-info .slide-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #22c55e;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .slide-info h2 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+
+  .slide-info h2 em {
+    font-style: normal;
+    color: #22c55e;
+  }
+
+  .slide-info p {
+    font-size: 16px;
+    color: #9ca3af;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: #d1d5db;
+    line-height: 1.5;
+  }
+
+  .feature-list li::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: rgba(34,197,94,0.2);
+    color: #22c55e;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .slide-screenshot {
+    flex: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .screenshot-frame {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08);
+    max-height: 75vh;
+  }
+
+  .screenshot-frame img {
+    display: block;
+    max-height: 75vh;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .screenshot-frame .browser-bar {
+    background: #1e1e1e;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .browser-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .browser-dot.red { background: #ff5f57; }
+  .browser-dot.yellow { background: #ffbd2e; }
+  .browser-dot.green { background: #28c941; }
+
+  .browser-url {
+    flex: 1;
+    background: #2a2a2a;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #6b7280;
+    margin-left: 8px;
+  }
+
+  /* Slide 3 — Features */
+  .slide-features {
+    background: #0d0d0d;
+    text-align: center;
+    padding: 40px 80px;
+  }
+
+  .slide-features .slide-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #22c55e;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .slide-features h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .slide-features h2 em { font-style: normal; color: #22c55e; }
+
+  .slide-features .subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 48px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+
+  .feature-card:hover { border-color: rgba(34,197,94,0.3); }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 14px;
+  }
+
+  .feature-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #f9fafb;
+  }
+
+  .feature-card p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  /* Slide 4 — How it works */
+  .slide-steps {
+    background: linear-gradient(135deg, #0a0a0a, #0d1f12);
+    flex-direction: column;
+    text-align: center;
+    gap: 0;
+    padding: 50px 80px;
+  }
+
+  .slide-steps .slide-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #22c55e;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .slide-steps h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 48px;
+  }
+
+  .steps-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .step-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    position: relative;
+  }
+
+  .step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 28px;
+    right: -20px;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(34,197,94,0.5), rgba(34,197,94,0.1));
+  }
+
+  .step-num {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(34,197,94,0.3);
+  }
+
+  .step-item h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f9fafb;
+  }
+
+  .step-item p {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  /* Slide AI */
+  .slide-dark { background: #070707; }
+
+  /* Stats slide */
+  .slide-stats {
+    background: linear-gradient(160deg, #071410, #0d1a0f);
+    flex-direction: column;
+    text-align: center;
+    gap: 0;
+  }
+
+  .slide-stats .slide-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #22c55e;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .slide-stats h2 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 48px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .stat-card {
+    background: rgba(34,197,94,0.07);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 20px;
+    padding: 36px 24px;
+  }
+
+  .stat-value {
+    font-size: 48px;
+    font-weight: 900;
+    color: #22c55e;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 15px;
+    color: #9ca3af;
+  }
+
+  /* Final slide */
+  .slide-final {
+    background: linear-gradient(135deg, #071410 0%, #0d2e18 50%, #071410 100%);
+    text-align: center;
+  }
+
+  .slide-final .big-logo {
+    font-size: 80px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    letter-spacing: -3px;
+  }
+
+  .slide-final .big-logo span { color: #22c55e; }
+
+  .slide-final h2 {
+    font-size: 28px;
+    color: #86efac;
+    font-weight: 400;
+    margin-bottom: 40px;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: #22c55e;
+    color: #000;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: #22c55e;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 14px 32px;
+    border-radius: 100px;
+    border: 1px solid #22c55e;
+    text-decoration: none;
+  }
+
+  .website-url {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #374151;
+    letter-spacing: 1px;
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 100;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    border-radius: 100px;
+    backdrop-filter: blur(12px);
+  }
+
+  .nav button {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .nav .counter {
+    font-size: 13px;
+    color: #6b7280;
+    min-width: 60px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    transition: width 0.4s ease;
+    z-index: 200;
+  }
+
+  .slide-indicator {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+
+  .indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .indicator-dot.active {
+    background: #22c55e;
+    transform: scale(1.3);
+  }
+
+  /* Keyboard hint */
+  .hint {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    font-size: 11px;
+    color: #374151;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="slide-indicator" id="indicators"></div>
+
+<div class="slides-container">
+
+  <!-- Slide 1: Title -->
+  <div class="slide slide-title active" id="slide-0">
+    <div class="decorative-dots">
+      <div class="dot" style="width:300px;height:300px;top:-100px;right:-80px;"></div>
+      <div class="dot" style="width:200px;height:200px;bottom:-60px;left:-60px;"></div>
+      <div class="dot" style="width:120px;height:120px;top:40%;left:10%;"></div>
+    </div>
+    <div class="badge">O'ZBEKISTON CHORVA PLATFORMASI</div>
+    <br><br>
+    <div class="logo">Chorva<span>AI</span></div>
+    <div class="tagline">
+      O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platforma — AI yordamida, tez va xavfsiz.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+      <span style="font-size:13px;color:#4b5563;padding:6px 14px;border:1px solid #1f2937;border-radius:100px;">Bozor</span>
+      <span style="font-size:13px;color:#4b5563;padding:6px 14px;border:1px solid #1f2937;border-radius:100px;">AI Yordamchi</span>
+      <span style="font-size:13px;color:#4b5563;padding:6px 14px;border:1px solid #1f2937;border-radius:100px;">Gemini 2.5 Flash</span>
+      <span style="font-size:13px;color:#4b5563;padding:6px 14px;border:1px solid #1f2937;border-radius:100px;">Laravel + Tailwind</span>
+    </div>
+  </div>
+
+  <!-- Slide 2: Bosh sahifa -->
+  <div class="slide slide-2col" id="slide-1">
+    <div class="slide-info">
+      <div class="slide-num">01 / BOSh SAhIFA</div>
+      <h2>Chorva mollari sotib olish va sotish <em>ekosistemi</em></h2>
+      <p>Sayt foydalanuvchini birinchi qarashdan loyiha maqsadi bilan tanishtiradi — aniq va kuchli hero qism.</p>
+      <ul class="feature-list">
+        <li>Yirik sifatli fon rasmi — chorva muhiti</li>
+        <li>"Sotishni boshlash" va "Mahsulotlarni ko'rish" CTA tugmalari</li>
+        <li>UZ / RU til almashish</li>
+        <li>Navigatsiya: Bozor, AI Yordamchi, E'lon berish</li>
+        <li>Floating AI chat tugmasi (pastki o'ng burchak)</li>
+      </ul>
+    </div>
+    <div class="slide-screenshot">
+      <div class="screenshot-frame">
+        <div class="browser-bar">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+          <div class="browser-url">chorvaai.uz</div>
+        </div>
+        <img src="screenshots/01_home_fold.png" alt="Bosh sahifa">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Nima uchun -->
+  <div class="slide slide-features" id="slide-2">
+    <div class="slide-num">02 / AFZALLIKLAR</div>
+    <h2>Nima uchun <em>ChorvaAI</em>?</h2>
+    <div class="subtitle">Chorva mollarini xavfsizroq, tezroq va shaffofroq savdo qilish tajribasi</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Tasdiqlangan ishonch</h3>
+        <p>Har bir fermer tekshiriladi. Haqiqiy odamlar va haqiqiy chorva mollari bilan savdo qilishingizga ishonch hosil qilamiz.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Yordamchi</h3>
+        <p>Sigir rasmini yuboring — AI zoti, taxminiy vazni, yoshi va bozor bahosini bir zumda aniqlaydi.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Adolatli narxlar</h3>
+        <p>Yashirin vositachisiz, shaffof bozor narxlari. Hammaga oya narxi bir xil.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>Joylashuv bo'yicha</h3>
+        <p>Viloyat va tumaningizga yaqin chorva mollarini toping. Xarita va kartochka ko'rinishi.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Qulay interfeys</h3>
+        <p>Telefon raqam orqali tez ro'yxatdan o'tish. Mobil va desktop uchun to'liq optimallashtirilgan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Ko'p tilli</h3>
+        <p>O'zbek va Rus tillarida to'liq ishlaydi. Barcha fermerlar uchun qulay.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Qanday ishlaydi -->
+  <div class="slide slide-steps" id="slide-3">
+    <div class="slide-num">03 / JARAYON</div>
+    <h2>Qanday ishlaydi?</h2>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <h3>Hisob yaratish</h3>
+        <p>Fermer yoki xaridor sifatida telefon raqam orqali bir necha daqiqada ro'yxatdan o'ting.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <h3>Joylashtirish yoki ko'rish</h3>
+        <p>Fermenter sog'lom chorva mollarini joylashtiradi. Xaridorlar tasdiqlanganlarni ko'radi.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <h3>Bog'lanish</h3>
+        <p>To'g'ridan-to'g'ri muloqot qiling, narxlarni muhokama qiling va shartlarga keleshing.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <h3>Bitim</h3>
+        <p>Xavfsiz to'lov va yetkazib berish tartiboti. Ikkala tomonga qulay.</p>
+      </div>
+    </div>
+    <div style="margin-top:48px;display:flex;gap:32px;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:#22c55e;">25+</div>
+        <div style="font-size:12px;color:#6b7280;margin-top:4px;">Aktiv e'lonlar</div>
+      </div>
+      <div style="width:1px;background:#1f2937;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:#22c55e;">3</div>
+        <div style="font-size:12px;color:#6b7280;margin-top:4px;">Sahifalar</div>
+      </div>
+      <div style="width:1px;background:#1f2937;"></div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:#22c55e;">AI</div>
+        <div style="font-size:12px;color:#6b7280;margin-top:4px;">Gemini 2.5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Marketplace -->
+  <div class="slide slide-2col slide-dark" id="slide-4">
+    <div class="slide-screenshot">
+      <div class="screenshot-frame">
+        <div class="browser-bar">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+          <div class="browser-url">chorvaai.uz/marketplace</div>
+        </div>
+        <img src="screenshots/02_marketplace.png" alt="Marketplace">
+      </div>
+    </div>
+    <div class="slide-info">
+      <div class="slide-num">04 / BOZOR</div>
+      <h2>Chorva <em>bozori</em> — barcha e'lonlar bir joyda</h2>
+      <p>25 dan ortiq chorva mollari: sigir, tuya, echki, qo'y, ot. Filter va qidirish imkoniyatlari mavjud.</p>
+      <ul class="feature-list">
+        <li>Grid ko'rinishida kartochkalar</li>
+        <li>Tur belgisi: Buqa, Sigir, Tuya, Echki, Qo'y</li>
+        <li>Narx, joylashuv, vazn, yosh ma'lumotlari</li>
+        <li>Qidiruv va filtr paneli</li>
+        <li>Kartochkalar / Xarita ko'rinishi</li>
+        <li>Sahifalash (pagination)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 6: AI Yordamchi -->
+  <div class="slide slide-2col" id="slide-5">
+    <div class="slide-info">
+      <div class="slide-num">05 / AI YORDAMCHI</div>
+      <h2><em>Sun'iy intellekt</em> bilan chorva tahlili</h2>
+      <p>Gemini 2.5 Flash modeli asosida ishlaydi. Rasm yuborib hayvon haqida batafsil ma'lumot oling.</p>
+      <ul class="feature-list">
+        <li>Rasm yuklash va tahlil qilish</li>
+        <li>Zot, yosh, taxminiy vazn aniqlash</li>
+        <li>Joriy bozor bahosini baholash</li>
+        <li>Parvarish va ovqatlanish bo'yicha maslahat</li>
+        <li>Narxlar, kategoriyalar haqida savol berish</li>
+        <li>Suhbat tarixi saqlanadi</li>
+      </ul>
+    </div>
+    <div class="slide-screenshot">
+      <div class="screenshot-frame">
+        <div class="browser-bar">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+          <div class="browser-url">chorvaai.uz/ai-assistant</div>
+        </div>
+        <img src="screenshots/03_ai_assistant.png" alt="AI Yordamchi">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Auth -->
+  <div class="slide slide-2col slide-dark" id="slide-6">
+    <div class="slide-screenshot" style="gap:24px;flex-direction:row;flex:1.6;">
+      <div class="screenshot-frame" style="flex:1;">
+        <div class="browser-bar">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+          <div class="browser-url">/login</div>
+        </div>
+        <img src="screenshots/04_login.png" alt="Kirish">
+      </div>
+      <div class="screenshot-frame" style="flex:1;">
+        <div class="browser-bar">
+          <div class="browser-dot red"></div>
+          <div class="browser-dot yellow"></div>
+          <div class="browser-dot green"></div>
+          <div class="browser-url">/register</div>
+        </div>
+        <img src="screenshots/05_register.png" alt="Ro'yxatdan o'tish">
+      </div>
+    </div>
+    <div class="slide-info">
+      <div class="slide-num">06 / AUTENTIFIKATSIYA</div>
+      <h2>Telefon raqam orqali <em>tez kirish</em></h2>
+      <p>Email talab qilinmaydi — faqat O'zbek telefon raqami (+998) va parol.</p>
+      <ul class="feature-list">
+        <li>Kirish: telefon + parol</li>
+        <li>Ro'yxat: ism, familiya, telefon, parol</li>
+        <li>"Eslab qolish" funktsiyasi</li>
+        <li>Parolni tiklash imkoniyati</li>
+        <li>UZ / RU til tanlovi</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 8: Tech stack -->
+  <div class="slide slide-features" id="slide-7">
+    <div class="slide-num">07 / TEXNOLOGIYALAR</div>
+    <h2>Texnik <em>arxitektura</em></h2>
+    <div class="subtitle">Zamonaviy va ishonchli texnologiyalar to'plami</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔴</div>
+        <h3>Laravel (Backend)</h3>
+        <p>PHP 8.3 asosida qurilgan. MVC arxitekturasi, Eloquent ORM, route middleware, policy-based ruxsatlar.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Tailwind CSS</h3>
+        <p>Utility-first CSS framework. Dark tema, responsive dizayn, Vite bilan build pipeline.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Gemini 2.5 Flash</h3>
+        <p>Google DeepMind AI modeli. Rasm tahlili, narx baholash va chorva maslahatchi vazifalarini bajaradi.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗄️</div>
+        <h3>MySQL</h3>
+        <p>Relyatsion ma'lumotlar bazasi. Foydalanuvchilar, mahsulotlar, kategoriyalar, suhbatlar saqlash.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Xarita integratsiyasi</h3>
+        <p>Marketplace'da kartochkalar yonida xarita ko'rinishi — joylashuv bo'yicha qidirish imkoniyati.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>i18n (Ko'p til)</h3>
+        <p>Laravel localization orqali UZ va RU tillari. Cookie asosida til saqlash.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Final -->
+  <div class="slide slide-final" id="slide-8">
+    <div class="decorative-dots">
+      <div class="dot" style="width:400px;height:400px;top:-150px;left:-120px;"></div>
+      <div class="dot" style="width:250px;height:250px;bottom:-80px;right:-80px;"></div>
+    </div>
+    <div class="big-logo">Chorva<span>AI</span></div>
+    <h2>O'zbekiston chorva bozorini raqamlashtirish</h2>
+    <div class="cta-buttons">
+      <a class="btn-primary" href="http://127.0.0.1:8000" target="_blank">Saytni ochish</a>
+      <a class="btn-secondary" href="http://127.0.0.1:8000/marketplace" target="_blank">Bozorni ko'rish</a>
+    </div>
+    <div style="margin-top:48px;display:flex;gap:48px;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-size:32px;font-weight:900;color:#22c55e;">🐄</div>
+        <div style="font-size:13px;color:#374151;margin-top:6px;">Chorva mollari</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:32px;font-weight:900;color:#22c55e;">🤖</div>
+        <div style="font-size:13px;color:#374151;margin-top:6px;">AI tahlil</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:32px;font-weight:900;color:#22c55e;">🇺🇿</div>
+        <div style="font-size:13px;color:#374151;margin-top:6px;">O'zbekiston</div>
+      </div>
+    </div>
+    <div class="website-url">chorvaai.uz — 2026</div>
+  </div>
+
+</div><!-- /slides-container -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button id="nextBtn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<div class="hint">← → klavishlar yoki tugmalar</div>
+
+<script>
+  const TOTAL = 9;
+  let current = 0;
+
+  const slides = document.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const indicators = document.getElementById('indicators');
+
+  // Build indicators
+  for (let i = 0; i < TOTAL; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'indicator-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    indicators.appendChild(dot);
+  }
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    indicators.children[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    indicators.children[current].classList.add('active');
+    progress.style.width = ((current + 1) / TOTAL * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + TOTAL;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === TOTAL - 1;
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < TOTAL) goTo(next);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      changeSlide(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      changeSlide(-1);
+    }
+  });
+
+  // Initial progress
+  progress.style.width = (1 / TOTAL * 100) + '%';
+</script>
+</body>
+</html>

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: #fff;
+    color: #111827;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* =================== PAGE =================== */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 0;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  /* =================== COVER PAGE =================== */
+  .cover {
+    background: linear-gradient(160deg, #052e16 0%, #064e24 40%, #0f4c2a 100%);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 297mm;
+  }
+
+  .cover-inner {
+    padding: 60px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .cover-tag {
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #4ade80;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 8px 20px;
+    border-radius: 100px;
+    margin-bottom: 48px;
+  }
+
+  .cover-logo {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .cover-logo .ai { color: #4ade80; }
+
+  .cover-subtitle {
+    font-size: 20px;
+    color: #86efac;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 460px;
+    margin-bottom: 60px;
+  }
+
+  .cover-divider {
+    width: 60px;
+    height: 3px;
+    background: #22c55e;
+    border-radius: 2px;
+    margin-bottom: 60px;
+  }
+
+  .cover-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 60px;
+  }
+
+  .cover-stat {
+    text-align: center;
+  }
+
+  .cover-stat-val {
+    font-size: 36px;
+    font-weight: 900;
+    color: #22c55e;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .cover-stat-lbl {
+    font-size: 12px;
+    color: #6b7280;
+    letter-spacing: 1px;
+  }
+
+  .cover-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+
+  .cover-tag-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #9ca3af;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+
+  .cover-footer {
+    font-size: 12px;
+    color: #374151;
+    letter-spacing: 1px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* =================== SECTION PAGES =================== */
+  .page-header {
+    background: #f0fdf4;
+    border-bottom: 3px solid #22c55e;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .page-header .logo {
+    font-size: 18px;
+    font-weight: 900;
+    color: #064e3b;
+    letter-spacing: -0.5px;
+  }
+
+  .page-header .logo .ai { color: #22c55e; }
+
+  .page-header .section-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #22c55e;
+    letter-spacing: 2px;
+    background: rgba(34,197,94,0.1);
+    padding: 5px 12px;
+    border-radius: 100px;
+  }
+
+  .page-content {
+    padding: 36px 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #f3f4f6;
+  }
+
+  .section-title .highlight { color: #16a34a; }
+
+  .section-lead {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.8;
+    background: #f9fafb;
+    border-left: 4px solid #22c55e;
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* Screenshot box */
+  .screenshot-box {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .screenshot-topbar {
+    background: #1e1e1e;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .browser-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .bd-r { background: #ff5f57; }
+  .bd-y { background: #ffbd2e; }
+  .bd-g { background: #28c941; }
+
+  .url-bar {
+    flex: 1;
+    background: #2a2a2a;
+    color: #9ca3af;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-left: 8px;
+    font-family: monospace;
+  }
+
+  .screenshot-box img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .two-col-6040 {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+  }
+
+  /* Info blocks */
+  .info-block {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .info-block h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-block h3 .icon {
+    width: 28px;
+    height: 28px;
+    background: #dcfce7;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .info-block ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-block ul li {
+    font-size: 12.5px;
+    color: #374151;
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .info-block ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .info-block p {
+    font-size: 12.5px;
+    color: #4b5563;
+    line-height: 1.7;
+  }
+
+  /* Feature cards grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .feature-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px 16px;
+  }
+
+  .feature-card .fc-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .feature-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .feature-card p {
+    font-size: 11.5px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  /* Steps */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .step-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    position: relative;
+  }
+
+  .step-card .step-n {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+  }
+
+  .step-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .step-card p {
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .step-arrow {
+    position: absolute;
+    right: -16px;
+    top: 28px;
+    color: #d1d5db;
+    font-size: 18px;
+    z-index: 1;
+  }
+
+  /* Tech stack */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .tech-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .tech-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: #dcfce7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+
+  .tech-card p {
+    font-size: 11.5px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  /* Callout */
+  .callout {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout .ci {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .callout p {
+    font-size: 12.5px;
+    color: #14532d;
+    line-height: 1.7;
+  }
+
+  .callout strong { color: #15803d; }
+
+  /* Page footer */
+  .page-footer {
+    padding: 10px 40px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  .page-footer span {
+    font-size: 10px;
+    color: #9ca3af;
+  }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+
+  .summary-table th {
+    background: #064e3b;
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .summary-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: top;
+    color: #374151;
+    line-height: 1.6;
+  }
+
+  .summary-table tr:nth-child(even) td { background: #f9fafb; }
+
+  .badge-green {
+    display: inline-block;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  /* Final page */
+  .final-page {
+    background: linear-gradient(160deg, #052e16 0%, #064e24 60%, #052e16 100%);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 297mm;
+  }
+
+  .final-inner {
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .final-logo {
+    font-size: 64px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+
+  .final-logo .ai { color: #4ade80; }
+
+  .final-desc {
+    font-size: 18px;
+    color: #86efac;
+    max-width: 440px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .final-line {
+    width: 80px;
+    height: 3px;
+    background: #22c55e;
+    border-radius: 2px;
+    margin: 0 auto 48px;
+  }
+
+  .contact-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 48px;
+  }
+
+  .contact-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px 14px;
+    text-align: center;
+  }
+
+  .contact-card .cc-icon { font-size: 22px; margin-bottom: 8px; }
+  .contact-card .cc-label { font-size: 10px; color: #6b7280; letter-spacing: 1px; margin-bottom: 6px; }
+  .contact-card .cc-value { font-size: 12px; color: #d1fae5; font-weight: 600; }
+
+  .final-footer {
+    font-size: 11px;
+    color: #374151;
+    letter-spacing: 1px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    width: 100%;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== PAGE 1: COVER ===== -->
+<div class="page cover">
+  <div class="cover-inner">
+    <div class="cover-tag">LOYIHA TAQDIMOTI — 2026</div>
+    <div class="cover-logo">Chorva<span class="ai">AI</span></div>
+    <div class="cover-subtitle">
+      O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platforma
+    </div>
+    <div class="cover-divider"></div>
+
+    <div class="cover-stats">
+      <div class="cover-stat">
+        <div class="cover-stat-val">25+</div>
+        <div class="cover-stat-lbl">AKTIV E'LON</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-val">AI</div>
+        <div class="cover-stat-lbl">GEMINI 2.5</div>
+      </div>
+      <div class="cover-stat">
+        <div class="cover-stat-val">2</div>
+        <div class="cover-stat-lbl">TIL (UZ/RU)</div>
+      </div>
+    </div>
+
+    <div class="cover-tags">
+      <span class="cover-tag-item">Laravel 11</span>
+      <span class="cover-tag-item">Tailwind CSS</span>
+      <span class="cover-tag-item">Gemini 2.5 Flash</span>
+      <span class="cover-tag-item">MySQL</span>
+      <span class="cover-tag-item">Vite</span>
+    </div>
+
+    <div style="font-size:13px;color:#4b5563;line-height:1.8;max-width:480px;text-align:center;">
+      Ushbu hujjat <strong style="color:#86efac;">ChorvaAI</strong> platformasining barcha sahifalari,
+      imkoniyatlari va texnik tuzilishini batafsil tushuntiradi.
+      Har bir bo'lim ekran rasmi va izohlar bilan to'ldirilgan.
+    </div>
+
+    <div class="cover-footer">
+      chorvaai.uz &nbsp;·&nbsp; info@chorvaai.uz &nbsp;·&nbsp; +998 90 000 00 00 &nbsp;·&nbsp; O'zbekiston, 2026
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 2: MUNDARIJA ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">MUNDARIJA</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Hujjat tarkibi</div>
+    <div class="section-lead">
+      Ushbu taqdimot ChorvaAI platformasining har bir bo'limini ekran rasmlari bilan birga
+      batafsil tushuntiradi. Quyida sahifalar ro'yxati keltirilgan.
+    </div>
+
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th style="width:60px;">Sahifa</th>
+          <th>Bo'lim</th>
+          <th>Tarkib</th>
+          <th style="width:90px;">Holat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3</td>
+          <td><strong>Bosh Sahifa (Hero)</strong></td>
+          <td>Platforma tavsifi, asosiy navigatsiya, CTA tugmalari, hero rasm</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>Nima uchun ChorvaAI?</strong></td>
+          <td>3 ta asosiy ustunlik: Ishonch, AI, Adolatli narxlar</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Qanday ishlaydi?</strong></td>
+          <td>4 qadam: Ro'yxat → Joylash → Bog'lan → Bitim</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>Marketplace (Bozor)</strong></td>
+          <td>Barcha chorva mollari, filter, qidiruv, pagination</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Mahsulot Batafsil</strong></td>
+          <td>E'lon sahifasi: foto, narx, ma'lumotlar, sotuvchi, bog'lanish</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>AI Yordamchi</strong></td>
+          <td>Gemini 2.5 bilan chat, rasm tahlil, maslahat</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><strong>Kirish / Ro'yxatdan o'tish</strong></td>
+          <td>Telefon raqam asosida autentifikatsiya tizimi</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><strong>Texnik Arxitektura</strong></td>
+          <td>Laravel, Tailwind, MySQL, Gemini, i18n stack</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><strong>Xulosa</strong></td>
+          <td>Aloqa ma'lumotlari, manzil, keyingi qadamlar</td>
+          <td><span class="badge-green">Tayyor</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <div class="ci">💡</div>
+      <p>
+        <strong>Platforma maqsadi:</strong> O'zbekistondagi chorva egalari uchun ishonchli raqamli
+        bozor yaratish. Fermer o'z mahsulotini onlayn joylashtiradi, xaridor esa AI yordamida
+        hayvon haqida batafsil ma'lumot olgan holda to'g'ridan-to'g'ri sotuvchi bilan bog'lanadi —
+        vositachisiz, shaffof narxlarda.
+      </p>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>2 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 3: BOSH SAHIFA HERO ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">01 — BOSH SAhIFA</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Bosh Sahifa — <span class="highlight">Hero qism</span></div>
+    <div class="section-lead">
+      Foydalanuvchi saytga kirganda birinchi ko'radigan sahifasi — to'q yashil fonda yirik sigir rasmi
+      va aniq chaqiruv matni bilan qurilgan. Bir nazar bilan platforma nima haqida ekanligi tushuniladi.
+    </div>
+
+    <div class="screenshot-box">
+      <div class="screenshot-topbar">
+        <span class="browser-dot bd-r"></span>
+        <span class="browser-dot bd-y"></span>
+        <span class="browser-dot bd-g"></span>
+        <span class="url-bar">chorvaai.uz</span>
+      </div>
+      <img src="screenshots/01_home_fold.png" style="max-height:340px;object-fit:cover;object-position:top;" alt="Bosh sahifa">
+    </div>
+
+    <div class="two-col">
+      <div class="info-block">
+        <h3><span class="icon">🧭</span> Navigatsiya paneli</h3>
+        <ul>
+          <li><strong>ChorvaAI</strong> — logotip, bosh sahifaga qaytish</li>
+          <li><strong>BOZOR</strong> — barcha e'lonlar ro'yxatiga o'tish</li>
+          <li><strong>AI YORDAMCHI</strong> — sun'iy intellekt chatiga o'tish</li>
+          <li><strong>+ E'LON BERISH</strong> — yangi mahsulot joylashtirish (yashil tugma)</li>
+          <li><strong>BIZ HAQIMIZDA / ALOQA</strong> — anchor havolalar</li>
+          <li><strong>UZ / RU</strong> — til almashtirish tugmalari</li>
+          <li><strong>KIRISH</strong> — ro'yxatdan o'tgan foydalanuvchilar uchun</li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3><span class="icon">🎯</span> Hero qism tarkibi</h3>
+        <ul>
+          <li>Sarlavha: <em>"Chorva mollari sotib olish va sotish ekosistemi"</em></li>
+          <li>Tavsif matni: platforma maqsadi qisqacha izohlangan</li>
+          <li><strong>"SOTISHNI BOSHLASH"</strong> — yashil asosiy tugma (login ga yo'naltiradi)</li>
+          <li><strong>"MAHSULOTLARNI KO'RISH"</strong> — ikkinchi darajali tugma</li>
+          <li>Fon: yashil rangli to'q gradient ustida chorva fermasi rasmi</li>
+          <li>Pastki o'ng burchakda: AI chat floating tugmasi (yashil doira)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>3 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 4: NIMA UCHUN ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">02 — AFZALLIKLAR</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Nima uchun <span class="highlight">ChorvaAI</span>?</div>
+    <div class="section-lead">
+      Bosh sahifaning "Nima uchun bozorimizddan foydalanasiz?" qismida 3 ta asosiy ustunlik kartochkalar
+      ko'rinishida vizual tarzda taqdim etilgan. Har biri haqiqiy rasm bilan bezatilgan.
+    </div>
+
+    <div class="screenshot-box">
+      <div class="screenshot-topbar">
+        <span class="browser-dot bd-r"></span>
+        <span class="browser-dot bd-y"></span>
+        <span class="browser-dot bd-g"></span>
+        <span class="url-bar">chorvaai.uz/#why</span>
+      </div>
+      <img src="screenshots/01b_home_why.png" style="max-height:300px;object-fit:cover;object-position:bottom;" alt="Why section">
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="fc-icon">🛡️</div>
+        <h4>Tasdiqlangan Ishonch</h4>
+        <p>
+          Har bir fermer haqiqiy shaxs sifatida tekshiriladi. Soxta e'lonlar va firibgarlardan
+          himoyalanish uchun maxsus tizim joriy etilgan. Xaridor real odamlar bilan ishlaydi.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">🤖</div>
+        <h4>AI Yordamchi</h4>
+        <p>
+          Gemini 2.5 Flash modeli yordamida sigir yoki boshqa hayvon rasmini yuborib,
+          uning zoti, taxminiy vazni, yoshi va joriy bozor bahosini bir zumda bilib oling.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">💰</div>
+        <h4>Adolatli Narxlar</h4>
+        <p>
+          Yashirin vositachilarsiz to'g'ridan-to'g'ri sotuvchi bilan bog'laning.
+          Bozor narxlari shaffof ko'rsatiladi. Hammaga teng va ochiq imkoniyat.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="ci">📊</div>
+      <p>
+        <strong>Dizayn yondashuvi:</strong> Har bir ustunlik kartochkasi haqiqiy chorva rasmi
+        (qo'y, sigir) bilan vizual kuchaytirilgan. AI kartochkasi esa to'q yashil rangda ajratib ko'rsatilgan —
+        bu platformaning eng asosiy xususiyati sifatida e'tiborni tortadi.
+        Kartochkalar hover effektli va "SINAB KO'RISH →" havolasiga ega.
+      </p>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>4 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 5: QANDAY ISHLAYDI ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">03 — JARAYON</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Qanday <span class="highlight">ishlaydi</span>?</div>
+    <div class="section-lead">
+      Platforma foydalanuvchini 4 oddiy qadamda savdo jarayoniga olib kiradi. Bosh sahifadagi
+      "Qanday ishlaydi?" bo'limida bu qadamlar sonli ikonkalar bilan ko'rsatilgan.
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <h4>Hisob yaratish</h4>
+        <p>
+          Fermer yoki xaridor sifatida o'zbek telefon raqami (+998) orqali bir necha daqiqada
+          ro'yxatdan o'ting. Email talab qilinmaydi.
+        </p>
+        <span class="step-arrow">›</span>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <h4>Joylashtirish yoki ko'rish</h4>
+        <p>
+          Fermer o'z chorva molini rasm, narx, joylashuv va batafsil ma'lumotlar bilan bozorga
+          joylashtiradi. Xaridor barchani ko'radi.
+        </p>
+        <span class="step-arrow">›</span>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <h4>Bog'lanish</h4>
+        <p>
+          Xohlagan e'lon sahifasida "Sotuvchi bilan bog'lanish" tugmasi orqali
+          to'g'ridan-to'g'ri muloqot boshlang va narx haqida kelishing.
+        </p>
+        <span class="step-arrow">›</span>
+      </div>
+      <div class="step-card">
+        <div class="step-n">4</div>
+        <h4>Bitim</h4>
+        <p>
+          Kelishuv bo'lgach, to'lov va yetkazib berish tartibotini ikki tomon
+          o'zaro hal qiladi. Xavfsiz va shaffof jarayon.
+        </p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="info-block">
+        <h3><span class="icon">👤</span> Fermer uchun afzalliklar</h3>
+        <ul>
+          <li>Mahsulotni keng auditoriyaga yetkazish</li>
+          <li>Vositachisiz bevosita xaridor bilan muloqot</li>
+          <li>AI yordamida hayvon qiymatini baholash</li>
+          <li>Bozordagi o'xshash narxlarni ko'rish</li>
+          <li>E'lonni istalgan vaqt tahrirlash yoki o'chirish</li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3><span class="icon">🛒</span> Xaridor uchun afzalliklar</h3>
+        <ul>
+          <li>Tasdiqlangan sotuvchilar bilan ishlash</li>
+          <li>Filtr va qidiruv orqali kerakli molni topish</li>
+          <li>Joylashuv xaritasida yaqin mollarni ko'rish</li>
+          <li>AI orqali hayvon haqida qo'shimcha ma'lumot olish</li>
+          <li>Adolatli bozor narxlarini taqqoslash imkoniyati</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>5 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 6: MARKETPLACE ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">04 — MARKETPLACE</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Marketplace — <span class="highlight">Chorva Bozori</span></div>
+    <div class="section-lead">
+      /marketplace sahifasi platformaning asosiy qismi bo'lib, barcha aktiv e'lonlar kartochkalar ko'rinishida
+      ko'rsatiladi. Hozirda 25 ta e'lon mavjud bo'lib, 3 sahifaga bo'lingan.
+    </div>
+
+    <div class="screenshot-box">
+      <div class="screenshot-topbar">
+        <span class="browser-dot bd-r"></span>
+        <span class="browser-dot bd-y"></span>
+        <span class="browser-dot bd-g"></span>
+        <span class="url-bar">chorvaai.uz/marketplace</span>
+      </div>
+      <img src="screenshots/02_marketplace.png" style="max-height:360px;object-fit:cover;object-position:top;" alt="Marketplace">
+    </div>
+
+    <div class="two-col">
+      <div class="info-block">
+        <h3><span class="icon">🔍</span> Qidiruv va filtr</h3>
+        <ul>
+          <li>Nomi, zoti yoki joylashuvi bo'yicha qidiruv</li>
+          <li><strong>Filter</strong> tugmasi — kengaytirilgan filtr paneli</li>
+          <li><strong>Kartochkalar</strong> ko'rinishi (hozirgi holat)</li>
+          <li><strong>Xarita</strong> ko'rinishi — geografik joylashuv bo'yicha</li>
+          <li>Sahifalash: 12 ta e'lon / sahifa, 3 sahifa</li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3><span class="icon">🏷️</span> E'lon kartochkasi</h3>
+        <ul>
+          <li>Hayvon rasmi yoki emoji belgisi</li>
+          <li>Rang kodi: Buqa, Sigir, Tuya, Echki, Qo'y</li>
+          <li>E'lon nomi va narxi (yashil rangda)</li>
+          <li>Joylashuv: Viloyat, Tuman</li>
+          <li>Vazn (kg) va Yosh ma'lumoti</li>
+          <li>"Batafsil ko'rish" tugmasi</li>
+          <li>E'lon vaqti (necha soat/kun avval)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>6 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 7: PRODUCT DETAIL ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">05 — MAhSULOT BATAFSIL</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Mahsulot <span class="highlight">batafsil sahifasi</span></div>
+    <div class="section-lead">
+      Har bir e'longa bosganda ochiladi. Hayvon haqida to'liq ma'lumot: rasmlar, texnik ko'rsatkichlar,
+      sotuvchi profili va bog'lanish tugmasi — hammasi bir sahifada.
+    </div>
+
+    <div class="two-col-6040">
+      <div class="screenshot-box">
+        <div class="screenshot-topbar">
+          <span class="browser-dot bd-r"></span>
+          <span class="browser-dot bd-y"></span>
+          <span class="browser-dot bd-g"></span>
+          <span class="url-bar">chorvaai.uz/marketplace/27</span>
+        </div>
+        <img src="screenshots/02b_product_detail.png" style="max-height:400px;object-fit:cover;object-position:top;" alt="Product detail">
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="info-block">
+          <h3><span class="icon">📋</span> Asosiy ma'lumotlar</h3>
+          <ul>
+            <li><strong>Nomi:</strong> "Qoramol" — sarlavha sifatida</li>
+            <li><strong>Narxi:</strong> 7 000 000 so'm (yashil, yirik)</li>
+            <li><strong>Holati:</strong> Faol / Yaqshi zor</li>
+            <li><strong>Zoti:</strong> Qorabosh</li>
+            <li><strong>Jinsi:</strong> Erkak</li>
+            <li><strong>Yoshi:</strong> 5 yosh</li>
+            <li><strong>Vazni:</strong> 220 kg</li>
+            <li><strong>Turi:</strong> Buqa</li>
+            <li><strong>Rangi:</strong> Qora</li>
+            <li><strong>Sog'liq holati:</strong> Zor</li>
+          </ul>
+        </div>
+        <div class="info-block">
+          <h3><span class="icon">🤝</span> Bog'lanish paneli</h3>
+          <ul>
+            <li>Sotuvchi ismi va profil belgisi</li>
+            <li>E'lon berilgan sana</li>
+            <li>Ko'rishlar soni va sevimlilar</li>
+            <li>"Kirish" — sotuvchi bilan bog'lanish</li>
+            <li>"Ro'yxatdan o'tish" — yangi foydalanuvchilar</li>
+            <li>Joylashuv: Beruniy, Qoraqalpog'iston</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>7 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 8: AI YORDAMCHI ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">06 — AI YORDAMCHI</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">AI Yordamchi — <span class="highlight">Gemini 2.5 Flash</span></div>
+    <div class="section-lead">
+      /ai-assistant sahifasi to'liq ekranli chat interfeysi bo'lib, Google Gemini 2.5 Flash modeli
+      bilan ishlaydi. Foydalanuvchi rasm yuklash yoki savol yozish orqali chorva haqida real vaqt
+      ma'lumot oladi.
+    </div>
+
+    <div class="two-col-6040" style="grid-template-columns:2fr 1.5fr;">
+      <div class="screenshot-box">
+        <div class="screenshot-topbar">
+          <span class="browser-dot bd-r"></span>
+          <span class="browser-dot bd-y"></span>
+          <span class="browser-dot bd-g"></span>
+          <span class="url-bar">chorvaai.uz/ai-assistant</span>
+        </div>
+        <img src="screenshots/03_ai_assistant.png" style="max-height:400px;" alt="AI Assistant">
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="info-block">
+          <h3><span class="icon">🤖</span> Interfeys tuzilishi</h3>
+          <ul>
+            <li>Chap panel: suhbat tarixi ro'yxati</li>
+            <li>"+ Yangi suhbat" — yangi chat boshlash</li>
+            <li>Model belgisi: <strong>Gemini 2.5 Flash</strong></li>
+            <li>Markazda: 4 ta tez savol kartochkasi</li>
+            <li>Pastda: savol yozish va fayl yuklash maydoni</li>
+            <li>Qorong'u (dark) tema</li>
+          </ul>
+        </div>
+        <div class="info-block">
+          <h3><span class="icon">💬</span> Tez savollar</h3>
+          <ul>
+            <li><strong>Narxlar</strong> — Sigir narxlari hozir qanday?</li>
+            <li><strong>Parvarish</strong> — Qo'y parvarishlash maslahat</li>
+            <li><strong>Kategoriyalar</strong> — Platformada qanday kategoriyalar bor?</li>
+            <li><strong>Xarid</strong> — Chorva mollarini qayerdan sotib olish mumkin?</li>
+          </ul>
+        </div>
+        <div class="info-block">
+          <h3><span class="icon">📷</span> Rasm tahlil</h3>
+          <p>
+            Hayvon rasmini yuborasiz — AI zoti, taxminiy vazni, yoshi va joriy bozor bahosini
+            bir necha soniyada aniqlaydi. <strong>Hech qanday maxsus bilim talab qilinmaydi.</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>8 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 9: AUTH ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">07 — AUTENTIFIKATSIYA</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Kirish va <span class="highlight">Ro'yxatdan o'tish</span></div>
+    <div class="section-lead">
+      Platforma email o'rniga o'zbek telefon raqami (+998) asosida autentifikatsiya tizimidan
+      foydalanadi. Bu foydalanuvchi uchun qulay va tez jarayonni ta'minlaydi.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#22c55e;letter-spacing:2px;margin-bottom:8px;">KIRISH SAHIFASI</div>
+        <div class="screenshot-box">
+          <div class="screenshot-topbar">
+            <span class="browser-dot bd-r"></span>
+            <span class="browser-dot bd-y"></span>
+            <span class="browser-dot bd-g"></span>
+            <span class="url-bar">chorvaai.uz/login</span>
+          </div>
+          <img src="screenshots/04_login.png" alt="Login" style="max-height:280px;object-fit:cover;object-position:top;">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#22c55e;letter-spacing:2px;margin-bottom:8px;">RO'YXATDAN O'TISH</div>
+        <div class="screenshot-box">
+          <div class="screenshot-topbar">
+            <span class="browser-dot bd-r"></span>
+            <span class="browser-dot bd-y"></span>
+            <span class="browser-dot bd-g"></span>
+            <span class="url-bar">chorvaai.uz/register</span>
+          </div>
+          <img src="screenshots/05_register.png" alt="Register" style="max-height:280px;object-fit:cover;object-position:top;">
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="info-block">
+        <h3><span class="icon">🔑</span> Kirish sahifasi maydonlari</h3>
+        <ul>
+          <li>Telefon raqam (+998 prefiksi avtomatik)</li>
+          <li>Parol maydoni</li>
+          <li>"Eslab qolish" checkbox</li>
+          <li>"Parolni unutdim?" havolasi</li>
+          <li>"KIRISH" tugmasi (to'q yashil)</li>
+          <li>"Akkauntingiz yo'qmi?" — ro'yxatga yo'naltirish</li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3><span class="icon">📝</span> Ro'yxat sahifasi maydonlari</h3>
+        <ul>
+          <li>Ism maydoni (majburiy)</li>
+          <li>Familiya maydoni (majburiy)</li>
+          <li>Telefon raqam (+998 prefiksi)</li>
+          <li>Parol maydoni</li>
+          <li>Parolni tasdiqlash maydoni</li>
+          <li>"RO'YXATDAN O'TISH" tugmasi</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>9 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 10: TECH STACK ===== -->
+<div class="page">
+  <div class="page-header">
+    <div class="logo">Chorva<span class="ai">AI</span></div>
+    <span class="section-tag">08 — TEXNIK ARXITEKTURA</span>
+  </div>
+  <div class="page-content">
+    <div class="section-title">Texnik <span class="highlight">Arxitektura</span></div>
+    <div class="section-lead">
+      ChorvaAI zamonaviy va ishonchli texnologiyalar to'plami asosida qurilgan.
+      Backend uchun Laravel, frontend uchun Tailwind CSS, AI uchun Google Gemini ishlatiladi.
+    </div>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">🔴</div>
+        <div>
+          <h4>Laravel 11 (Backend)</h4>
+          <p>PHP 8.3 asosida qurilgan MVC framework. Eloquent ORM orqali ma'lumotlar bazasi bilan ishlash,
+          Route middleware autentifikatsiya, Policy-based ruxsatlar tizimi, Blade template engine.</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🎨</div>
+        <div>
+          <h4>Tailwind CSS + Vite</h4>
+          <p>Utility-first CSS framework. Barcha sahifalar responsive (mobil va desktop). Vite orqali
+          tez build pipeline, PostCSS integratsiyasi. Qorong'u va och ranglar uchun dizayn tizimi.</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🤖</div>
+        <div>
+          <h4>Google Gemini 2.5 Flash</h4>
+          <p>AI Yordamchi bo'limida ishlatiladi. Matn va rasm (multimodal) tahlil qilish qobiliyati.
+          Chorva zotini aniqlash, narx baholash, parvarish maslahati berish — barchasi real vaqtda.</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🗄️</div>
+        <div>
+          <h4>MySQL (Ma'lumotlar bazasi)</h4>
+          <p>Relyatsion ma'lumotlar bazasi. Jadvallar: users, products, categories, conversations, messages.
+          Laravel migrations orqali boshqarish. Indekslar va foreign key bog'lanishlar.</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🌍</div>
+        <div>
+          <h4>i18n — Ko'p til qo'llab-quvvatlash</h4>
+          <p>Laravel localization tizimi orqali O'zbek (UZ) va Rus (RU) tillarida to'liq ishlaydi.
+          Til tanlovi navigatsiyada bayroq bilan ko'rsatilgan. Cookie orqali til saqlanadi.</p>
+        </div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🗺️</div>
+        <div>
+          <h4>Xarita integratsiyasi</h4>
+          <p>Marketplace'da kartochkalar yonida xarita ko'rinishi mavjud. Har bir e'lon
+          viloyat va tuman ma'lumoti bilan saqlanadi. Joylashuv bo'yicha qidiruv imkoniyati.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="ci">🏗️</div>
+      <p>
+        <strong>Arxitektura xulosasi:</strong> Server-side rendering (Blade templates) + minimal JavaScript.
+        Laravel Sanctum autentifikatsiyasi. RESTful routes tuzilishi. Storage faylariga public symlink.
+        Queue va cache uchun Laravel tayyor imkoniyatlaridan foydalanilgan.
+      </p>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>ChorvaAI — Loyiha Taqdimoti</span>
+    <span>10 / 11</span>
+  </div>
+</div>
+
+
+<!-- ===== PAGE 11: FINAL ===== -->
+<div class="page final-page">
+  <div class="final-inner">
+    <div class="final-logo">Chorva<span class="ai">AI</span></div>
+    <div class="final-line"></div>
+    <div class="final-desc">
+      O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platforma.
+      AI yordamida, tez, xavfsiz va shaffof.
+    </div>
+
+    <div class="contact-cards">
+      <div class="contact-card">
+        <div class="cc-icon">🌐</div>
+        <div class="cc-label">VEBSAYT</div>
+        <div class="cc-value">chorvaai.uz</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">📧</div>
+        <div class="cc-label">EMAIL</div>
+        <div class="cc-value">info@chorvaai.uz</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">📞</div>
+        <div class="cc-label">TELEFON</div>
+        <div class="cc-value">+998 90 000 00 00</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:480px;margin-bottom:40px;">
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#22c55e;">25+</div>
+        <div style="font-size:10px;color:#4b5563;margin-top:4px;letter-spacing:1px;">E'LONLAR</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#22c55e;">5</div>
+        <div style="font-size:10px;color:#4b5563;margin-top:4px;letter-spacing:1px;">KATEGORIYA</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#22c55e;">AI</div>
+        <div style="font-size:10px;color:#4b5563;margin-top:4px;letter-spacing:1px;">GEMINI 2.5</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#22c55e;">2</div>
+        <div style="font-size:10px;color:#4b5563;margin-top:4px;letter-spacing:1px;">TIL</div>
+      </div>
+    </div>
+
+    <div class="final-footer">
+      © 2026 ChorvaAI — Barcha huquqlar himoyalangan &nbsp;·&nbsp; O'zbekiston, Qoraqalpog'iston
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
