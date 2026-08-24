@@ -32,6 +32,7 @@ class User extends Authenticatable
         'phone',
         'email',
         'password',
+        'google_id',
         'phone_verified_at',
         'email_verified_at',
         'avatar',
@@ -64,6 +65,10 @@ class User extends Authenticatable
 
     public function hasVerifiedPhone(): bool
     {
+        // Google orqali kirgan foydalanuvchilar uchun telefon talab qilinmaydi
+        if (is_null($this->phone)) {
+            return true;
+        }
         return !is_null($this->phone_verified_at);
     }
 

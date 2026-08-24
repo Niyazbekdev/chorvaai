@@ -58,4 +58,7 @@ return [
     'email'                   => "Email адрес",
     'login_identifier'        => "Email или номер телефона",
     'login_placeholder'       => "email@example.com или 901234567",
+    'or'                      => "или",
+    'google_login'            => "Войти через Google",
+    'google_register'         => "Зарегистрироваться через Google",
 ];

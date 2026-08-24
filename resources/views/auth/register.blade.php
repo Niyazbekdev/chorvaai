@@ -111,6 +111,16 @@
         </div>
     </form>
 
+    <div class="mt-6 flex items-center gap-3">
+        <div class="flex-1 h-px bg-gray-200"></div>
+        <span class="text-xs text-gray-400">{{ __('auth.or') }}</span>
+        <div class="flex-1 h-px bg-gray-200"></div>
+    </div>
+
+    <div class="mt-4">
+        <x-google-button>{{ __('auth.google_register') }}</x-google-button>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const phoneInput = document.getElementById('phone');
