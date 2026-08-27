@@ -23,7 +23,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'login'    => ['required', 'string'],
+            'phone'    => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -32,24 +32,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $login = trim($this->input('login', ''));
+        $digits = preg_replace('/\D/', '', $this->input('phone', ''));
+        $phone  = '+998' . substr($digits, -9);
 
-        // Email yoki telefon ekanini aniqlash
-        if (str_contains($login, '@')) {
-            $credentials = ['email' => $login, 'password' => $this->input('password')];
-            $errorField  = 'login';
-        } else {
-            $digits = preg_replace('/\D/', '', $login);
-            $phone  = '+998' . substr($digits, -9);
-            $credentials = ['phone' => $phone, 'password' => $this->input('password')];
-            $errorField  = 'login';
-        }
-
-        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+        if (! Auth::attempt(['phone' => $phone, 'password' => $this->input('password')], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                $errorField => "Email / telefon raqam yoki parol noto'g'ri.",
+                'phone' => "Telefon raqam yoki parol noto'g'ri.",
             ]);
         }
 
@@ -67,7 +57,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'login' => trans('auth.throttle', [
+            'phone' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -76,6 +66,6 @@ class LoginRequest extends FormRequest
 
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('login')) . '|' . $this->ip());
+        return Str::transliterate(Str::lower($this->string('phone')) . '|' . $this->ip());
     }
 }

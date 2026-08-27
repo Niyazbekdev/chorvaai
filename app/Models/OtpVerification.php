@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OtpVerification extends Model
 {
-    protected $fillable = ['phone', 'email', 'code', 'expires_at', 'attempts', 'resend_at'];
+    protected $fillable = ['phone', 'code', 'expires_at', 'attempts', 'resend_at'];
 
     protected $casts = [
         'expires_at' => 'datetime',

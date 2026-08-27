@@ -31,20 +31,6 @@
             <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
         </div>
 
-        <!-- Email -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('auth.email')" />
-            <x-text-input
-                id="email"
-                class="block mt-1 w-full"
-                type="email"
-                name="email"
-                :value="old('email')"
-                required
-                autocomplete="email" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
         <!-- Phone -->
         <div class="mt-4">
             <x-input-label for="phone" :value="__('Phone Number')" />
@@ -110,16 +96,6 @@
             </x-primary-button>
         </div>
     </form>
-
-    <div class="mt-6 flex items-center gap-3">
-        <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-xs text-gray-400">{{ __('auth.or') }}</span>
-        <div class="flex-1 h-px bg-gray-200"></div>
-    </div>
-
-    <div class="mt-4">
-        <x-google-button>{{ __('auth.google_register') }}</x-google-button>
-    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {

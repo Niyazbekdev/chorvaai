@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\OtpMail;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\EskizService;
@@ -12,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -37,15 +35,11 @@ class RegisteredUserController extends Controller
             'first_name' => ['required', 'string', 'max:100'],
             'last_name'  => ['required', 'string', 'max:100'],
             'phone'      => ['required', 'string', 'regex:/^\+998\d{9}$/'],
-            'email'      => ['required', 'string', 'email', 'max:255'],
             'password'   => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'phone.regex'    => "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak.",
-            'email.required' => "Email manzil kiritish majburiy.",
-            'email.email'    => "To'g'ri email manzil kiriting.",
+            'phone.regex' => "Telefon raqam +998XXXXXXXXX formatida bo'lishi kerak.",
         ]);
 
-        // Telefon raqam bilan mavjud foydalanuvchini tekshirish
         $existingByPhone = User::where('phone', $request->phone)->first();
         if ($existingByPhone) {
             if ($existingByPhone->phone_verified_at !== null) {
@@ -54,25 +48,14 @@ class RegisteredUserController extends Controller
             $existingByPhone->delete();
         }
 
-        // Email bilan mavjud foydalanuvchini tekshirish
-        $existingByEmail = User::where('email', $request->email)->first();
-        if ($existingByEmail) {
-            if ($existingByEmail->email_verified_at !== null) {
-                return back()->withErrors(['email' => "Bu email manzil allaqachon ro'yxatdan o'tgan."])->withInput();
-            }
-            $existingByEmail->delete();
-        }
-
         $customerRole = Role::where('slug', 'customer')->first();
 
         $user = User::create([
             'first_name'        => $request->first_name,
             'last_name'         => $request->last_name,
             'phone'             => $request->phone,
-            'email'             => $request->email,
             'password'          => Hash::make($request->password),
             'phone_verified_at' => null,
-            'email_verified_at' => null,
             'role_id'           => $customerRole?->id,
         ]);
 

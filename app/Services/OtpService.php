@@ -6,48 +6,18 @@ use App\Models\OtpVerification;
 
 class OtpService
 {
-    private const OTP_TTL_MINUTES  = 5;
-    private const RESEND_COOLDOWN  = 60;  // seconds
-    private const MAX_ATTEMPTS     = 3;
+    private const OTP_TTL_MINUTES = 5;
+    private const RESEND_COOLDOWN = 60;
+    private const MAX_ATTEMPTS    = 3;
 
     public function generate(string $phone): string
     {
-        return $this->generateFor('phone', $phone);
-    }
-
-    public function generateForEmail(string $email): string
-    {
-        return $this->generateFor('email', $email);
-    }
-
-    public function verify(string $phone, string $code): array
-    {
-        return $this->verifyFor('phone', $phone, $code);
-    }
-
-    public function verifyEmail(string $email, string $code): array
-    {
-        return $this->verifyFor('email', $email, $code);
-    }
-
-    public function canResend(string $phone): array
-    {
-        return $this->canResendFor('phone', $phone);
-    }
-
-    public function canResendEmail(string $email): array
-    {
-        return $this->canResendFor('email', $email);
-    }
-
-    private function generateFor(string $column, string $value): string
-    {
-        OtpVerification::where($column, $value)->delete();
+        OtpVerification::where('phone', $phone)->delete();
 
         $code = (string) random_int(100000, 999999);
 
         OtpVerification::create([
-            $column      => $value,
+            'phone'      => $phone,
             'code'       => hash('sha256', $code),
             'expires_at' => now()->addMinutes(self::OTP_TTL_MINUTES),
             'attempts'   => 0,
@@ -57,9 +27,9 @@ class OtpService
         return $code;
     }
 
-    private function verifyFor(string $column, string $value, string $code): array
+    public function verify(string $phone, string $code): array
     {
-        $otp = OtpVerification::where($column, $value)->latest()->first();
+        $otp = OtpVerification::where('phone', $phone)->latest()->first();
 
         if (!$otp) {
             return ['ok' => false, 'error' => 'Kod topilmadi. Qaytadan yuborish tugmasini bosing.'];
@@ -88,9 +58,9 @@ class OtpService
         return ['ok' => true];
     }
 
-    private function canResendFor(string $column, string $value): array
+    public function canResend(string $phone): array
     {
-        $otp = OtpVerification::where($column, $value)->latest()->first();
+        $otp = OtpVerification::where('phone', $phone)->latest()->first();
 
         if (!$otp || $otp->canResend()) {
             return ['can' => true, 'seconds' => 0];

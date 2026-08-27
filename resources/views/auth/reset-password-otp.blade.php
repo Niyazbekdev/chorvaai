@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <div class="text-4xl mb-3">{{ $type === 'email' ? '✉️' : '📱' }}</div>
+        <div class="text-4xl mb-3">📱</div>
         <h2 class="text-xl font-bold text-gray-800">{{ __('auth.enter_code_title') }}</h2>
         <p class="text-sm text-gray-500 mt-1">
             <span class="font-medium text-gray-700">{{ $identifier }}</span>
@@ -12,13 +12,6 @@
         <div class="mb-4 bg-amber-50 border-2 border-amber-400 text-amber-900 px-4 py-4 rounded-xl text-center">
             <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">SMS tasdiqlash kodi</p>
             <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_otp') }}</p>
-        </div>
-    @endif
-
-    @if(session('dev_email_otp'))
-        <div class="mb-4 bg-blue-50 border-2 border-blue-400 text-blue-900 px-4 py-4 rounded-xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 mb-1">Email tasdiqlash kodi</p>
-            <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_email_otp') }}</p>
         </div>
     @endif
 

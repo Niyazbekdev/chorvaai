@@ -40,16 +40,6 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('phone.verify');
         }
 
-        if (!$user->hasVerifiedEmail()) {
-            $resend = $this->otpService->canResendEmail($user->email);
-            if ($resend['can']) {
-                $code = $this->otpService->generateForEmail($user->email);
-                \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\OtpMail($code));
-                session(['dev_email_otp' => $code]);
-            }
-            return redirect()->route('email.otp.verify');
-        }
-
         return redirect()->intended(route('products.index'));
     }
 

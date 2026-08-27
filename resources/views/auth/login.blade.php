@@ -4,20 +4,25 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email yoki Telefon -->
+        <!-- Telefon raqam -->
         <div>
-            <x-input-label for="login" :value="__('auth.login_identifier')" />
-            <x-text-input
-                id="login"
-                class="block mt-1 w-full"
-                type="text"
-                name="login"
-                :value="old('login')"
-                required
-                autofocus
-                autocomplete="username"
-                placeholder="{{ __('auth.login_placeholder') }}" />
-            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+            <x-input-label for="phone" :value="__('auth.login_identifier')" />
+            <div class="flex mt-1">
+                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-600">
+                    +998
+                </span>
+                <x-text-input
+                    id="phone"
+                    class="block w-full rounded-l-none"
+                    type="text"
+                    name="phone"
+                    :value="old('phone')"
+                    required
+                    autofocus
+                    autocomplete="username"
+                    placeholder="{{ __('auth.login_placeholder') }}" />
+            </div>
+            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -63,13 +68,12 @@
         </div>
     </form>
 
-    <div class="mt-6 flex items-center gap-3">
-        <div class="flex-1 h-px bg-gray-200"></div>
-        <span class="text-xs text-gray-400">{{ __('auth.or') }}</span>
-        <div class="flex-1 h-px bg-gray-200"></div>
-    </div>
-
-    <div class="mt-4">
-        <x-google-button>{{ __('auth.google_login') }}</x-google-button>
-    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '').slice(0, 9);
+        });
+    });
+    </script>
 </x-guest-layout>

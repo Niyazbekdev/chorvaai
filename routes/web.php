@@ -64,12 +64,6 @@ Route::middleware(['auth', 'phone.verified'])->group(function () {
     Route::post('/profile/phone/resend', [ProfileController::class, 'resendPhoneOtp'])->middleware('throttle:3,1')->name('profile.phone.resend');
     Route::post('/profile/phone/cancel', [ProfileController::class, 'cancelPhoneChange'])->name('profile.phone.cancel');
 
-    // Email change flow
-    Route::post('/profile/email/request', [ProfileController::class, 'requestEmailChange'])->name('profile.email.request');
-    Route::post('/profile/email/verify', [ProfileController::class, 'verifyEmailChange'])->name('profile.email.verify');
-    Route::post('/profile/email/resend', [ProfileController::class, 'resendEmailOtp'])->middleware('throttle:3,1')->name('profile.email.resend');
-    Route::post('/profile/email/cancel', [ProfileController::class, 'cancelEmailChange'])->name('profile.email.cancel');
-
     // Conversations & Messages
     Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
     Route::post('/conversations', [ConversationController::class, 'store'])->name('conversations.store');

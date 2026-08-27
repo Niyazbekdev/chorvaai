@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Mail\OtpMail;
 use App\Models\Status;
 use App\Models\User;
 use App\Services\EskizService;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -21,6 +19,7 @@ class ProfileController extends Controller
         private OtpService   $otpService,
         private EskizService $eskizService,
     ) {}
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -83,7 +82,6 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    // ── Telefon o'zgartirish: OTP yuborish ───────────────────────────────────
     public function requestPhoneChange(Request $request): RedirectResponse
     {
         $request->validate(['new_phone' => ['required', 'string']]);
@@ -117,7 +115,6 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with($flash);
     }
 
-    // ── Telefon o'zgartirish: OTP tasdiqlash ─────────────────────────────────
     public function verifyPhoneChange(Request $request): RedirectResponse
     {
         $request->validate(['code' => 'required|digits:6']);
@@ -144,7 +141,6 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with('status', 'phone-updated');
     }
 
-    // ── Telefon o'zgartirish: OTP qayta yuborish ─────────────────────────────
     public function resendPhoneOtp(Request $request): RedirectResponse
     {
         $newPhone = $request->session()->get('phone_change_pending');
@@ -169,93 +165,9 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with($flash);
     }
 
-    // ── Telefon o'zgartirish: bekor qilish ───────────────────────────────────
     public function cancelPhoneChange(Request $request): RedirectResponse
     {
         $request->session()->forget('phone_change_pending');
-        return redirect()->route('profile.edit');
-    }
-
-    // ── Email o'zgartirish: OTP yuborish ─────────────────────────────────────
-    public function requestEmailChange(Request $request): RedirectResponse
-    {
-        $request->validate(['new_email' => ['required', 'string', 'email', 'max:255']]);
-
-        $newEmail = trim($request->new_email);
-
-        if ($newEmail === $request->user()->email) {
-            return back()->withErrors(['new_email' => __('profile.email_same')]);
-        }
-
-        if (User::where('email', $newEmail)->exists()) {
-            return back()->withErrors(['new_email' => __('profile.email_taken')]);
-        }
-
-        $resend = $this->otpService->canResendEmail($newEmail);
-        if (!$resend['can']) {
-            return back()->withErrors(['new_email' => $resend['seconds'] . ' ' . __('auth.resend_wait')]);
-        }
-
-        $code = $this->otpService->generateForEmail($newEmail);
-        Mail::to($newEmail)->send(new OtpMail($code));
-
-        $request->session()->put('email_change_pending', $newEmail);
-
-        return redirect()->route('profile.edit')->with('dev_otp_email_change', $code);
-    }
-
-    // ── Email o'zgartirish: OTP tasdiqlash ───────────────────────────────────
-    public function verifyEmailChange(Request $request): RedirectResponse
-    {
-        $request->validate(['code' => 'required|digits:6']);
-
-        $newEmail = $request->session()->get('email_change_pending');
-        if (!$newEmail) {
-            return redirect()->route('profile.edit');
-        }
-
-        $result = $this->otpService->verifyEmail($newEmail, $request->code);
-
-        if (!$result['ok']) {
-            return back()->withErrors(['email_code' => $result['error']])
-                ->with('email_change_pending', $newEmail);
-        }
-
-        $request->user()->update([
-            'email'             => $newEmail,
-            'email_verified_at' => now(),
-        ]);
-
-        $request->session()->forget('email_change_pending');
-
-        return redirect()->route('profile.edit')->with('status', 'email-updated');
-    }
-
-    // ── Email o'zgartirish: OTP qayta yuborish ───────────────────────────────
-    public function resendEmailOtp(Request $request): RedirectResponse
-    {
-        $newEmail = $request->session()->get('email_change_pending');
-        if (!$newEmail) {
-            return redirect()->route('profile.edit');
-        }
-
-        $resend = $this->otpService->canResendEmail($newEmail);
-        if (!$resend['can']) {
-            return back()->withErrors(['email_code' => $resend['seconds'] . ' ' . __('auth.resend_wait')])
-                ->with('email_change_pending', $newEmail);
-        }
-
-        $code = $this->otpService->generateForEmail($newEmail);
-        Mail::to($newEmail)->send(new OtpMail($code));
-
-        return redirect()->route('profile.edit')
-            ->with(['status' => 'email-otp-resent', 'email_change_pending' => $newEmail, 'dev_otp_email_change' => $code]);
-    }
-
-    // ── Email o'zgartirish: bekor qilish ─────────────────────────────────────
-    public function cancelEmailChange(Request $request): RedirectResponse
-    {
-        $request->session()->forget('email_change_pending');
         return redirect()->route('profile.edit');
     }
 }

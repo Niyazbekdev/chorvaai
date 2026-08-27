@@ -26,13 +26,6 @@
                 </div>
             </div>
 
-            {{-- Email manzilni o'zgartirish --}}
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-2xl">
-                <div class="max-w-xl">
-                    @include('profile.partials.change-email-form')
-                </div>
-            </div>
-
         </div>
     </div>
 </x-app-layout>
