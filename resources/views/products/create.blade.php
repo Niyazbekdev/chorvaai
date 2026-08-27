@@ -7,6 +7,34 @@
             <p class="text-gray-500 text-sm mt-1">* {{ __('products.all_required') }}</p>
         </div>
 
+        {{-- E'lon limiti eslatmasi --}}
+        @if($hasSubscription)
+            <div class="mb-4 flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-sm text-green-700">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                <span>Faol obuna — bu oy cheksiz e'lon joylashtirishingiz mumkin.</span>
+            </div>
+        @else
+            @if($freeRemaining <= 1)
+                <div class="mb-4 flex items-start gap-2 bg-yellow-50 border border-yellow-300 rounded-xl px-4 py-3 text-sm text-yellow-800">
+                    <svg class="mt-0.5 shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                    <span>
+                        Bu oy uchun sizda <strong>{{ $freeRemaining }} ta</strong> bepul e'lon qoldi.
+                        @if($freeRemaining === 0)
+                            — E'lon joylash uchun
+                            <a href="{{ route('payment.select', ['type' => 'subscription']) }}" class="underline font-semibold">obuna oling (50 000 so'm/oy)</a>.
+                        @else
+                            Limitdan keyin obuna kerak bo'ladi.
+                        @endif
+                    </span>
+                </div>
+            @else
+                <div class="mb-4 flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Bu oy uchun <strong>{{ $freeRemaining }} ta</strong> bepul e'lon imkoniyatingiz bor.</span>
+                </div>
+            @endif
+        @endif
+
         <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data"
               class="space-y-6">
             @csrf

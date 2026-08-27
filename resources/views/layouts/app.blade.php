@@ -46,7 +46,6 @@
                         <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">{{ __('nav.footer_pages') }}</h4>
                         <ul class="space-y-2.5">
                             <li><a href="{{ url('/marketplace') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.marketplace') }}</a></li>
-                            <li><a href="{{ route('ai-assistant.index') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.ai_assistant') }}</a></li>
                             <li><a href="{{ url('/#why') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.about') }}</a></li>
                             <li><a href="{{ url('/#contact') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.contact') }}</a></li>
                         </ul>
@@ -59,6 +58,8 @@
                             @auth
                                 <li><a href="{{ route('products.create') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.footer_post_ad') }}</a></li>
                                 <li><a href="{{ url('/dashboard') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.dashboard') }}</a></li>
+                                <li><a href="{{ route('banners.create') }}" class="text-emerald-400/80 hover:text-emerald-400 text-sm transition-colors font-medium">📢 Reklama berish</a></li>
+                                <li><a href="{{ route('banners.my') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">Mening reklamalarim</a></li>
                             @else
                                 <li><a href="{{ route('login') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.login') }}</a></li>
                                 <li><a href="{{ url('/register') }}" class="text-white/50 hover:text-emerald-400 text-sm transition-colors">{{ __('nav.register') }}</a></li>
@@ -75,7 +76,6 @@
             </div>
         </footer>
 
-        <x-ai-chat-widget />
-        @stack('scripts')
+@stack('scripts')
     </body>
 </html>

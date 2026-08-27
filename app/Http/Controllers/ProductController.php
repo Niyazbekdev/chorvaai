@@ -7,11 +7,11 @@ use App\Http\Requests\Product\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Color;
-use App\Models\Conversation;
 use App\Models\Product;
 use App\Models\Region;
 use App\Models\Status;
 use App\Services\ProductService;
+use App\Services\SubscriptionService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +21,10 @@ class ProductController extends Controller
 {
     use AuthorizesRequests;
 
-    public function __construct(private ProductService $productService) {}
+    public function __construct(
+        private ProductService $productService,
+        private SubscriptionService $subscriptionService,
+    ) {}
 
     public function index(Request $request): View
     {
@@ -67,27 +70,33 @@ class ProductController extends Controller
 
         $isFavorited = $product->isFavoritedBy(auth()->id());
 
-        $existingConversation = auth()->check()
-            ? Conversation::where('product_id', $product->id)
-                ->where('buyer_id', auth()->id())
-                ->first()
-            : null;
-
         $contactPhone = $product->contact_phone ?? $product->user?->phone;
 
-        return view('products.show', compact('product', 'isFavorited', 'existingConversation', 'contactPhone'));
+        return view('products.show', compact('product', 'isFavorited', 'contactPhone'));
     }
 
-    public function create(): View
+    public function create(): RedirectResponse|View
     {
-        return view('products.create', $this->formData());
+        $user = auth()->user();
+
+        if (!$this->subscriptionService->canPost($user)) {
+            return redirect()->route('payment.select', ['type' => 'subscription'])
+                ->with('limit_reached', true);
+        }
+
+        return view('products.create', array_merge($this->formData(), [
+            'freeRemaining' => $this->subscriptionService->freeRemaining($user),
+            'hasSubscription' => $this->subscriptionService->hasActive($user),
+        ]));
     }
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
+        $this->authorize('create', Product::class);
+
         $images = $request->file('images') ?? [];
 
-        $product = $this->productService->store(
+        $this->productService->store(
             $request->safe()->except(['images']),
             $images,
             $request->user()->id

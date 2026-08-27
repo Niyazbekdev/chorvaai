@@ -22,7 +22,6 @@
         favCount: {{ $product->favorites()->count() }},
         showPhone: false,
         phone: '',
-        showMsg: false,
         loadingFav: false,
         loadingPhone: false,
 
@@ -66,14 +65,6 @@
                 body: JSON.stringify({ type: 'call_click' })
             });
         },
-
-        async trackMessage() {
-            await fetch('{{ route('products.contact-event', $product) }}', {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'message_click' })
-            });
-        }
      }">
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -343,33 +334,6 @@
                                         </div>
                                     </template>
                                 </div>
-
-                                {{-- Chat --}}
-                                @if($existingConversation)
-                                    <a href="{{ route('conversations.show', $existingConversation) }}"
-                                       @click="trackMessage()"
-                                       class="flex items-center justify-center gap-2 w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
-                                        {{ __('products.continue_chat') }}
-                                    </a>
-                                @else
-                                    <button @click="trackMessage(); showMsg = !showMsg"
-                                            class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
-                                        {{ __('products.send_message') }}
-                                    </button>
-                                    <div x-show="showMsg" x-transition class="mt-2">
-                                        <form method="POST" action="{{ route('conversations.store') }}">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            <textarea name="message" rows="3" required
-                                                placeholder="{{ __('products.write_message') }}"
-                                                class="w-full rounded-xl border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
-                                            <button type="submit"
-                                                class="mt-2 w-full bg-blue-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">
-                                                {{ __('products.send') }}
-                                            </button>
-                                        </form>
-                                    </div>
-                                @endif
                             </div>
                         @endif
                     @else

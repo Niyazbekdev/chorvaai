@@ -10,9 +10,7 @@ return [
     'profile_settings' => "Profil sozlamalari",
     'my_ads'        => "Mening e'lonlarim",
     'favorites'     => "Sevimlilar",
-    'messages'      => "Xabarlar",
     'logout'        => "Chiqish",
-    'ai_assistant'  => "AI Yordamchi",
     'dashboard'     => "Kabinet",
     // footer
     'footer_desc'      => "O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platform. AI yordamida tez, xavfsiz va shaffof.",

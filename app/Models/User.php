@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 // use Database\Factories\UserFactory;
-use App\Models\Conversation;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -77,18 +76,18 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class);
     }
 
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function favoriteProducts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'favorites')->withPivot('created_at');
-    }
-
-    public function buyerConversations(): HasMany
-    {
-        return $this->hasMany(Conversation::class, 'buyer_id');
-    }
-
-    public function sellerConversations(): HasMany
-    {
-        return $this->hasMany(Conversation::class, 'seller_id');
     }
 }

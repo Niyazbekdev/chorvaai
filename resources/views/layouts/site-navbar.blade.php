@@ -13,13 +13,6 @@
 .site-links { display: flex; gap: 24px; align-items: center; }
 .site-links a { color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: .85rem; letter-spacing: .04em; }
 .site-links a:hover { color: #10b981; }
-.site-nav-ai-btn {
-    background: rgba(16,185,129,.18); color: #6ee7b7 !important;
-    border: 1px solid rgba(16,185,129,.4); border-radius: 999px;
-    padding: 6px 14px; font-size: .8rem !important;
-    transition: background .2s, color .2s !important;
-}
-.site-nav-ai-btn:hover { background: rgba(16,185,129,.32) !important; color: white !important; }
 .site-announce-btn {
     background: #10b981; color: white !important; text-decoration: none;
     padding: 9px 20px; border-radius: 999px; font-weight: 700;
@@ -123,7 +116,6 @@
 }
 .mobile-nav-link:hover { color: #10b981; }
 .mobile-nav-link:last-child { border-bottom: none; }
-.mobile-nav-ai { color: #6ee7b7 !important; }
 .mobile-nav-post {
     display: block; text-align: center;
     background: #10b981; color: white !important;
@@ -198,10 +190,6 @@
 
         <nav class="site-links">
             <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
-            <a href="{{ route('ai-assistant.index') }}" class="site-nav-ai-btn">
-                <svg style="width:15px;height:15px;display:inline;margin-right:5px;vertical-align:-2px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-                {{ __('nav.ai_assistant') }}
-            </a>
             <a href="{{ route('products.create') }}" class="site-announce-btn">{{ __('nav.post_ad') }}</a>
             <a href="{{ url('/') }}#why">{{ __('nav.about') }}</a>
             <a href="{{ url('/') }}#contact">{{ __('nav.contact') }}</a>
@@ -247,18 +235,10 @@
                                 <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px">{{ $__favCount }}</span>
                             @endif
                         </a>
-                        <a href="{{ route('conversations.index') }}" style="display:flex;align-items:center;justify-content:space-between">
-                            {{ __('nav.messages') }}
-                            @php
-                                $__unread = \App\Models\Message::whereHas('conversation', fn($q) =>
-                                    $q->where('buyer_id', auth()->id())->orWhere('seller_id', auth()->id())
-                                )->where('sender_id', '!=', auth()->id())->whereNull('read_at')->count();
-                            @endphp
-                            @if($__unread > 0)
-                                <span style="background:#2563eb;color:white;font-size:.7rem;font-weight:700;
-                                             padding:2px 7px;border-radius:999px">{{ $__unread }}</span>
-                            @endif
+                        <a href="{{ route('ai.index') }}" style="display:flex;align-items:center;gap:6px;color:#059669;font-weight:600">
+                            🤖 Bozor tahlili
                         </a>
+                        <a href="{{ route('banners.my') }}">📢 Reklamalarim</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="logout-btn">{{ __('nav.logout') }}</button>
@@ -302,10 +282,6 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             {{ __('nav.marketplace') }}
         </a>
-        <a href="{{ route('ai-assistant.index') }}" class="mobile-nav-link mobile-nav-ai" @click="mobileOpen = false">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-            {{ __('nav.ai_assistant') }}
-        </a>
         <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             {{ __('nav.about') }}
@@ -333,17 +309,11 @@
                     <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:auto">{{ $__favCount }}</span>
                 @endif
             </a>
-            <a href="{{ route('conversations.index') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                {{ __('nav.messages') }}
-                @php
-                    $__unread = \App\Models\Message::whereHas('conversation', fn($q) =>
-                        $q->where('buyer_id', auth()->id())->orWhere('seller_id', auth()->id())
-                    )->where('sender_id', '!=', auth()->id())->whereNull('read_at')->count();
-                @endphp
-                @if($__unread > 0)
-                    <span style="background:#2563eb;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:auto">{{ $__unread }}</span>
-                @endif
+            <a href="{{ route('ai.index') }}" class="mobile-nav-secondary" style="color:#059669;font-weight:600" @click="mobileOpen = false">
+                🤖 Bozor tahlili agenti
+            </a>
+            <a href="{{ route('banners.my') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
+                📢 Reklamalarim
             </a>
         @endauth
 

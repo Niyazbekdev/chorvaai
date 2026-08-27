@@ -9,7 +9,6 @@
                 <div class="flex gap-3 mt-2">
                     <a href="{{ route('profile.my-products') }}" class="text-sm text-gray-500 hover:text-gray-700">{{ __('profile.ads_tab') }}</a>
                     <a href="{{ route('profile.favorites') }}" class="text-sm font-semibold text-green-600 border-b-2 border-green-600 pb-0.5">{{ __('profile.favorites_tab') }}</a>
-                    <a href="{{ route('conversations.index') }}" class="text-sm text-gray-500 hover:text-gray-700">{{ __('profile.messages_tab') }}</a>
                 </div>
             </div>
         </div>

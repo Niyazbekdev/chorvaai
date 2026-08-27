@@ -32,7 +32,7 @@ class ProfileController extends Controller
         $user     = $request->user();
         $products = $user->products()
             ->with(['category', 'status'])
-            ->withCount(['favorites', 'conversations', 'contactEvents as phone_views_count' => fn ($q) => $q->where('type', 'phone_view')])
+            ->withCount(['favorites', 'contactEvents as phone_views_count' => fn ($q) => $q->where('type', 'phone_view')])
             ->latest()
             ->get();
 

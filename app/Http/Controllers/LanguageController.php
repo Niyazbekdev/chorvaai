@@ -15,6 +15,11 @@ class LanguageController extends Controller
 
         session(['locale' => $locale]);
 
-        return redirect()->back();
+        $back = url()->previous();
+        $appUrl = config('app.url');
+
+        return str_starts_with($back, $appUrl)
+            ? redirect()->to($back)
+            : redirect()->to('/');
     }
 }

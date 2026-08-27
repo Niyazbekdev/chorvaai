@@ -62,7 +62,9 @@ class RegisteredUserController extends Controller
         $code = $this->otpService->generate($user->phone);
         $this->eskizService->send($user->phone, "ChorvaAI: tasdiqlash kodingiz: $code. Amal qilish muddati 5 daqiqa.");
 
-        session(['dev_otp' => $code]);
+        if (config('app.env') !== 'production') {
+            session(['dev_otp' => $code]);
+        }
 
         Auth::login($user);
 

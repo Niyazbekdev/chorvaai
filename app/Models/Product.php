@@ -76,11 +76,6 @@ class Product extends Model
         return $this->hasOne(Sale::class);
     }
 
-    public function conversations(): HasMany
-    {
-        return $this->hasMany(Conversation::class);
-    }
-
     public function getFormattedPriceAttribute(): string
     {
         return number_format($this->price, 0, '.', ' ') . " so'm";
@@ -118,11 +113,6 @@ class Product extends Model
     public function getPhoneViewsCountAttribute(): int
     {
         return (int) ($this->attributes['phone_views_count'] ?? $this->contactEvents()->where('type', 'phone_view')->count());
-    }
-
-    public function getConversationsCountAttribute(): int
-    {
-        return (int) ($this->attributes['conversations_count'] ?? $this->conversations()->count());
     }
 
     public function isSold(): bool

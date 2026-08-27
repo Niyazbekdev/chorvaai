@@ -3,7 +3,6 @@ return [
     'my_ads'             => "Mening e'lonlarim",
     'ads_tab'            => "E'lonlar",
     'favorites_tab'      => "Sevimlilar",
-    'messages_tab'       => "Xabarlar",
     'profile_settings'   => "⚙ Profil",
     'new_ad'             => "+ Yangi e'lon",
     // stats
@@ -21,7 +20,6 @@ return [
     'views'              => "ko'rish",
     'favorites'          => "sevimli",
     'phone_views'        => "telefon ko'rish",
-    'chats'              => "suhbat",
     // actions
     'view'               => "Ko'rish",
     'edit'               => "Tahrirlash",

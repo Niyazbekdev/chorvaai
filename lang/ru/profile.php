@@ -3,7 +3,6 @@ return [
     'my_ads'             => "Мои объявления",
     'ads_tab'            => "Объявления",
     'favorites_tab'      => "Избранное",
-    'messages_tab'       => "Сообщения",
     'profile_settings'   => "⚙ Профиль",
     'new_ad'             => "+ Новое объявление",
     // stats
@@ -21,7 +20,6 @@ return [
     'views'              => "просм.",
     'favorites'          => "изб.",
     'phone_views'        => "тел. просм.",
-    'chats'              => "чатов",
     // actions
     'view'               => "Смотреть",
     'edit'               => "Редактировать",

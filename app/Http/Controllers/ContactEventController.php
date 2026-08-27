@@ -11,7 +11,7 @@ class ContactEventController extends Controller
 {
     public function store(Request $request, Product $product): JsonResponse
     {
-        $request->validate(['type' => 'required|in:phone_view,call_click,message_click']);
+        $request->validate(['type' => 'required|in:phone_view,call_click']);
 
         ProductContactEvent::create([
             'product_id' => $product->id,

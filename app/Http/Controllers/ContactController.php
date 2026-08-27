@@ -12,7 +12,7 @@ class ContactController extends Controller
     {
         $request->validate([
             'name'    => ['required', 'string', 'max:100'],
-            'phone'   => ['required', 'string', 'max:20'],
+            'phone'   => ['required', 'string', 'max:20', 'regex:/^\+?[0-9\s\-\(\)]{7,20}$/'],
             'message' => ['nullable', 'string', 'max:1000'],
         ]);
 
