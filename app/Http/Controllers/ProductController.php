@@ -30,7 +30,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->getFiltered($request->only([
             'q', 'category', 'region', 'city', 'gender', 'price_from', 'price_to',
-            'lat', 'lng', 'radius',
+            'lat', 'lng', 'radius', 'sort',
         ]));
 
         $mapProducts = Product::with(['region', 'city', 'category.parent'])
@@ -64,6 +64,7 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
+        $product->loadCount('favorites');
         $product->load(['category', 'user', 'color', 'region', 'city', 'status']);
 
         Product::withoutTimestamps(fn () => $product->increment('views_count'));
@@ -72,7 +73,29 @@ class ProductController extends Controller
 
         $contactPhone = $product->contact_phone ?? $product->user?->phone;
 
-        return view('products.show', compact('product', 'isFavorited', 'contactPhone'));
+        $relatedProducts = Product::with(['category', 'region', 'city'])
+            ->where('id', '!=', $product->id)
+            ->where('status_id', 1)
+            ->when($product->category_id, fn ($q) =>
+                $q->where('category_id', $product->category_id)
+                  ->orWhere('category_id', $product->category?->parent_id)
+            )
+            ->latest()
+            ->take(4)
+            ->get();
+
+        if ($product->user) {
+            $allSellerProducts = $product->user->products()->with('status')->get();
+            $sellerStats = [
+                'active' => $allSellerProducts->filter(fn ($p) => $p->status?->name === 'Faol')->count(),
+                'sold'   => $allSellerProducts->filter(fn ($p) => $p->status?->name === 'Sotildi')->count(),
+                'total'  => $allSellerProducts->count(),
+            ];
+        } else {
+            $sellerStats = null;
+        }
+
+        return view('products.show', compact('product', 'isFavorited', 'contactPhone', 'relatedProducts', 'sellerStats'));
     }
 
     public function create(): RedirectResponse|View
@@ -135,8 +158,8 @@ class ProductController extends Controller
 
         $this->productService->delete($product);
 
-        return redirect()->route('products.index')
-            ->with('success', "E'lon o'chirildi.");
+        return redirect()->route('profile.my-products')
+            ->with('success', "E'lon muvaffaqiyatli o'chirildi.");
     }
 
     private function formData(): array

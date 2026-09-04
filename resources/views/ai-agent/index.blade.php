@@ -53,12 +53,16 @@
                             <span x-text="msg.role === 'user' ? '{{ substr(auth()->user()->name ?? 'U', 0, 1) }}' : '🤖'"></span>
                         </div>
 
-                        {{-- Bubble --}}
-                        <div class="max-w-xl text-sm leading-relaxed whitespace-pre-wrap px-4 py-3 rounded-2xl"
-                             :class="msg.role === 'user'
-                                ? 'bg-green-600 text-white rounded-tr-sm'
-                                : 'bg-gray-100 text-gray-800 rounded-tl-sm'"
+                        {{-- User bubble --}}
+                        <div x-show="msg.role === 'user'"
+                             class="max-w-xl text-sm leading-relaxed whitespace-pre-wrap px-4 py-3 rounded-2xl bg-green-600 text-white rounded-tr-sm"
                              x-text="msg.content">
+                        </div>
+
+                        {{-- Assistant bubble --}}
+                        <div x-show="msg.role === 'assistant'"
+                             class="max-w-xl text-sm leading-relaxed px-4 py-3 rounded-2xl bg-gray-100 text-gray-800 rounded-tl-sm ai-prose"
+                             x-html="renderMarkdown(msg.content)">
                         </div>
                     </div>
                 </template>
@@ -109,7 +113,7 @@
                 </form>
 
                 <p class="text-xs text-gray-400 mt-2 text-center">
-                    AI ma'lumotlari marketplacess bazasidan olinadi · Oldingi suhbat saqlanmaydi
+                    AI ma'lumotlari marketplace bazasidan olinadi · Oldingi suhbat saqlanmaydi
                 </p>
             </div>
 
@@ -118,7 +122,23 @@
     </div>
 </div>
 
+@push('styles')
+<style>
+.ai-prose ul { list-style: disc; padding-left: 1.2em; margin: 0.4em 0; }
+.ai-prose ol { list-style: decimal; padding-left: 1.2em; margin: 0.4em 0; }
+.ai-prose li { margin: 0.15em 0; }
+.ai-prose p { margin: 0.4em 0; }
+.ai-prose p:first-child { margin-top: 0; }
+.ai-prose p:last-child { margin-bottom: 0; }
+.ai-prose strong { font-weight: 700; }
+.ai-prose em { font-style: italic; }
+.ai-prose code { background: rgba(0,0,0,.08); padding: 0 4px; border-radius: 4px; font-size: .85em; }
+.ai-prose hr { border: none; border-top: 1px solid rgba(0,0,0,.1); margin: 0.5em 0; }
+</style>
+@endpush
+
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
 <script>
 function aiAgent() {
     return {
@@ -134,7 +154,17 @@ function aiAgent() {
         ],
 
         init() {
+            if (window.marked) {
+                marked.setOptions({ breaks: true, gfm: true });
+            }
             this.$nextTick(() => this.$refs.inputBox?.focus());
+        },
+
+        renderMarkdown(text) {
+            if (window.marked) {
+                return marked.parse(text);
+            }
+            return text.replace(/\n/g, '<br>');
         },
 
         async sendMessage(text = null) {
@@ -161,6 +191,14 @@ function aiAgent() {
                     },
                     body: JSON.stringify({ messages: this.messages }),
                 });
+
+                if (res.status === 429) {
+                    this.messages.push({
+                        role: 'assistant',
+                        content: 'So\'rovlar chegarasiga yetdingiz. Iltimos, bir daqiqa kutib, qayta urinib ko\'ring.',
+                    });
+                    return;
+                }
 
                 const data = await res.json();
                 this.messages.push({ role: 'assistant', content: data.reply });

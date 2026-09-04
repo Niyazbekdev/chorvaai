@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    body {
+        background-color: #F8FCF7;
+        color: #191D14;
+        font-family: 'Manrope', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Zilla Slab', serif;
+    }
+}
+
 @layer utilities {
     @keyframes slideInUp {
         from { opacity: 0; transform: translateY(40px); }

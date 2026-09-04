@@ -1,194 +1,315 @@
 <x-app-layout>
-<div class="min-h-screen bg-gray-50 pt-6 pb-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+@push('styles')
+<style>
+.profile-nav-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    font-size: .9rem; font-weight: 600; color: #5C6352;
+    text-decoration: none; transition: background .15s, color .15s;
+}
+.profile-nav-link:hover { background: #EDF0E5; color: #1D3520; }
+.profile-nav-link.active { background: #E2ECDF; color: #1D3520; }
+.profile-nav-link svg { flex-shrink: 0; }
 
-        {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">{{ __('profile.my_ads') }}</h1>
-                <div class="flex gap-3 mt-2">
-                    <a href="{{ route('profile.my-products') }}" class="text-sm font-semibold text-green-600 border-b-2 border-green-600 pb-0.5">{{ __('profile.ads_tab') }}</a>
-                    <a href="{{ route('profile.favorites') }}" class="text-sm text-gray-500 hover:text-gray-700">{{ __('profile.favorites_tab') }}</a>
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <a href="{{ route('profile.edit') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                    {{ __('profile.profile_settings') }}
-                </a>
-                <a href="{{ route('products.create') }}"
-                   class="bg-green-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700 transition">
-                    {{ __('profile.new_ad') }}
-                </a>
-            </div>
-        </div>
+.stat-card { border-radius: 16px; padding: 18px 20px; }
 
-        {{-- Statistika --}}
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            @php
-                $statItems = [
-                    ['📋', $stats['total'],       __('profile.total_ads'),   'text-gray-900'],
-                    ['✅', $stats['active'],      __('profile.active'),      'text-green-600'],
-                    ['🏷️', $stats['sold'],         __('profile.sold'),        'text-blue-600'],
-                    ['⏳', $stats['pending'],     __('profile.pending'),     'text-yellow-600'],
-                    ['👁', $stats['total_views'], __('profile.total_views'), 'text-purple-600'],
-                    ['💰', number_format($stats['total_value'], 0, '.', ' '), __('profile.active_value'), 'text-emerald-700'],
-                ];
-            @endphp
-            @foreach($statItems as [$icon, $val, $label, $color])
-                <div class="bg-white rounded-2xl shadow p-4 text-center">
-                    <p class="text-2xl mb-1">{{ $icon }}</p>
-                    <p class="text-xl font-bold {{ $color }}">{{ $val }}</p>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ $label }}</p>
-                </div>
-            @endforeach
-        </div>
+.status-badge {
+    display: inline-block; font-size: .68rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 5px; text-transform: uppercase; letter-spacing: .04em;
+}
+.status-faol    { background: #E2ECDF; color: #1D3520; }
+.status-sotildi { background: #f0f0f0; color: #6b7280; }
+.status-pending { background: #F6ECD7; color: #B5822A; }
 
-        {{-- Flash --}}
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-xl text-sm">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-xl text-sm">
-                {{ session('error') }}
-            </div>
-        @endif
+.filter-tab {
+    padding: 7px 16px; border-radius: 999px; font-size: .84rem; font-weight: 600;
+    border: none; cursor: pointer; background: transparent; color: #5C6352;
+    text-decoration: none; transition: background .15s, color .15s;
+    white-space: nowrap;
+}
+.filter-tab.active { background: #1D3520; color: white; }
+.filter-tab:hover:not(.active) { background: #EDF0E5; color: #1D3520; }
 
-        {{-- E'lonlar --}}
-        @if($products->isEmpty())
-            <div class="bg-white rounded-2xl shadow p-16 text-center text-gray-400">
-                <p class="text-5xl mb-4">📭</p>
-                <p class="text-xl font-semibold text-gray-600">{{ __('profile.no_ads') }}</p>
-                <p class="text-sm mt-1 mb-6">{{ __('profile.no_ads_hint') }}</p>
-                <a href="{{ route('products.create') }}"
-                   class="inline-block bg-green-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-green-700 transition">
-                    {{ __('profile.post_first') }}
-                </a>
-            </div>
-        @else
-            <div class="space-y-4">
-                @foreach($products as $product)
-                    @php
-                        $statusName  = $product->status?->name ?? '';
-                        $statusClass = match($statusName) {
-                            'Faol'               => 'bg-green-100 text-green-700',
-                            'Sotildi'            => 'bg-gray-200 text-gray-500',
-                            "Ko'rib chiqilmoqda" => 'bg-yellow-100 text-yellow-700',
-                            default              => 'bg-blue-100 text-blue-600',
-                        };
-                        $isSold = $statusName === 'Sotildi';
-                    @endphp
+.product-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #EDF0E5; }
+.product-row:last-child { border-bottom: none; }
+.product-row:hover { background: #FAFCF9; }
 
-                    <div class="bg-white rounded-2xl shadow hover:shadow-md transition overflow-hidden">
-                        <div class="flex flex-col sm:flex-row">
-                            {{-- Image --}}
-                            <div class="w-full sm:w-40 h-40 sm:h-auto bg-gradient-to-br from-green-100 to-green-200 flex-shrink-0 overflow-hidden">
-                                @if($product->primary_image_url)
-                                    <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}"
-                                         class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-5xl">🐄</div>
-                                @endif
+.icon-btn {
+    width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid #E2ECDF;
+    background: white; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #5C6352; transition: all .15s; flex-shrink: 0;
+    text-decoration: none;
+}
+.icon-btn:hover { border-color: #1D3520; color: #1D3520; background: #F8FCF7; }
+.icon-btn.danger:hover { border-color: #A34F30; color: #A34F30; background: #F5E3DB; }
+</style>
+@endpush
+
+<div class="min-h-screen pb-16" style="background:#F8FCF7;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="flex gap-6">
+
+            {{-- ═══ LEFT SIDEBAR ═══ --}}
+            <div class="hidden lg:block w-[220px] flex-shrink-0">
+                <div class="bg-white rounded-2xl p-5 sticky top-[72px]" style="border:1px solid #EDF0E5;">
+
+                    {{-- User info --}}
+                    <div class="flex flex-col items-center text-center mb-6 pb-5" style="border-bottom:1px solid #EDF0E5;">
+                        @if($user->avatar)
+                            <img src="{{ $user->avatar_url }}" alt=""
+                                 class="w-14 h-14 rounded-full object-cover mb-3">
+                        @else
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg mb-3"
+                                 style="background:#E2ECDF;color:#1D3520;">
+                                {{ mb_strtoupper(mb_substr($user->first_name,0,1).mb_substr($user->last_name,0,1)) }}
                             </div>
+                        @endif
+                        <p class="font-bold text-sm text-ink leading-tight">{{ $user->first_name }} {{ $user->last_name }}</p>
+                        <span class="mt-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background:#E2ECDF;color:#3E683F;">
+                            Tasdiqlangan
+                        </span>
+                    </div>
 
-                            {{-- Content --}}
-                            <div class="flex-1 p-4 sm:p-5 flex flex-col">
-                                <div class="flex items-start justify-between gap-2 flex-wrap">
-                                    <div>
-                                        <div class="flex items-center gap-2 flex-wrap mb-1">
-                                            <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-semibold">
-                                                {{ $product->category?->name ?? '—' }}
-                                            </span>
-                                            <span class="text-xs px-2 py-0.5 rounded-full {{ $statusClass }}">
-                                                {{ $statusName ?: '—' }}
-                                            </span>
+                    {{-- Nav --}}
+                    <nav class="space-y-1">
+                        <a href="{{ route('profile.my-products') }}" class="profile-nav-link active">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            Mening e'lonlarim
+                        </a>
+                        <a href="{{ route('profile.favorites') }}" class="profile-nav-link">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            Sevimlilar
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="profile-nav-link">
+                            <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            Profil sozlamalari
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            {{-- ═══ MAIN CONTENT ═══ --}}
+            <div class="flex-1 min-w-0 space-y-5">
+
+                {{-- Header --}}
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <h1 class="font-serif text-2xl font-bold text-ink">Mening e'lonlarim</h1>
+                        <p class="text-sm mt-0.5" style="color:#5C6352;">Oxirgi 30 kunlik ko'rsatkichlar</p>
+                    </div>
+                    <a href="{{ route('products.create') }}"
+                       style="background:#1D3520;color:white;padding:10px 18px;border-radius:10px;font-weight:700;font-size:.875rem;text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0;"
+                       onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                        Yangi e'lon
+                    </a>
+                </div>
+
+                {{-- Stat cards --}}
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    {{-- Faol e'lonlar --}}
+                    <div class="stat-card bg-white" style="border:1px solid #EDF0E5;">
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">Faol e'lonlar</p>
+                        <p class="font-serif font-bold text-3xl text-ink">{{ $stats['active'] }}</p>
+                        @if($stats['pending'] > 0)
+                            <p class="text-xs mt-1" style="color:#5C6352;">{{ $stats['pending'] }} tasi ko'rib chiqilmoqda</p>
+                        @endif
+                    </div>
+                    {{-- Umumiy ko'rishlar --}}
+                    <div class="stat-card" style="background:#F6ECD7;border:1px solid #e8d5a8;">
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#9a6d22;">Umumiy ko'rishlar</p>
+                        <p class="font-serif font-bold text-3xl" style="color:#B5822A;">{{ number_format($stats['total_views']) }}</p>
+                        <p class="text-xs mt-1" style="color:#9a6d22;">jami barcha e'lonlar</p>
+                    </div>
+                    {{-- Telefon ochilishi --}}
+                    <div class="stat-card" style="background:#EFF6FF;border:1px solid #bfdbfe;">
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#3b82f6;">Telefon ochilishi</p>
+                        <p class="font-serif font-bold text-3xl" style="color:#2563eb;">
+                            {{ $products->sum('phone_views_count') }}
+                        </p>
+                        <p class="text-xs mt-1" style="color:#3b82f6;">telefon raqam ko'rildi</p>
+                    </div>
+                    {{-- Sotilgan --}}
+                    <div class="stat-card" style="background:#EDF0E5;border:1px solid #d4ddd0;">
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">Sotilgan</p>
+                        <p class="font-serif font-bold text-3xl text-ink">{{ $stats['sold'] }}</p>
+                        @if($stats['total_value'] > 0)
+                            <p class="text-xs mt-1" style="color:#5C6352;">jami {{ number_format($stats['total_value']/1000000, 0) }} mln so'm</p>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Flash messages --}}
+                @if(session('success'))
+                    <div class="px-4 py-3 rounded-xl text-sm" style="background:#E2ECDF;color:#1D3520;">{{ session('success') }}</div>
+                @endif
+                @if(session('error'))
+                    <div class="px-4 py-3 rounded-xl text-sm" style="background:#F5E3DB;color:#A34F30;">{{ session('error') }}</div>
+                @endif
+
+                {{-- Filter tabs --}}
+                @php
+                    $filter   = request('filter', 'all');
+                    $allCount = $products->count();
+                    $activeCount  = $products->filter(fn($p) => $p->status?->name === 'Faol')->count();
+                    $pendingCount = $products->filter(fn($p) => $p->status?->name === "Ko'rib chiqilmoqda")->count();
+                    $soldCount    = $products->filter(fn($p) => $p->status?->name === 'Sotildi')->count();
+
+                    $displayed = match($filter) {
+                        'active'  => $products->filter(fn($p) => $p->status?->name === 'Faol'),
+                        'pending' => $products->filter(fn($p) => $p->status?->name === "Ko'rib chiqilmoqda"),
+                        'sold'    => $products->filter(fn($p) => $p->status?->name === 'Sotildi'),
+                        default   => $products,
+                    };
+                @endphp
+
+                <div class="flex gap-1.5 flex-wrap">
+                    <a href="{{ route('profile.my-products') }}" class="filter-tab {{ $filter === 'all' ? 'active' : '' }}">
+                        Barchasi · {{ $allCount }}
+                    </a>
+                    <a href="{{ route('profile.my-products', ['filter' => 'active']) }}" class="filter-tab {{ $filter === 'active' ? 'active' : '' }}">
+                        Faol · {{ $activeCount }}
+                    </a>
+                    <a href="{{ route('profile.my-products', ['filter' => 'pending']) }}" class="filter-tab {{ $filter === 'pending' ? 'active' : '' }}">
+                        Ko'rib chiqilmoqda · {{ $pendingCount }}
+                    </a>
+                    <a href="{{ route('profile.my-products', ['filter' => 'sold']) }}" class="filter-tab {{ $filter === 'sold' ? 'active' : '' }}">
+                        Sotildi · {{ $soldCount }}
+                    </a>
+                </div>
+
+                {{-- Product list --}}
+                @if($displayed->isEmpty())
+                    <div class="bg-white rounded-2xl p-16 text-center" style="border:1px solid #EDF0E5;">
+                        <p class="text-4xl mb-3">📭</p>
+                        <p class="font-bold text-base text-ink mb-1">Hozircha e'lonlar yo'q</p>
+                        <p class="text-sm mb-5" style="color:#5C6352;">Birinchi e'loningizni joylang</p>
+                        <a href="{{ route('products.create') }}"
+                           style="display:inline-block;background:#1D3520;color:white;padding:11px 24px;border-radius:10px;font-weight:700;font-size:.875rem;text-decoration:none;">
+                            E'lon berish
+                        </a>
+                    </div>
+                @else
+                    <div class="bg-white rounded-2xl overflow-hidden" style="border:1px solid #EDF0E5;">
+                        @foreach($displayed as $product)
+                            @php
+                                $statusName = $product->status?->name ?? '';
+                                $isSold     = $statusName === 'Sotildi';
+                                $isPending  = $statusName === "Ko'rib chiqilmoqda";
+                            @endphp
+                            <div class="product-row">
+                                {{-- Thumbnail --}}
+                                <a href="{{ route('products.show', $product) }}"
+                                   class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0"
+                                   style="background:#EDF0E5;">
+                                    @if($product->primary_image_url)
+                                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-2xl">
+                                            {{ match(true) {
+                                                in_array($product->category?->name, ['Sigir','Buqa','Buzoq']) => '🐄',
+                                                in_array($product->category?->name, ["Qo'y"]) => '🐑',
+                                                $product->category?->name === 'Echki' => '🐐',
+                                                $product->category?->name === 'Ot' => '🐴',
+                                                $product->category?->name === 'Tuya' => '🐪',
+                                                default => '🐾'
+                                            } }}
                                         </div>
-                                        <h4 class="font-bold text-gray-900 text-base">{{ $product->name }}</h4>
-                                        <p class="text-green-600 font-bold">{{ $product->formatted_price }}</p>
+                                    @endif
+                                </a>
+
+                                {{-- Info --}}
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                        <span class="status-badge {{ $isSold ? 'status-sotildi' : ($isPending ? 'status-pending' : 'status-faol') }}">
+                                            {{ strtoupper($statusName ?: 'FAOL') }}
+                                        </span>
+                                        @if($product->category)
+                                            <span style="font-size:.68rem;font-weight:600;color:#5C6352;">{{ $product->category->name }}</span>
+                                        @endif
                                     </div>
-                                    <p class="text-xs text-gray-400 whitespace-nowrap">
-                                        {{ $product->created_at->format('d.m.Y') }}
-                                    </p>
+                                    <p class="font-bold text-sm text-ink leading-tight truncate">{{ $product->name }}</p>
+                                    <p class="font-serif font-bold text-base" style="color:#1D3520;">{{ $product->formatted_price }}</p>
                                 </div>
 
-                                {{-- Per-product stats --}}
-                                <div class="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+                                {{-- Stats --}}
+                                <div class="hidden sm:flex items-center gap-4 text-xs flex-shrink-0" style="color:#5C6352;">
                                     <span class="flex items-center gap-1">
-                                        👁 <strong>{{ number_format($product->views_count) }}</strong> {{ __('profile.views') }}
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        <strong class="text-ink">{{ number_format($product->views_count) }}</strong>
                                     </span>
                                     <span class="flex items-center gap-1">
-                                        ❤️ <strong>{{ $product->favorites_count }}</strong> {{ __('profile.favorites') }}
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                                        <strong class="text-ink">{{ $product->favorites_count }}</strong>
                                     </span>
                                     <span class="flex items-center gap-1">
-                                        📞 <strong>{{ $product->phone_views_count }}</strong> {{ __('profile.phone_views') }}
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                        <strong class="text-ink">{{ $product->phone_views_count }}</strong>
                                     </span>
                                 </div>
 
                                 {{-- Actions --}}
-                                <div class="flex flex-wrap gap-2 mt-4">
-                                    <a href="{{ route('products.show', $product) }}"
-                                       class="text-xs border border-gray-300 text-gray-600 px-3 py-1.5 rounded-xl hover:bg-gray-50 transition">
-                                        {{ __('profile.view') }}
-                                    </a>
+                                <div class="flex items-center gap-2 flex-shrink-0">
                                     @if(!$isSold)
-                                        <a href="{{ route('products.edit', $product) }}"
-                                           class="text-xs border border-blue-500 text-blue-500 px-3 py-1.5 rounded-xl hover:bg-blue-500 hover:text-white transition">
-                                            {{ __('profile.edit') }}
+                                        <a href="{{ route('products.edit', $product) }}" class="icon-btn" title="Tahrirlash">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         </a>
-                                        <button onclick="openSoldModal({{ $product->id }}, '{{ e($product->name) }}')"
-                                            class="text-xs bg-blue-50 border border-blue-400 text-blue-600 px-3 py-1.5 rounded-xl hover:bg-blue-500 hover:text-white transition">
-                                            {{ __('profile.sold_btn') }}
-                                        </button>
                                     @endif
                                     <form method="POST" action="{{ route('products.destroy', $product) }}"
-                                          onsubmit="return confirm('{{ __('profile.delete_confirm') }}')">
+                                          onsubmit="return confirm('O\'chirishni tasdiqlaysizmi?')">
                                         @csrf @method('DELETE')
-                                        <button type="submit"
-                                            class="text-xs border border-red-400 text-red-500 px-3 py-1.5 rounded-xl hover:bg-red-500 hover:text-white transition">
-                                            {{ __('profile.delete') }}
+                                        <button type="submit" class="icon-btn danger" title="O'chirish">
+                                            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
                                     </form>
+                                    @if(!$isSold)
+                                        <button onclick="openSoldModal({{ $product->id }}, {{ json_encode($product->name) }}, {{ $product->price }})"
+                                                style="padding:7px 14px;border-radius:8px;font-weight:700;font-size:.78rem;border:none;cursor:pointer;background:#F6ECD7;color:#B5822A;white-space:nowrap;">
+                                            Sotildi
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
-                @endforeach
+                @endif
+
             </div>
-        @endif
+        </div>
     </div>
 </div>
 
 {{-- Mark as Sold modal --}}
 <div id="soldModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeSoldModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
-        <h3 class="text-lg font-bold mb-1">{{ __('profile.mark_sold_title') }}</h3>
-        <p class="text-sm text-gray-500 mb-4" id="soldProductName"></p>
+    <div class="absolute inset-0" style="background:rgba(0,0,0,.5);" onclick="closeSoldModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+        <h3 class="font-serif text-xl font-bold text-ink mb-1">Sotildiga belgilash</h3>
+        <p class="text-sm mb-5" style="color:#5C6352;" id="soldProductName"></p>
         <form method="POST" id="soldForm" class="space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('profile.sold_price') }}</label>
-                <input type="number" name="sold_price" min="0"
-                    id="soldPrice"
-                    class="w-full rounded-xl border-gray-300 text-sm">
+                <label class="block text-xs font-semibold uppercase tracking-wide mb-1.5" style="color:#5C6352;">Sotilgan narxi</label>
+                <input type="number" name="sold_price" id="soldPrice" min="0"
+                       style="width:100%;border:1.5px solid #E2ECDF;border-radius:10px;padding:11px 14px;font-size:.9rem;outline:none;box-sizing:border-box;"
+                       onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('profile.sale_source') }}</label>
-                <select name="source" class="w-full rounded-xl border-gray-300 text-sm">
-                    <option value="outside">{{ __('profile.source_outside') }}</option>
-                    <option value="phone_call">{{ __('profile.source_phone') }}</option>
-                    <option value="platform_chat">{{ __('profile.source_chat') }}</option>
+                <label class="block text-xs font-semibold uppercase tracking-wide mb-1.5" style="color:#5C6352;">Savdo manbasi</label>
+                <select name="source"
+                        style="width:100%;border:1.5px solid #E2ECDF;border-radius:10px;padding:11px 14px;font-size:.9rem;outline:none;background:white;box-sizing:border-box;">
+                    <option value="outside">Platforma tashqarisida</option>
+                    <option value="phone_call">Telefon orqali</option>
+                    <option value="platform_chat">Sayt orqali</option>
                 </select>
             </div>
-            <div class="flex gap-3 pt-2">
+            <div class="flex gap-3 pt-1">
                 <button type="button" onclick="closeSoldModal()"
-                    class="flex-1 py-2.5 border border-gray-300 rounded-xl text-sm font-semibold hover:bg-gray-50">
-                    {{ __('profile.cancel') }}
+                        style="flex:1;padding:12px;border:1.5px solid #E2ECDF;border-radius:10px;font-weight:600;background:white;cursor:pointer;color:#191D14;">
+                    Bekor qilish
                 </button>
                 <button type="submit"
-                    class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700">
-                    {{ __('profile.confirm') }}
+                        style="flex:1;padding:12px;background:#1D3520;color:white;border-radius:10px;font-weight:700;border:none;cursor:pointer;">
+                    Tasdiqlash
                 </button>
             </div>
         </form>
@@ -196,11 +317,11 @@
 </div>
 
 <script>
-function openSoldModal(productId, productName) {
-    const modal = document.getElementById('soldModal');
-    document.getElementById('soldProductName').textContent = productName;
-    document.getElementById('soldForm').action = `/products/${productId}/mark-sold`;
-    modal.classList.remove('hidden');
+function openSoldModal(id, name, price) {
+    document.getElementById('soldProductName').textContent = name;
+    document.getElementById('soldPrice').value = price;
+    document.getElementById('soldForm').action = `/products/${id}/mark-sold`;
+    document.getElementById('soldModal').classList.remove('hidden');
 }
 function closeSoldModal() {
     document.getElementById('soldModal').classList.add('hidden');

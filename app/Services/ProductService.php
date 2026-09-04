@@ -12,7 +12,7 @@ class ProductService
 {
     public function getFiltered(array $filters): LengthAwarePaginator
     {
-        return Product::with(['category', 'user', 'color', 'region', 'city', 'status'])
+        $query = Product::with(['category', 'user', 'color', 'region', 'city', 'status'])
             ->whereHas('status', fn ($q) => $q->where('name', '!=', 'Sotildi'))
             ->when(auth()->id(), fn ($q, $id) => $q->where('user_id', '!=', $id))
             ->when($filters['q'] ?? null, function ($q, $v) {
@@ -39,9 +39,16 @@ class ProductService
             ->when(
                 isset($filters['lat'], $filters['lng'], $filters['radius']),
                 fn ($q) => $this->filterByRadius($q, $filters['lat'], $filters['lng'], $filters['radius'])
-            )
-            ->latest()
-            ->paginate(12);
+            );
+
+        match ($filters['sort'] ?? null) {
+            'price_asc'  => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            'popular'    => $query->orderBy('views_count', 'desc'),
+            default      => $query->latest(),
+        };
+
+        return $query->paginate(12);
     }
 
     private function filterByRadius($query, float $lat, float $lng, float $radius): void

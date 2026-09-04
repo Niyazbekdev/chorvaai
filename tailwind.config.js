@@ -12,8 +12,30 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans:  ['Inter', ...defaultTheme.fontFamily.sans],
-                serif: ['Playfair Display', ...defaultTheme.fontFamily.serif],
+                sans:  ['Manrope', ...defaultTheme.fontFamily.sans],
+                serif: ['Zilla Slab', ...defaultTheme.fontFamily.serif],
+            },
+            colors: {
+                moss: {
+                    900: '#1D3520',
+                    700: '#2C4E2E',
+                    500: '#3E683F',
+                    100: '#E2ECDF',
+                },
+                wheat: {
+                    DEFAULT: '#B5822A',
+                    100: '#F6ECD7',
+                },
+                clay: {
+                    DEFAULT: '#A34F30',
+                    100: '#F5E3DB',
+                },
+                ink: {
+                    DEFAULT: '#191D14',
+                    2: '#5C6352',
+                },
+                ground: '#EDF0E5',
+                paper:  '#F8FCF7',
             },
         },
     },

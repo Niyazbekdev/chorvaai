@@ -1,47 +1,88 @@
 <style>
+/* ── Navbar ── */
 .site-navbar {
     position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
-    background: rgba(1,31,19,.85); backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255,255,255,.15);
+    background: #ffffff;
+    border-bottom: 1px solid #EDF0E5;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
 .site-navbar-inner {
-    height: 76px; display: flex; align-items: center; justify-content: space-between;
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
     max-width: 1280px; margin: 0 auto; padding: 0 40px;
 }
-.site-logo { color: white; text-decoration: none; font-size: 26px; font-weight: 700; flex-shrink: 0; }
-.site-logo span { color: #10b981; }
-.site-links { display: flex; gap: 24px; align-items: center; }
-.site-links a { color: white; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: .85rem; letter-spacing: .04em; }
-.site-links a:hover { color: #10b981; }
+.site-logo {
+    display: flex; align-items: center; gap: 8px;
+    color: #191D14; text-decoration: none; font-family: 'Zilla Slab', serif;
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
+}
+.site-logo svg { flex-shrink: 0; }
+.site-links { display: flex; gap: 4px; align-items: center; }
+.site-links a {
+    color: #191D14; text-decoration: none; font-weight: 600; font-size: .875rem;
+    padding: 7px 14px; border-radius: 8px; transition: background .15s, color .15s;
+}
+.site-links a:hover { background: #EDF0E5; color: #1D3520; }
+
+/* "E'lon berish" green button */
 .site-announce-btn {
-    background: #10b981; color: white !important; text-decoration: none;
-    padding: 9px 20px; border-radius: 999px; font-weight: 700;
-    font-size: .85rem; letter-spacing: .04em; text-transform: uppercase;
+    background: #1D3520 !important; color: white !important;
+    padding: 8px 18px; border-radius: 8px; font-weight: 700;
+    font-size: .875rem; display: flex; align-items: center; gap: 6px;
     transition: background .2s;
 }
-.site-announce-btn:hover { background: #059669 !important; color: white !important; }
-.site-auth { display: flex; gap: 12px; align-items: center; }
-.site-login { color: white; text-decoration: none; font-weight: 700; }
-.site-register {
-    background: #16a34a; color: white; text-decoration: none; border: 0;
-    padding: 10px 20px; border-radius: 999px; font-weight: 700;
+.site-announce-btn:hover { background: #2C4E2E !important; }
+
+/* Auth buttons */
+.site-auth { display: flex; gap: 8px; align-items: center; }
+.site-login-btn {
+    color: #191D14; text-decoration: none; font-weight: 600;
+    font-size: .875rem; padding: 7px 16px; border-radius: 8px;
+    transition: background .15s;
 }
-.site-register:hover { background: #15803d; color: white; }
+.site-login-btn:hover { background: #EDF0E5; }
+.site-register-btn {
+    background: #1D3520; color: white; text-decoration: none;
+    padding: 8px 18px; border-radius: 8px; font-weight: 700;
+    font-size: .875rem; transition: background .2s;
+    border: none; cursor: pointer;
+}
+.site-register-btn:hover { background: #2C4E2E; color: white; }
+
+/* Language switcher */
+.lang-switcher {
+    display: flex; align-items: center;
+    background: #EDF0E5; border-radius: 8px; padding: 3px;
+    gap: 2px;
+}
+.lang-btn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: .78rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+    color: #5C6352; text-decoration: none;
+    transition: all .15s; white-space: nowrap;
+}
+.lang-btn:hover { color: #1D3520; }
+.lang-btn.active {
+    background: white; color: #1D3520;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12);
+}
+
+/* Profile dropdown */
 .profile-wrap { position: relative; }
 .profile-btn {
-    background: #16a34a; color: white; border: 0;
-    padding: 10px 20px; border-radius: 999px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    background: #1D3520; color: white; border: 0;
+    padding: 7px 14px; border-radius: 8px; font-weight: 700;
+    font-size: .875rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
     transition: background .2s;
 }
-.profile-btn:hover { background: #15803d; }
-.profile-btn .arrow {
-    display: inline-block; transition: transform .25s ease; font-size: .75rem;
-}
+.profile-btn:hover { background: #2C4E2E; }
+.profile-btn .arrow { display: inline-block; transition: transform .25s ease; font-size: .7rem; }
 .profile-btn.open .arrow { transform: rotate(180deg); }
 .profile-menu {
-    display: none; position: absolute; right: 0; top: 54px; width: 230px;
-    background: white; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    display: none; position: absolute; right: 0; top: 50px; width: 230px;
+    background: white; border-radius: 14px;
+    border: 1px solid #EDF0E5;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
     overflow: hidden; z-index: 100;
     animation: dropIn .18s ease;
 }
@@ -52,132 +93,113 @@
 }
 .profile-menu-header {
     display: block; width: 100%; padding: 14px 16px;
-    color: #111827; background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+    color: #191D14; background: #F8FCF7; border-bottom: 1px solid #EDF0E5;
     font-size: .88rem; line-height: 1.4;
 }
 .profile-menu a, .profile-menu button {
-    display: block; width: 100%; padding: 11px 16px; text-align: left;
-    color: #111827; text-decoration: none; background: white; border: 0;
-    font-size: .9rem; cursor: pointer; transition: background .15s;
+    display: block; width: 100%; padding: 10px 16px; text-align: left;
+    color: #191D14; text-decoration: none; background: white; border: 0;
+    font-size: .875rem; cursor: pointer; transition: background .12s;
 }
-.profile-menu a:hover, .profile-menu button:hover { background: #f3f4f6; }
-.profile-menu .logout-btn { color: #dc2626; }
-.profile-menu .logout-btn:hover { background: #fee2e2; }
+.profile-menu a:hover, .profile-menu button:hover { background: #F8FCF7; }
+.profile-menu .logout-btn { color: #A34F30; }
+.profile-menu .logout-btn:hover { background: #F5E3DB; }
 
-/* ── Language switcher ── */
-.lang-switcher {
-    display: flex; align-items: center;
-    background: rgba(255,255,255,.12);
-    border-radius: 999px;
-    padding: 3px;
-    gap: 2px;
-    border: 1px solid rgba(255,255,255,.2);
+/* Icon buttons (bell, chat) */
+.nav-icon-btn {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #5C6352; background: transparent; border: none; cursor: pointer;
+    transition: background .15s, color .15s;
+    text-decoration: none;
 }
-.lang-btn {
-    display: flex; align-items: center; gap: 4px;
-    padding: 5px 11px; border-radius: 999px;
-    font-size: .78rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
-    color: rgba(255,255,255,.7); text-decoration: none;
-    transition: all .2s; white-space: nowrap;
-}
-.lang-btn:hover { color: white; background: rgba(255,255,255,.12); }
-.lang-btn.active {
-    background: white; color: #065f46;
-    box-shadow: 0 1px 4px rgba(0,0,0,.18);
-}
-.lang-flag { font-size: 1rem; line-height: 1; }
+.nav-icon-btn:hover { background: #EDF0E5; color: #1D3520; }
 
 /* ── Hamburger (mobile only) ── */
 .mobile-menu-btn {
-    display: none;
-    background: none; border: none; cursor: pointer;
-    color: white; padding: 6px; border-radius: 8px;
+    display: none; background: none; border: none; cursor: pointer;
+    color: #191D14; padding: 6px; border-radius: 8px;
     align-items: center; justify-content: center;
-    transition: background .15s;
-    flex-shrink: 0;
+    transition: background .15s; flex-shrink: 0;
 }
-.mobile-menu-btn:hover { background: rgba(255,255,255,.1); }
+.mobile-menu-btn:hover { background: #EDF0E5; }
 
 /* ── Mobile nav panel ── */
 .mobile-nav {
-    background: rgba(1,31,19,.97); backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,.1);
+    background: #ffffff;
+    border-top: 1px solid #EDF0E5;
     padding: 8px 20px 24px;
     overflow-y: auto;
     max-height: calc(100dvh - 64px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
 }
 .mobile-nav-link {
     display: flex; align-items: center; gap: 10px;
-    color: white; text-decoration: none; font-weight: 600;
+    color: #191D14; text-decoration: none; font-weight: 600;
     font-size: .95rem; padding: 14px 4px;
-    border-bottom: 1px solid rgba(255,255,255,.07);
-    text-transform: uppercase; letter-spacing: .04em;
+    border-bottom: 1px solid #EDF0E5;
     transition: color .15s;
 }
-.mobile-nav-link:hover { color: #10b981; }
+.mobile-nav-link:hover { color: #1D3520; }
 .mobile-nav-link:last-child { border-bottom: none; }
 .mobile-nav-post {
     display: block; text-align: center;
-    background: #10b981; color: white !important;
-    padding: 13px; border-radius: 12px;
+    background: #1D3520; color: white !important;
+    padding: 13px; border-radius: 10px;
     font-weight: 700; font-size: .9rem;
-    text-decoration: none; margin-top: 4px;
-    text-transform: uppercase; letter-spacing: .05em;
+    text-decoration: none; margin-top: 8px;
 }
-.mobile-nav-post:hover { background: #059669; }
+.mobile-nav-post:hover { background: #2C4E2E; }
 .mobile-user-header {
     padding: 16px 4px 12px;
-    border-bottom: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid #EDF0E5;
     margin-bottom: 4px;
 }
 .mobile-nav-secondary {
     display: flex; align-items: center; gap: 10px;
-    color: rgba(255,255,255,.75); text-decoration: none;
+    color: #5C6352; text-decoration: none;
     font-size: .9rem; font-weight: 500;
     padding: 12px 4px;
-    border-bottom: 1px solid rgba(255,255,255,.07);
+    border-bottom: 1px solid #EDF0E5;
     transition: color .15s;
 }
-.mobile-nav-secondary:hover { color: white; }
+.mobile-nav-secondary:hover { color: #191D14; }
 .mobile-nav-logout {
     display: block; width: 100%; text-align: center;
-    background: rgba(220,38,38,.15); color: #f87171;
-    border: 1px solid rgba(220,38,38,.3);
-    padding: 13px; border-radius: 12px;
+    background: #F5E3DB; color: #A34F30;
+    border: none;
+    padding: 13px; border-radius: 10px;
     font-weight: 700; font-size: .9rem; cursor: pointer;
     margin-top: 12px; transition: background .15s;
 }
-.mobile-nav-logout:hover { background: rgba(220,38,38,.25); }
+.mobile-nav-logout:hover { background: #f0d0c0; }
 .mobile-nav-login {
     display: block; text-align: center;
-    background: #10b981; color: white;
-    padding: 13px; border-radius: 12px;
+    background: #1D3520; color: white;
+    padding: 13px; border-radius: 10px;
     font-weight: 700; font-size: .9rem;
     text-decoration: none; margin-top: 12px;
 }
+.mobile-nav-login:hover { background: #2C4E2E; }
 
 /* ── Main content offset below fixed navbar ── */
-.site-main-offset { padding-top: 76px; }
-/* Hero sections that should fill viewport behind the navbar */
-.site-hero-fullscreen { margin-top: -76px; }
+.site-main-offset { padding-top: 64px; }
+.site-hero-fullscreen { margin-top: -64px; }
 
-/* ── Responsive breakpoints ── */
+/* ── Responsive ── */
 @media (max-width: 900px) {
     .site-navbar-inner { padding: 0 20px; }
-    .site-links { gap: 14px; }
-    .site-links a { font-size: .78rem; }
+    .site-links { gap: 2px; }
+    .site-links a { font-size: .82rem; padding: 6px 10px; }
 }
-
 @media (max-width: 768px) {
-    .site-navbar-inner { padding: 0 16px; height: 64px; }
+    .site-navbar-inner { padding: 0 16px; }
     .site-links { display: none; }
-    .site-auth .site-register,
+    .site-auth .site-register-btn,
     .site-auth .profile-wrap { display: none; }
+    .site-auth .nav-icon-btn { display: none; }
     .mobile-menu-btn { display: flex; }
-    .site-main-offset { padding-top: 64px; }
-    .site-hero-fullscreen { margin-top: -64px; }
 }
-
 @media (min-width: 769px) {
     .mobile-nav { display: none !important; }
     .mobile-menu-btn { display: none !important; }
@@ -186,73 +208,100 @@
 
 <header class="site-navbar" x-data="{ mobileOpen: false }" @keydown.escape.window="mobileOpen = false">
     <div class="site-navbar-inner">
-        <a href="{{ url('/') }}" class="site-logo">Chorva<span>AI</span></a>
 
+        {{-- Logo --}}
+        <a href="{{ url('/') }}" class="site-logo">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="16" fill="#E2ECDF"/>
+                <path d="M9 22c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#1D3520" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="16" cy="12" r="3.5" fill="#1D3520"/>
+                <path d="M13 10.5c-.5-1-1.5-1.5-2.5-1" stroke="#1D3520" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M19 10.5c.5-1 1.5-1.5 2.5-1" stroke="#1D3520" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            ChorvaAI
+        </a>
+
+        {{-- Nav links --}}
         <nav class="site-links">
-            <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
-            <a href="{{ route('products.create') }}" class="site-announce-btn">{{ __('nav.post_ad') }}</a>
-            <a href="{{ url('/') }}#why">{{ __('nav.about') }}</a>
-            <a href="{{ url('/') }}#contact">{{ __('nav.contact') }}</a>
+            <a href="{{ url('/marketplace') }}">Bozor</a>
+            <a href="{{ route('ai.index') }}">Ai Yordamchi</a>
+            <a href="{{ url('/') }}#why">Biz haqimizda</a>
+            <a href="{{ url('/') }}#contact">Aloqa</a>
         </nav>
 
+        {{-- Right auth area --}}
         <div class="site-auth">
             @php $currentLocale = app()->getLocale(); @endphp
 
+            {{-- Language switcher --}}
             <div class="lang-switcher">
                 <a href="{{ route('lang.switch', 'uz') }}"
-                   class="lang-btn {{ $currentLocale === 'uz' ? 'active' : '' }}">
-                    <span class="lang-flag">🇺🇿</span> UZ
-                </a>
+                   class="lang-btn {{ $currentLocale === 'uz' ? 'active' : '' }}">UZ</a>
                 <a href="{{ route('lang.switch', 'ru') }}"
-                   class="lang-btn {{ $currentLocale === 'ru' ? 'active' : '' }}">
-                    <span class="lang-flag">🇷🇺</span> RU
-                </a>
+                   class="lang-btn {{ $currentLocale === 'ru' ? 'active' : '' }}">RU</a>
             </div>
 
             @guest
-                <a href="{{ route('login') }}" class="site-register">{{ __('nav.login') }}</a>
+                <a href="{{ route('login') }}" class="site-login-btn">Kirish</a>
+                <a href="{{ url('/register') }}" class="site-register-btn">Ro'yxatdan o'tish</a>
             @endguest
 
             @auth
+                {{-- Bell icon --}}
+                <a href="{{ route('profile.my-products') }}" class="nav-icon-btn" title="E'lonlarim">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M15 17H20L18.595 15.595A1 1 0 0118 14.828V11A6.002 6.002 0 0012 6a6 6 0 00-6 5v3.828a1 1 0 01-.293.707L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </a>
+
+                {{-- Chat icon --}}
+                <a href="{{ url('/marketplace') }}" class="nav-icon-btn" title="Bozor">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                </a>
+
+                {{-- Profile dropdown --}}
                 <div class="profile-wrap" id="profileWrap">
                     <button class="profile-btn" id="profileBtn" onclick="toggleProfileMenu()">
+                        <span style="width:22px;height:22px;border-radius:50%;background:#E2ECDF;color:#1D3520;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800">
+                            {{ strtoupper(substr(Auth::user()->first_name, 0, 2)) }}
+                        </span>
                         {{ Auth::user()->first_name }}
                         <span class="arrow">▼</span>
                     </button>
                     <div class="profile-menu" id="profileMenu">
                         <span class="profile-menu-header">
                             <strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong><br>
-                            <span style="color:#6b7280;font-size:.8rem">{{ Auth::user()->phone }}</span>
+                            <span style="color:#5C6352;font-size:.8rem">{{ Auth::user()->phone }}</span>
                         </span>
-                        <a href="{{ route('profile.edit') }}">{{ __('nav.profile_settings') }}</a>
-                        <a href="{{ route('profile.my-products') }}">{{ __('nav.my_ads') }}</a>
+                        <a href="{{ route('profile.edit') }}">Profil sozlamalari</a>
+                        <a href="{{ route('profile.my-products') }}">Mening e'lonlarim</a>
                         <a href="{{ route('profile.favorites') }}" style="display:flex;align-items:center;justify-content:space-between">
-                            {{ __('nav.favorites') }}
-                            @php
-                                $__favCount = auth()->user()?->favorites()->count() ?? 0;
-                            @endphp
+                            Sevimlilar
+                            @php $__favCount = auth()->user()?->favorites()->count() ?? 0; @endphp
                             @if($__favCount > 0)
-                                <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px">{{ $__favCount }}</span>
+                                <span style="background:#3E683F;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px">{{ $__favCount }}</span>
                             @endif
                         </a>
-                        <a href="{{ route('ai.index') }}" style="display:flex;align-items:center;gap:6px;color:#059669;font-weight:600">
-                            🤖 Bozor tahlili
-                        </a>
-                        <a href="{{ route('banners.my') }}">📢 Reklamalarim</a>
+                        <a href="{{ route('ai.index') }}" style="color:#3E683F;font-weight:600">Bozor tahlili</a>
+                        <a href="{{ route('banners.my') }}">Reklamalarim</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="logout-btn">{{ __('nav.logout') }}</button>
+                            <button type="submit" class="logout-btn">Chiqish</button>
                         </form>
                     </div>
                 </div>
             @endauth
 
-            {{-- Hamburger button (mobile only) --}}
-            <button class="mobile-menu-btn" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()">
-                <svg x-show="!mobileOpen" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {{-- Hamburger (mobile) --}}
+            <button class="mobile-menu-btn" @click="mobileOpen = !mobileOpen">
+                <svg x-show="!mobileOpen" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
-                <svg x-show="mobileOpen" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg x-show="mobileOpen" width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
@@ -270,77 +319,43 @@
          x-transition:leave-end="opacity-0 -translate-y-1">
 
         @auth
-            {{-- User info --}}
             <div class="mobile-user-header">
-                <p style="color:white;font-weight:700;font-size:1rem">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
-                <p style="color:rgba(255,255,255,.5);font-size:.82rem;margin-top:2px">{{ Auth::user()->phone }}</p>
+                <p style="color:#191D14;font-weight:700;font-size:1rem">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
+                <p style="color:#5C6352;font-size:.82rem;margin-top:2px">{{ Auth::user()->phone }}</p>
             </div>
         @endauth
 
-        {{-- Nav links --}}
-        <a href="{{ url('/marketplace') }}" class="mobile-nav-link" @click="mobileOpen = false">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            {{ __('nav.marketplace') }}
-        </a>
-        <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            {{ __('nav.about') }}
-        </a>
-        <a href="{{ url('/') }}#contact" class="mobile-nav-link" @click="mobileOpen = false">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            {{ __('nav.contact') }}
-        </a>
+        <a href="{{ url('/marketplace') }}" class="mobile-nav-link" @click="mobileOpen = false">Bozor</a>
+        <a href="{{ route('ai.index') }}" class="mobile-nav-link" @click="mobileOpen = false">Ai Yordamchi</a>
+        <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">Biz haqimizda</a>
+        <a href="{{ url('/') }}#contact" class="mobile-nav-link" @click="mobileOpen = false">Aloqa</a>
 
         @auth
-            {{-- Auth quick links --}}
-            <a href="{{ route('profile.edit') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                {{ __('nav.profile_settings') }}
-            </a>
-            <a href="{{ route('profile.my-products') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                {{ __('nav.my_ads') }}
-            </a>
-            <a href="{{ route('profile.favorites') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
-                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                {{ __('nav.favorites') }}
-                @php $__favCount = auth()->user()?->favorites()->count() ?? 0; @endphp
-                @if($__favCount > 0)
-                    <span style="background:#ef4444;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:auto">{{ $__favCount }}</span>
-                @endif
-            </a>
-            <a href="{{ route('ai.index') }}" class="mobile-nav-secondary" style="color:#059669;font-weight:600" @click="mobileOpen = false">
-                🤖 Bozor tahlili agenti
-            </a>
-            <a href="{{ route('banners.my') }}" class="mobile-nav-secondary" @click="mobileOpen = false">
-                📢 Reklamalarim
-            </a>
+            <a href="{{ route('profile.edit') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Profil sozlamalari</a>
+            <a href="{{ route('profile.my-products') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Mening e'lonlarim</a>
+            <a href="{{ route('profile.favorites') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Sevimlilar</a>
+            <a href="{{ route('ai.index') }}" class="mobile-nav-secondary" style="color:#3E683F;font-weight:600" @click="mobileOpen = false">Bozor tahlili</a>
+            <a href="{{ route('banners.my') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Reklamalarim</a>
         @endauth
 
-        {{-- Primary CTA --}}
-        <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">
-            {{ __('nav.post_ad') }}
-        </a>
+        <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">+ E'lon berish</a>
 
         @auth
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="mobile-nav-logout">{{ __('nav.logout') }}</button>
+                <button type="submit" class="mobile-nav-logout">Chiqish</button>
             </form>
         @else
-            <a href="{{ route('login') }}" class="mobile-nav-login" @click="mobileOpen = false">{{ __('nav.login') }}</a>
+            <a href="{{ route('login') }}" class="mobile-nav-login" @click="mobileOpen = false">Kirish</a>
         @endauth
     </div>
 </header>
 
 <script>
 function toggleProfileMenu() {
-    const btn  = document.getElementById('profileBtn');
-    const menu = document.getElementById('profileMenu');
-    btn.classList.toggle('open');
-    menu.classList.toggle('open');
+    document.getElementById('profileBtn')?.classList.toggle('open');
+    document.getElementById('profileMenu')?.classList.toggle('open');
 }
-
 document.addEventListener('click', function (e) {
     const wrap = document.getElementById('profileWrap');
     if (wrap && !wrap.contains(e.target)) {
@@ -348,28 +363,4 @@ document.addEventListener('click', function (e) {
         document.getElementById('profileMenu')?.classList.remove('open');
     }
 });
-
-// ── Navbardagi linklar history yig'masin (mobil "orqaga" tugma muammosi) ──
-// Asosiy bo'limlar o'rtasida o'tganda history.replace ishlatiladi —
-// yangi entry yaratmaydi, orqaga bosganda faqat oldingi "muhim" sahifaga qaytadi.
-(function () {
-    // Desktop: site-links ichidagi linklar (Post Ad tugmasi bundan mustasno)
-    document.querySelectorAll('.site-links a:not(.site-announce-btn), .profile-menu a')
-        .forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                location.replace(this.href);
-            });
-        });
-
-    // Mobil: .mobile-nav-link va .mobile-nav-secondary linklar
-    // (Alpine @click="mobileOpen=false" element darajasida ishlaydi,
-    //  keyin event document ga ko'tarilib replaceState ishga tushadi)
-    document.addEventListener('click', function (e) {
-        const link = e.target.closest('.mobile-nav-link, .mobile-nav-secondary');
-        if (!link || !link.href) return;
-        e.preventDefault();
-        location.replace(link.href);
-    });
-})();
 </script>

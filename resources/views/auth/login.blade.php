@@ -1,72 +1,66 @@
 <x-guest-layout>
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div>
+        <h1 class="font-serif text-3xl font-bold text-ink mb-1">Xush kelibsiz</h1>
+        <p class="text-ink-2 text-sm mb-7">Akkauntingizga kiring</p>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <!-- Telefon raqam -->
-        <div>
-            <x-input-label for="phone" :value="__('auth.login_identifier')" />
-            <div class="flex mt-1">
-                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-100 text-gray-600">
-                    +998
-                </span>
-                <x-text-input
-                    id="phone"
-                    class="block w-full rounded-l-none"
-                    type="text"
-                    name="phone"
-                    :value="old('phone')"
-                    required
-                    autofocus
-                    autocomplete="username"
-                    placeholder="{{ __('auth.login_placeholder') }}" />
+        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+            @csrf
+
+            {{-- Phone --}}
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wide mb-1.5" style="color:#5C6352;">
+                    Telefon raqam
+                </label>
+                <div class="flex">
+                    <span class="inline-flex items-center px-4 rounded-l-xl font-semibold text-sm"
+                          style="background:#EDF0E5;color:#191D14;border:1.5px solid #E2ECDF;border-right:none;">
+                        +998
+                    </span>
+                    <input id="phone" type="text" name="phone" value="{{ old('phone') }}"
+                           required autofocus autocomplete="username"
+                           placeholder="90 123 45 67"
+                           style="flex:1;border:1.5px solid #E2ECDF;border-left:none;border-radius:0 10px 10px 0;padding:11px 14px;font-size:.9rem;outline:none;background:white;color:#191D14;transition:border-color .15s;"
+                           onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
+                </div>
+                <x-input-error :messages="$errors->get('phone')" class="mt-1.5" />
             </div>
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-        </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input
-                id="password"
-                class="block mt-1 w-full"
-                type="password"
-                name="password"
-                required
-                autocomplete="current-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            {{-- Password --}}
+            <div>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wide" style="color:#5C6352;">Parol</label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}"
+                           style="color:#3E683F;font-size:.82rem;font-weight:600;text-decoration:none;">
+                            Parolni unutdim?
+                        </a>
+                    @endif
+                </div>
+                <input id="password" type="password" name="password" required autocomplete="current-password"
+                       placeholder="••••••••••"
+                       style="width:100%;border:1.5px solid #E2ECDF;border-radius:10px;padding:11px 14px;font-size:.9rem;outline:none;background:white;color:#191D14;transition:border-color .15s;box-sizing:border-box;"
+                       onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
+                <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+            </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input
-                    id="remember_me"
-                    type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                    name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+            {{-- Submit --}}
+            <button type="submit"
+                    style="width:100%;background:#1D3520;color:white;padding:13px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:background .2s;margin-top:4px;"
+                    onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
+                Kirish
+            </button>
 
-        <div class="flex items-center justify-between mt-4">
-            <a href="{{ route('password.request') }}"
-               class="text-sm text-gray-600 hover:text-gray-900 underline rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('auth.forgot_password') }}
+        </form>
+
+        <p class="text-center text-sm mt-6" style="color:#5C6352;">
+            Akkauntingiz yo'qmi?
+            <a href="{{ route('register') }}" style="color:#1D3520;font-weight:700;text-decoration:none;">
+                Ro'yxatdan o'ting
             </a>
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-
-        <div class="mt-4 text-center">
-            <a href="{{ route('register') }}"
-               class="text-sm text-gray-600 hover:text-gray-900 underline">
-                {{ __('auth.no_account') }}
-            </a>
-        </div>
-    </form>
+        </p>
+    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {

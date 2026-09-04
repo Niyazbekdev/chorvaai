@@ -9,6 +9,7 @@ use App\Services\EskizService;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -169,5 +170,27 @@ class ProfileController extends Controller
     {
         $request->session()->forget('phone_change_pending');
         return redirect()->route('profile.edit');
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+
+        Auth::logout();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Akkauntingiz o\'chirildi.');
     }
 }

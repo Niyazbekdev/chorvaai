@@ -17,7 +17,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
-Route::get('/', fn () => view('welcome'))->name('home');
+Route::get('/', function () {
+    $categories = \App\Models\Category::whereNull('parent_id')->with('children')->get();
+    $recentProducts = \App\Models\Product::with(['category', 'region', 'city'])
+        ->where('status_id', 1)
+        ->latest()
+        ->take(4)
+        ->get();
+    $stats = [
+        'products' => \App\Models\Product::where('status_id', 1)->count(),
+        'users'    => \App\Models\User::count(),
+        'regions'  => \App\Models\Region::count(),
+    ];
+    return view('welcome', compact('categories', 'recentProducts', 'stats'));
+})->name('home');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 
 // Marketplace — public
@@ -51,6 +64,7 @@ Route::middleware(['auth', 'phone.verified'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/my-products', [ProfileController::class, 'myProducts'])->name('profile.my-products');
     Route::get('/profile/favorites', [ProfileController::class, 'favorites'])->name('profile.favorites');
 
