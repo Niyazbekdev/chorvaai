@@ -223,10 +223,10 @@
 
         {{-- Nav links --}}
         <nav class="site-links">
-            <a href="{{ url('/marketplace') }}">Bozor</a>
-            <a href="{{ route('ai.index') }}">Ai Yordamchi</a>
-            <a href="{{ url('/') }}#why">Biz haqimizda</a>
-            <a href="{{ url('/') }}#contact">Aloqa</a>
+            <a href="{{ url('/marketplace') }}">{{ __('nav.marketplace') }}</a>
+            <a href="{{ route('ai.index') }}">{{ __('nav.ai_assistant') }}</a>
+            <a href="{{ url('/') }}#why">{{ __('nav.about') }}</a>
+            <a href="{{ url('/') }}#contact">{{ __('nav.contact') }}</a>
         </nav>
 
         {{-- Right auth area --}}
@@ -242,13 +242,13 @@
             </div>
 
             @guest
-                <a href="{{ route('login') }}" class="site-login-btn">Kirish</a>
-                <a href="{{ url('/register') }}" class="site-register-btn">Ro'yxatdan o'tish</a>
+                <a href="{{ route('login') }}" class="site-login-btn">{{ __('nav.login') }}</a>
+                <a href="{{ url('/register') }}" class="site-register-btn">{{ __('nav.register') }}</a>
             @endguest
 
             @auth
                 {{-- Bell icon --}}
-                <a href="{{ route('profile.my-products') }}" class="nav-icon-btn" title="E'lonlarim">
+                <a href="{{ route('profile.my-products') }}" class="nav-icon-btn" title="{{ __('nav.my_ads_icon') }}">
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                               d="M15 17H20L18.595 15.595A1 1 0 0118 14.828V11A6.002 6.002 0 0012 6a6 6 0 00-6 5v3.828a1 1 0 01-.293.707L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
@@ -256,7 +256,7 @@
                 </a>
 
                 {{-- Chat icon --}}
-                <a href="{{ url('/marketplace') }}" class="nav-icon-btn" title="Bozor">
+                <a href="{{ url('/marketplace') }}" class="nav-icon-btn" title="{{ __('nav.marketplace_title') }}">
                     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
@@ -277,20 +277,20 @@
                             <strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong><br>
                             <span style="color:#5C6352;font-size:.8rem">{{ Auth::user()->phone }}</span>
                         </span>
-                        <a href="{{ route('profile.edit') }}">Profil sozlamalari</a>
-                        <a href="{{ route('profile.my-products') }}">Mening e'lonlarim</a>
+                        <a href="{{ route('profile.edit') }}">{{ __('nav.profile_settings') }}</a>
+                        <a href="{{ route('profile.my-products') }}">{{ __('nav.my_ads') }}</a>
                         <a href="{{ route('profile.favorites') }}" style="display:flex;align-items:center;justify-content:space-between">
-                            Sevimlilar
+                            {{ __('nav.favorites') }}
                             @php $__favCount = auth()->user()?->favorites()->count() ?? 0; @endphp
                             @if($__favCount > 0)
                                 <span style="background:#3E683F;color:white;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:999px">{{ $__favCount }}</span>
                             @endif
                         </a>
-                        <a href="{{ route('ai.index') }}" style="color:#3E683F;font-weight:600">Bozor tahlili</a>
-                        <a href="{{ route('banners.my') }}">Reklamalarim</a>
+                        <a href="{{ route('ai.index') }}" style="color:#3E683F;font-weight:600">{{ __('nav.market_analysis') }}</a>
+                        <a href="{{ route('banners.my') }}">{{ __('nav.my_banners') }}</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="logout-btn">Chiqish</button>
+                            <button type="submit" class="logout-btn">{{ __('nav.logout') }}</button>
                         </form>
                     </div>
                 </div>
@@ -325,28 +325,28 @@
             </div>
         @endauth
 
-        <a href="{{ url('/marketplace') }}" class="mobile-nav-link" @click="mobileOpen = false">Bozor</a>
-        <a href="{{ route('ai.index') }}" class="mobile-nav-link" @click="mobileOpen = false">Ai Yordamchi</a>
-        <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">Biz haqimizda</a>
-        <a href="{{ url('/') }}#contact" class="mobile-nav-link" @click="mobileOpen = false">Aloqa</a>
+        <a href="{{ url('/marketplace') }}" class="mobile-nav-link" @click="mobileOpen = false">{{ __('nav.marketplace') }}</a>
+        <a href="{{ route('ai.index') }}" class="mobile-nav-link" @click="mobileOpen = false">{{ __('nav.ai_assistant') }}</a>
+        <a href="{{ url('/') }}#why" class="mobile-nav-link" @click="mobileOpen = false">{{ __('nav.about') }}</a>
+        <a href="{{ url('/') }}#contact" class="mobile-nav-link" @click="mobileOpen = false">{{ __('nav.contact') }}</a>
 
         @auth
-            <a href="{{ route('profile.edit') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Profil sozlamalari</a>
-            <a href="{{ route('profile.my-products') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Mening e'lonlarim</a>
-            <a href="{{ route('profile.favorites') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Sevimlilar</a>
-            <a href="{{ route('ai.index') }}" class="mobile-nav-secondary" style="color:#3E683F;font-weight:600" @click="mobileOpen = false">Bozor tahlili</a>
-            <a href="{{ route('banners.my') }}" class="mobile-nav-secondary" @click="mobileOpen = false">Reklamalarim</a>
+            <a href="{{ route('profile.edit') }}" class="mobile-nav-secondary" @click="mobileOpen = false">{{ __('nav.profile_settings') }}</a>
+            <a href="{{ route('profile.my-products') }}" class="mobile-nav-secondary" @click="mobileOpen = false">{{ __('nav.my_ads') }}</a>
+            <a href="{{ route('profile.favorites') }}" class="mobile-nav-secondary" @click="mobileOpen = false">{{ __('nav.favorites') }}</a>
+            <a href="{{ route('ai.index') }}" class="mobile-nav-secondary" style="color:#3E683F;font-weight:600" @click="mobileOpen = false">{{ __('nav.market_analysis') }}</a>
+            <a href="{{ route('banners.my') }}" class="mobile-nav-secondary" @click="mobileOpen = false">{{ __('nav.my_banners') }}</a>
         @endauth
 
-        <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">+ E'lon berish</a>
+        <a href="{{ route('products.create') }}" class="mobile-nav-post" @click="mobileOpen = false">{{ __('nav.post_ad') }}</a>
 
         @auth
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="mobile-nav-logout">Chiqish</button>
+                <button type="submit" class="mobile-nav-logout">{{ __('nav.logout') }}</button>
             </form>
         @else
-            <a href="{{ route('login') }}" class="mobile-nav-login" @click="mobileOpen = false">Kirish</a>
+            <a href="{{ route('login') }}" class="mobile-nav-login" @click="mobileOpen = false">{{ __('nav.login') }}</a>
         @endauth
     </div>
 </header>

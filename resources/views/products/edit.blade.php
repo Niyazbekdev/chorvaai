@@ -308,7 +308,7 @@ filterCities(true);
 
 const initLat = parseFloat('{{ $product->latitude ?? 41.2995 }}');
 const initLng = parseFloat('{{ $product->longitude ?? 69.2401 }}');
-const map = L.map('pickMap').setView([initLat, initLng], $product->latitude ? 13 : 7);
+const map = L.map('pickMap').setView([initLat, initLng], {{ $product->latitude ? 13 : 7 }});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let marker = @if($product->latitude) L.marker([{{ $product->latitude }}, {{ $product->longitude }}]).addTo(map) @else null @endif;

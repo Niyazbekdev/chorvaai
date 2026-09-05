@@ -48,7 +48,7 @@
                         @endif
                         <p class="font-bold text-sm text-ink leading-tight">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</p>
                         <span class="mt-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background:#E2ECDF;color:#3E683F;">
-                            Tasdiqlangan
+                            {{ __('profile.verified') }}
                         </span>
                     </div>
 
@@ -56,15 +56,15 @@
                     <nav class="space-y-1">
                         <a href="{{ route('profile.my-products') }}" class="profile-nav-link">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            Mening e'lonlarim
+                            {{ __('profile.my_ads') }}
                         </a>
                         <a href="{{ route('profile.favorites') }}" class="profile-nav-link">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                            Sevimlilar
+                            {{ __('profile.favorites_tab') }}
                         </a>
                         <a href="{{ route('profile.edit') }}" class="profile-nav-link active">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            Profil sozlamalari
+                            {{ __('profile.profile_title') }}
                         </a>
                     </nav>
                 </div>
@@ -75,26 +75,26 @@
 
                 {{-- Header --}}
                 <div>
-                    <h1 class="font-serif text-2xl font-bold text-ink">Profil sozlamalari</h1>
-                    <p class="text-sm mt-0.5" style="color:#5C6352;">Shaxsiy ma'lumotlaringizni tahrirlang</p>
+                    <h1 class="font-serif text-2xl font-bold text-ink">{{ __('profile.profile_title') }}</h1>
+                    <p class="text-sm mt-0.5" style="color:#5C6352;">{{ __('profile.edit_desc') }}</p>
                 </div>
 
                 {{-- Flash --}}
                 @if(session('status') === 'profile-updated')
                     <div class="px-4 py-3 rounded-xl text-sm font-semibold" style="background:#E2ECDF;color:#1D3520;">
-                        ✓ Ma'lumotlar saqlandi
+                        {{ __('profile.profile_updated') }}
                     </div>
                 @endif
                 @if(session('status') === 'phone-changed')
                     <div class="px-4 py-3 rounded-xl text-sm font-semibold" style="background:#E2ECDF;color:#1D3520;">
-                        ✓ Telefon raqam yangilandi
+                        {{ __('profile.phone_changed') }}
                     </div>
                 @endif
 
                 {{-- Profile info card --}}
                 <div class="section-card">
-                    <h2 class="font-bold text-base text-ink mb-1">Shaxsiy ma'lumotlar</h2>
-                    <p class="text-sm mb-6" style="color:#5C6352;">Ism, familiya va profilingiz rasmini yangilang</p>
+                    <h2 class="font-bold text-base text-ink mb-1">{{ __('profile.info_title') }}</h2>
+                    <p class="text-sm mb-6" style="color:#5C6352;">{{ __('profile.personal_info_desc') }}</p>
 
                     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-5">
                         @csrf
@@ -120,11 +120,11 @@
                                        onchange="previewAvatar(this)">
                             </div>
                             <div>
-                                <p class="font-semibold text-sm text-ink">Profil rasmi</p>
-                                <p class="text-xs mt-0.5" style="color:#5C6352;">JPG, PNG, GIF · Max 2MB</p>
+                                <p class="font-semibold text-sm text-ink">{{ __('profile.avatar_label') }}</p>
+                                <p class="text-xs mt-0.5" style="color:#5C6352;">{{ __('profile.avatar_hint') }}</p>
                                 <button type="button" onclick="document.getElementById('avatar_input').click()"
                                         class="mt-2 text-xs font-semibold" style="color:#1D3520;background:none;border:none;cursor:pointer;padding:0;">
-                                    Rasmni o'zgartirish
+                                    {{ __('profile.change_avatar_btn') }}
                                 </button>
                                 <x-input-error :messages="$errors->get('avatar')" class="mt-1" />
                             </div>
@@ -133,14 +133,14 @@
                         {{-- Name row --}}
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="field-label" for="first_name">Ism</label>
+                                <label class="field-label" for="first_name">{{ __('auth.first_name') }}</label>
                                 <input id="first_name" type="text" name="first_name" class="field-input"
                                        value="{{ old('first_name', auth()->user()->first_name) }}"
                                        required autofocus autocomplete="given-name" placeholder="Jasur">
                                 <x-input-error :messages="$errors->get('first_name')" class="mt-1" />
                             </div>
                             <div>
-                                <label class="field-label" for="last_name">Familiya</label>
+                                <label class="field-label" for="last_name">{{ __('auth.last_name') }}</label>
                                 <input id="last_name" type="text" name="last_name" class="field-input"
                                        value="{{ old('last_name', auth()->user()->last_name) }}"
                                        required autocomplete="family-name" placeholder="Toshmatov">
@@ -150,14 +150,14 @@
 
                         {{-- Phone (readonly) --}}
                         <div>
-                            <label class="field-label">Telefon raqam</label>
+                            <label class="field-label">{{ __('auth.phone_number') }}</label>
                             <div class="flex items-center gap-2">
                                 <input type="text" class="field-input" value="{{ auth()->user()->phone }}" readonly
                                        style="background:#F8FCF7;color:#5C6352;cursor:not-allowed;flex:1;">
                                 <a href="#phone-section"
                                    style="white-space:nowrap;font-size:.8rem;font-weight:700;color:#1D3520;text-decoration:none;padding:12px 16px;border:1.5px solid #E2ECDF;border-radius:10px;background:white;"
                                    onmouseover="this.style.background='#EDF0E5'" onmouseout="this.style.background='white'">
-                                    O'zgartirish
+                                    {{ __('profile.change_btn') }}
                                 </a>
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                             <button type="submit"
                                     style="background:#1D3520;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;"
                                     onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                                Saqlash
+                                {{ __('profile.save') }}
                             </button>
                         </div>
                     </form>
@@ -174,35 +174,35 @@
 
                 {{-- Change phone card --}}
                 <div class="section-card" id="phone-section">
-                    <h2 class="font-bold text-base text-ink mb-1">Telefon raqamni o'zgartirish</h2>
-                    <p class="text-sm mb-6" style="color:#5C6352;">Yangi raqam SMS orqali tasdiqlanadi</p>
+                    <h2 class="font-bold text-base text-ink mb-1">{{ __('profile.phone_title') }}</h2>
+                    <p class="text-sm mb-6" style="color:#5C6352;">{{ __('profile.phone_section_desc') }}</p>
                     @include('profile.partials.change-phone-form')
                 </div>
 
                 {{-- Change password card --}}
                 <div class="section-card">
-                    <h2 class="font-bold text-base text-ink mb-1">Parolni o'zgartirish</h2>
-                    <p class="text-sm mb-6" style="color:#5C6352;">Xavfsizlik uchun kuchli parol ishlating</p>
+                    <h2 class="font-bold text-base text-ink mb-1">{{ __('profile.change_password_title') }}</h2>
+                    <p class="text-sm mb-6" style="color:#5C6352;">{{ __('profile.change_password_desc') }}</p>
 
                     <form method="POST" action="{{ route('password.update') }}" class="space-y-4">
                         @csrf
                         @method('PUT')
 
                         <div>
-                            <label class="field-label" for="current_password">Joriy parol</label>
+                            <label class="field-label" for="current_password">{{ __('profile.current_password') }}</label>
                             <input id="current_password" type="password" name="current_password" class="field-input"
                                    autocomplete="current-password" placeholder="••••••••">
                             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-1" />
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="field-label" for="new_password">Yangi parol</label>
+                                <label class="field-label" for="new_password">{{ __('profile.new_password') }}</label>
                                 <input id="new_password" type="password" name="password" class="field-input"
                                        autocomplete="new-password" placeholder="••••••••">
                                 <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-1" />
                             </div>
                             <div>
-                                <label class="field-label" for="new_password_confirmation">Tasdiqlang</label>
+                                <label class="field-label" for="new_password_confirmation">{{ __('profile.confirm_field') }}</label>
                                 <input id="new_password_confirmation" type="password" name="password_confirmation" class="field-input"
                                        autocomplete="new-password" placeholder="••••••••">
                                 <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-1" />
@@ -212,10 +212,10 @@
                             <button type="submit"
                                     style="background:#1D3520;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;"
                                     onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                                Parolni yangilash
+                                {{ __('profile.update_password') }}
                             </button>
                             @if(session('status') === 'password-updated')
-                                <span class="text-sm font-semibold" style="color:#3E683F;">✓ Parol yangilandi</span>
+                                <span class="text-sm font-semibold" style="color:#3E683F;">{{ __('profile.password_updated_flash') }}</span>
                             @endif
                         </div>
                     </form>
@@ -223,13 +223,13 @@
 
                 {{-- Delete account card --}}
                 <div class="section-card" style="border-color:#F5E3DB;">
-                    <h2 class="font-bold text-base mb-1" style="color:#A34F30;">Akkauntni o'chirish</h2>
-                    <p class="text-sm mb-5" style="color:#5C6352;">Bu amal qaytarib bo'lmaydi. Barcha ma'lumotlar o'chirib yuboriladi.</p>
+                    <h2 class="font-bold text-base mb-1" style="color:#A34F30;">{{ __('profile.delete_account_title') }}</h2>
+                    <p class="text-sm mb-5" style="color:#5C6352;">{{ __('profile.delete_account_desc') }}</p>
 
                     <button onclick="document.getElementById('deleteModal').classList.remove('hidden')"
                             style="padding:11px 24px;border:1.5px solid #A34F30;border-radius:10px;font-weight:700;font-size:.875rem;color:#A34F30;background:white;cursor:pointer;"
                             onmouseover="this.style.background='#F5E3DB'" onmouseout="this.style.background='white'">
-                        Akkauntni o'chirish
+                        {{ __('profile.delete_account_title') }}
                     </button>
                 </div>
             </div>
@@ -241,24 +241,24 @@
 <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
     <div class="absolute inset-0" style="background:rgba(0,0,0,.5);" onclick="document.getElementById('deleteModal').classList.add('hidden')"></div>
     <div class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
-        <h3 class="font-serif text-xl font-bold text-ink mb-2">Akkauntni o'chirish</h3>
-        <p class="text-sm mb-5" style="color:#5C6352;">Tasdiqlash uchun parolingizni kiriting. Bu amal qaytarib bo'lmaydi.</p>
+        <h3 class="font-serif text-xl font-bold text-ink mb-2">{{ __('profile.delete_account_title') }}</h3>
+        <p class="text-sm mb-5" style="color:#5C6352;">{{ __('profile.delete_modal_desc') }}</p>
         <form method="POST" action="{{ route('profile.destroy') }}" class="space-y-4">
             @csrf
             @method('DELETE')
             <div>
-                <label class="field-label">Parol</label>
+                <label class="field-label">{{ __('auth.password') }}</label>
                 <input type="password" name="password" class="field-input" required placeholder="••••••••">
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-1" />
             </div>
             <div class="flex gap-3">
                 <button type="button" onclick="document.getElementById('deleteModal').classList.add('hidden')"
                         style="flex:1;padding:12px;border:1.5px solid #E2ECDF;border-radius:10px;font-weight:600;background:white;cursor:pointer;">
-                    Bekor qilish
+                    {{ __('profile.cancel') }}
                 </button>
                 <button type="submit"
                         style="flex:1;padding:12px;background:#A34F30;color:white;border-radius:10px;font-weight:700;border:none;cursor:pointer;">
-                    O'chirish
+                    {{ __('profile.delete') }}
                 </button>
             </div>
         </form>

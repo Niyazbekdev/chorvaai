@@ -9,9 +9,14 @@ return [
     'register'      => "Ro'yxatdan o'tish",
     'profile_settings' => "Profil sozlamalari",
     'my_ads'        => "Mening e'lonlarim",
+    'my_ads_icon'   => "E'lonlarim",
     'favorites'     => "Sevimlilar",
     'logout'        => "Chiqish",
     'dashboard'     => "Kabinet",
+    'ai_assistant'  => "AI Yordamchi",
+    'market_analysis' => "Bozor tahlili",
+    'my_banners'    => "Reklamalarim",
+    'marketplace_title' => "Bozor",
     // footer
     'footer_desc'      => "O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platform. AI yordamida tez, xavfsiz va shaffof.",
     'footer_pages'     => "Sahifalar",
@@ -19,4 +24,6 @@ return [
     'footer_post_ad'   => "E'lon berish",
     'footer_copyright' => "© :year ChorvaAI. Barcha huquqlar himoyalangan.",
     'footer_location'  => "O'zbekiston",
+    'footer_privacy'   => "Maxfiylik siyosati",
+    'footer_terms'     => "Foydalanish shartlari",
 ];

@@ -3,21 +3,21 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">Mening reklamalarim</h1>
+            <h1 class="text-2xl font-bold text-gray-900">{{ __('banners.my_banners_title') }}</h1>
             <a href="{{ route('banners.create') }}"
                class="bg-green-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-green-700 transition">
-                + Yangi reklama
+                {{ __('banners.new_banner') }}
             </a>
         </div>
 
         @if($banners->isEmpty())
             <div class="bg-white rounded-2xl shadow p-12 text-center text-gray-400">
                 <p class="text-4xl mb-3">📢</p>
-                <p class="text-lg font-semibold text-gray-600">Hali reklama yo'q</p>
-                <p class="text-sm mt-1 mb-6">Marketplayssda banneringizni joylashtiring</p>
+                <p class="text-lg font-semibold text-gray-600">{{ __('banners.no_banners') }}</p>
+                <p class="text-sm mt-1 mb-6">{{ __('banners.no_banners_hint') }}</p>
                 <a href="{{ route('banners.create') }}"
                    class="inline-block bg-green-600 text-white px-7 py-3 rounded-xl font-semibold hover:bg-green-700 transition">
-                    Reklama berish
+                    {{ __('banners.post_banner') }}
                 </a>
             </div>
         @else
@@ -37,9 +37,9 @@
                                     <h3 class="font-bold text-gray-900 text-base leading-snug">{{ $banner->title }}</h3>
                                     @php
                                         $badge = match($banner->status) {
-                                            'active'          => ['Faol', 'bg-green-100 text-green-700'],
-                                            'archived'        => ['Arxiv', 'bg-gray-100 text-gray-500'],
-                                            'pending_payment' => ['To\'lov kutilmoqda', 'bg-yellow-100 text-yellow-700'],
+                                            'active'          => [__('banners.status_active'), 'bg-green-100 text-green-700'],
+                                            'archived'        => [__('banners.status_archived'), 'bg-gray-100 text-gray-500'],
+                                            'pending_payment' => [__('banners.status_pending'), 'bg-yellow-100 text-yellow-700'],
                                             default           => [$banner->status, 'bg-gray-100 text-gray-500'],
                                         };
                                     @endphp
@@ -55,7 +55,7 @@
                                         {{ $banner->expires_at->format('d.m.Y') }}
                                         @if($banner->status === 'active')
                                             · <span class="text-green-600 font-medium">
-                                                {{ now()->diffInDays($banner->expires_at) }} kun qoldi
+                                                {{ now()->diffInDays($banner->expires_at) }} {{ __('banners.days_left') }}
                                             </span>
                                         @endif
                                     </p>
@@ -68,22 +68,22 @@
                                         @csrf
                                         <button type="submit"
                                             class="text-xs border border-green-500 text-green-600 px-4 py-1.5 rounded-xl hover:bg-green-50 font-semibold transition">
-                                            Qayta aktivlashtirish (30 000 so'm)
+                                            {{ __('banners.reactivate') }}
                                         </button>
                                     </form>
                                 @elseif($banner->status === 'pending_payment')
                                     <a href="{{ route('payment.select', ['type' => 'banner', 'banner_id' => $banner->id]) }}"
                                        class="text-xs bg-blue-600 text-white px-4 py-1.5 rounded-xl hover:bg-blue-700 font-semibold transition">
-                                        To'lovni amalga oshirish
+                                        {{ __('banners.make_payment') }}
                                     </a>
                                 @endif
 
                                 <form method="POST" action="{{ route('banners.destroy', $banner) }}"
-                                      onsubmit="return confirm('Bannerni o\'chirasizmi?')">
+                                      onsubmit="return confirm('{{ __('banners.delete_confirm') }}')">
                                     @csrf @method('DELETE')
                                     <button type="submit"
                                         class="text-xs border border-red-300 text-red-500 px-4 py-1.5 rounded-xl hover:bg-red-50 font-semibold transition">
-                                        O'chirish
+                                        {{ __('banners.delete_btn') }}
                                     </button>
                                 </form>
                             </div>

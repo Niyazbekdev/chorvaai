@@ -25,16 +25,16 @@
         {{-- Badge --}}
         <div class="inline-flex items-center gap-2 mb-6">
             <span style="background:#2C4E2E;color:#E2ECDF;font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:999px;letter-spacing:.05em;text-transform:uppercase;">
-                O'zbekistonning birinchi chorva bozori
+                {{ __('welcome.hero_badge') }}
             </span>
         </div>
 
         <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white mb-6 opacity-0 anim-1">
-            Chorva mollari sotib olish<br>va sotish ekosistemi.
+            {{ __('welcome.hero_title') }}
         </h1>
 
         <p class="text-white/60 text-base sm:text-lg leading-relaxed max-w-lg mb-10 opacity-0 anim-3">
-            Biz chorva egalari uchun ularni oson sotib olish va sotish, hamda ertagni kunda kuzatuv yechimlaridan foydalanish imkonini beradigan yagona ekotizimni quryamiz.
+            {{ __('welcome.hero_desc') }}
         </p>
 
         <div class="flex flex-wrap gap-3 opacity-0 anim-4">
@@ -42,19 +42,19 @@
                 <a href="{{ route('profile.my-products') }}"
                    style="background:#B5822A;color:white;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;transition:background .2s;"
                    onmouseover="this.style.background='#9a6d22'" onmouseout="this.style.background='#B5822A'">
-                    Sotishni boshlash
+                    {{ __('welcome.start_selling') }}
                 </a>
             @else
                 <a href="{{ route('login') }}"
                    style="background:#B5822A;color:white;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;transition:background .2s;"
                    onmouseover="this.style.background='#9a6d22'" onmouseout="this.style.background='#B5822A'">
-                    Sotishni boshlash
+                    {{ __('welcome.start_selling') }}
                 </a>
             @endauth
             <a href="{{ url('/marketplace') }}"
                style="background:transparent;color:white;padding:13px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;border:2px solid rgba(255,255,255,.3);transition:border-color .2s,background .2s;"
                onmouseover="this.style.borderColor='rgba(255,255,255,.6)'" onmouseout="this.style.borderColor='rgba(255,255,255,.3)'">
-                Mahsulotlarni ko'rish
+                {{ __('welcome.browse_livestock') }}
             </a>
         </div>
     </div>
@@ -64,15 +64,15 @@
         <div class="max-w-7xl mx-auto px-5 sm:px-10 py-5 flex items-center gap-10 sm:gap-20 flex-wrap">
             <div>
                 <p class="text-white font-bold text-2xl sm:text-3xl font-serif">{{ number_format($stats['products']) }}</p>
-                <p class="text-white/50 text-sm mt-0.5">Faol e'lon</p>
+                <p class="text-white/50 text-sm mt-0.5">{{ __('welcome.stats_active_ads') }}</p>
             </div>
             <div>
                 <p class="text-white font-bold text-2xl sm:text-3xl font-serif">{{ number_format($stats['users']) }}</p>
-                <p class="text-white/50 text-sm mt-0.5">Tasdiqlangan fermer</p>
+                <p class="text-white/50 text-sm mt-0.5">{{ __('welcome.stats_farmers') }}</p>
             </div>
             <div>
                 <p class="text-white font-bold text-2xl sm:text-3xl font-serif">{{ $stats['regions'] }}</p>
-                <p class="text-white/50 text-sm mt-0.5">Viloyat</p>
+                <p class="text-white/50 text-sm mt-0.5">{{ __('welcome.stats_regions') }}</p>
             </div>
         </div>
     </div>
@@ -82,9 +82,9 @@
 <section class="py-16 bg-paper">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-8">
-            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink">Kategoriyalar</h2>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink">{{ __('welcome.categories_title') }}</h2>
             <a href="{{ url('/marketplace') }}" style="color:#3E683F;font-weight:600;font-size:.9rem;text-decoration:none;display:flex;align-items:center;gap:4px;">
-                Barchasi
+                {{ __('welcome.view_all') }}
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
         </div>
@@ -122,17 +122,17 @@
 <section id="why" class="py-16 bg-ground">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-12">
-            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-3">Nima uchun bozorimizdan<br>foydalanasiz?</h2>
-            <p class="text-ink-2 max-w-md text-sm leading-relaxed">Chorva mollarini xavfsizroq, tezroq va aniqroq savdo qilish tajribasini his eting.</p>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-3">{{ __('welcome.why_title') }}</h2>
+            <p class="text-ink-2 max-w-md text-sm leading-relaxed">{{ __('welcome.why_desc') }}</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @php
                 $features = [
-                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>', 'title' => 'Tasdiqlangan ishonch', 'desc' => 'Har bir fermer tekshiriladi. Haqiqiy odamlar va haqiqiy chorva mollari.'],
-                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/>', 'title' => 'Ai yordamchi', 'desc' => "Sigir yoshini yuborating — AI zoti, vazni, yoshi va bozor bahosini aniqlaydi."],
-                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>', 'title' => 'Xavfsiz yetkazib berish', 'desc' => "Chorva mollaringizni kerakli joyga ishonchli tarzda yetkazib beramiz."],
-                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>', 'title' => 'Adolatli narxlar', 'desc' => "Yashirin vositachi yo'q, to'lovsiz shaffof bozor narxlari."],
+                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>', 'title' => __('welcome.trust_title'), 'desc' => __('welcome.trust_desc')],
+                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/>', 'title' => __('welcome.ai_feature_title'), 'desc' => __('welcome.ai_feature_desc')],
+                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>', 'title' => __('welcome.delivery_title'), 'desc' => __('welcome.delivery_desc')],
+                    ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>', 'title' => __('welcome.price_title'), 'desc' => __('welcome.price_desc')],
                 ];
             @endphp
             @foreach($features as $f)
@@ -157,15 +157,15 @@
                 <div class="p-8 sm:p-12 flex flex-col justify-center">
                     <span style="background:#E2ECDF;color:#3E683F;font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;width:fit-content;margin-bottom:16px;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        AI YORDAMCHI
+                        {{ __('welcome.ai_badge') }}
                     </span>
-                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-4">Rasm yuboring — narxni bilib oling</h2>
-                    <p class="text-ink-2 text-sm leading-relaxed mb-8">Molning rasmini yuklang. AI zoti, taxminiy yoshi va vazn holati (BCS) baholaydi va saytdagi bozor narxini aytadi.</p>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-4">{{ __('welcome.ai_title') }}</h2>
+                    <p class="text-ink-2 text-sm leading-relaxed mb-8">{{ __('welcome.ai_desc') }}</p>
                     <a href="{{ route('ai.index') }}"
                        style="background:#1D3520;color:white;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.9rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;width:fit-content;"
                        onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Rasmni sinab ko'rish
+                        {{ __('welcome.ai_try_btn') }}
                     </a>
                 </div>
                 {{-- Right — sample card --}}
@@ -175,16 +175,16 @@
                             <div class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl" style="background:#EDF0E5;">🐄</div>
                             <div class="flex-1">
                                 <table class="w-full text-xs text-ink-2">
-                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">ZOTI</td><td class="text-right font-bold text-ink">Golshteyn</td></tr>
-                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">TAXMINIY YOSH</td><td class="text-right font-bold text-ink">3–4 yosh</td></tr>
-                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">TAXMINIY VAZN</td><td class="text-right font-bold text-ink">490–540 kg</td></tr>
-                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">BADAN HOLATI</td><td class="text-right font-bold text-ink">BCS 6/9</td></tr>
+                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">{{ __('welcome.ai_card_breed') }}</td><td class="text-right font-bold text-ink">Golshteyn</td></tr>
+                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">{{ __('welcome.ai_card_age') }}</td><td class="text-right font-bold text-ink">{{ __('welcome.ai_card_age_val') }}</td></tr>
+                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">{{ __('welcome.ai_card_weight') }}</td><td class="text-right font-bold text-ink">{{ __('welcome.ai_card_weight_val') }}</td></tr>
+                                    <tr><td class="py-0.5 font-semibold uppercase tracking-wide text-[10px]">{{ __('welcome.ai_card_body') }}</td><td class="text-right font-bold text-ink">BCS 6/9</td></tr>
                                 </table>
                             </div>
                         </div>
                         <div class="flex items-center justify-between pt-4" style="border-top:1px solid #EDF0E5;">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-ink-2">BOZOR BAHOSI</span>
-                            <span class="font-serif font-bold text-lg" style="color:#1D3520;">17–20 mln so'm</span>
+                            <span class="text-xs font-semibold uppercase tracking-wide text-ink-2">{{ __('welcome.ai_card_price_label') }}</span>
+                            <span class="font-serif font-bold text-lg" style="color:#1D3520;">{{ __('welcome.ai_card_price_val') }}</span>
                         </div>
                     </div>
                 </div>
@@ -196,15 +196,15 @@
 {{-- ===== QANDAY ISHLAYDI ===== --}}
 <section class="py-16 bg-ground">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-12">Qanday ishlaydi</h2>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink mb-12">{{ __('welcome.how_title') }}</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @php
                 $steps = [
-                    ['n' => '1', 'title' => 'Hisob yarating', 'desc' => "Fermer yoki xaridor sifatida necha daqiqada ro'yxatdan o'ting."],
-                    ['n' => '2', 'title' => "Joylashing yoki ko'ring", 'desc' => "Fermerlar chorva mollarini joylaydi, xaridorlar tanishadi."],
-                    ['n' => '3', 'title' => "Bog'laning", 'desc' => "To'g'ridan-to'g'ri musoqot qiling va narxni keltiring."],
-                    ['n' => '4', 'title' => 'Bitim', 'desc' => "Xavfsiz to'lov va yetkazib berish tartiboti."],
+                    ['n' => '1', 'title' => __('welcome.step1_title'), 'desc' => __('welcome.step1_desc')],
+                    ['n' => '2', 'title' => __('welcome.step2_title'), 'desc' => __('welcome.step2_desc')],
+                    ['n' => '3', 'title' => __('welcome.step3_title'), 'desc' => __('welcome.step3_desc')],
+                    ['n' => '4', 'title' => __('welcome.step4_title'), 'desc' => __('welcome.step4_desc')],
                 ];
             @endphp
             @foreach($steps as $s)
@@ -225,10 +225,10 @@
 <section class="py-16 bg-paper">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between mb-8">
-            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink">So'nggi e'lonlar</h2>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-ink">{{ __('welcome.recent_ads') }}</h2>
             <a href="{{ url('/marketplace') }}"
                style="color:#3E683F;font-weight:600;font-size:.9rem;text-decoration:none;display:flex;align-items:center;gap:4px;">
-                Bozorga o'tish
+                {{ __('welcome.go_to_marketplace') }}
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
         </div>
@@ -256,7 +256,7 @@
                         {{-- Tags --}}
                         <div class="absolute top-2.5 left-2.5 flex gap-1.5">
                             @if($product->created_at->diffInDays() < 3)
-                                <span style="background:#B5822A;color:white;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;">Yangi</span>
+                                <span style="background:#B5822A;color:white;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;">{{ __('welcome.new_tag') }}</span>
                             @endif
                         </div>
                         {{-- Fav --}}
@@ -297,7 +297,7 @@
                             @endif
                             @if($product->gender)
                                 <span style="background:#EDF0E5;color:#5C6352;font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:6px;">
-                                    {{ $product->gender === 'erkak' ? "Erkak" : "Urg'ochi" }}
+                                    {{ $product->gender === 'erkak' ? __('welcome.male') : __('welcome.female') }}
                                 </span>
                             @endif
                         </div>
@@ -305,7 +305,7 @@
                         <p class="font-serif font-bold text-lg mb-2" style="color:#1D3520;">{{ $product->formatted_price }}</p>
                         <div class="text-xs flex gap-3" style="color:#5C6352;">
                             @if($product->age)
-                                <span>{{ $product->age }} yosh</span>
+                                <span>{{ $product->age }} {{ __('products.age_unit') }}</span>
                             @endif
                             @if($product->weight)
                                 <span>{{ $product->weight }} kg</span>
@@ -322,7 +322,7 @@
             @empty
                 <div class="col-span-4 text-center py-16 text-ink-2">
                     <p class="text-4xl mb-3">🐄</p>
-                    <p>Hozircha e'lonlar yo'q</p>
+                    <p>{{ __('welcome.no_ads') }}</p>
                 </div>
             @endforelse
         </div>
@@ -334,28 +334,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-8">
         <div>
             <h2 class="font-serif text-3xl sm:text-4xl font-bold text-ink mb-3">
-                Chorva biznesingizni<br>rivojlantirishga tayyormisiz?
+                {{ __('welcome.cta_title') }}
             </h2>
-            <p class="text-ink-2">Minglab fermerlar va xaridorlar bilan O'zbekistonning yirik chorva bozoriga qo'shiling.</p>
+            <p class="text-ink-2">{{ __('welcome.cta_desc') }}</p>
         </div>
         <div class="flex gap-3 flex-wrap flex-shrink-0">
             @auth
                 <a href="{{ route('products.create') }}"
                    style="background:#1D3520;color:white;padding:14px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;"
                    onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                    Bugun boshlash
+                    {{ __('welcome.get_started') }}
                 </a>
             @else
                 <a href="{{ url('/register') }}"
                    style="background:#1D3520;color:white;padding:14px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;"
                    onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                    Bugun boshlash
+                    {{ __('welcome.get_started') }}
                 </a>
             @endauth
             <a href="{{ url('/marketplace') }}"
                style="background:white;color:#1D3520;padding:14px 28px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;border:2px solid #1D3520;"
                onmouseover="this.style.background='#F8FCF7'" onmouseout="this.style.background='white'">
-                Bozorga o'tish
+                {{ __('welcome.go_to_marketplace') }}
             </a>
         </div>
     </div>

@@ -82,6 +82,8 @@ class MarketAnalysisTools
         $query = DB::table('products as p')
             ->join('categories as c', 'c.id', '=', 'p.category_id')
             ->join('regions as r', 'r.id', '=', 'p.region_id')
+            ->join('statuses as s', 's.id', '=', 'p.status_id')
+            ->where('s.name', 'Faol')
             ->where('p.created_at', '>=', now()->subMonths($months))
             ->selectRaw('
                 ROUND(AVG(p.price)) as avg_price,
@@ -117,6 +119,8 @@ class MarketAnalysisTools
 
         $rows = DB::table('products as p')
             ->join('categories as c', 'c.id', '=', 'p.category_id')
+            ->join('statuses as s', 's.id', '=', 'p.status_id')
+            ->where('s.name', 'Faol')
             ->where('p.created_at', '>=', now()->subMonths($months))
             ->where('c.name', 'like', "%$category%")
             ->selectRaw("DATE_FORMAT(p.created_at, '%Y-%m') as month, ROUND(AVG(p.price)) as avg_price, COUNT(*) as listing_count")
@@ -145,6 +149,8 @@ class MarketAnalysisTools
         $rows = DB::table('products as p')
             ->join('categories as c', 'c.id', '=', 'p.category_id')
             ->join('regions as r', 'r.id', '=', 'p.region_id')
+            ->join('statuses as s', 's.id', '=', 'p.status_id')
+            ->where('s.name', 'Faol')
             ->where('c.name', 'like', "%$category%")
             ->selectRaw('r.name as region, ROUND(AVG(p.price)) as avg_price, COUNT(*) as listing_count')
             ->groupBy('r.id', 'r.name')
@@ -167,6 +173,9 @@ class MarketAnalysisTools
 
         $rows = DB::table('products as p')
             ->join('categories as c', 'c.id', '=', 'p.category_id')
+            ->join('statuses as s', 's.id', '=', 'p.status_id')
+            ->where('s.name', 'Faol')
+            ->whereNull('c.parent_id')
             ->where('p.created_at', '>=', now()->subMonths($months))
             ->selectRaw('c.name as category, ROUND(AVG(p.price)) as avg_price, COUNT(*) as listing_count')
             ->groupBy('c.id', 'c.name')

@@ -119,8 +119,8 @@
         {{-- Header --}}
         <div class="flex items-start justify-between gap-3 mb-6 mt-4">
             <div>
-                <h1 class="font-serif text-2xl sm:text-3xl font-bold text-ink">Bozor</h1>
-                <p class="text-ink-2 mt-0.5 text-sm">Sotuvdagi chorva mollari · {{ $products->total() }} ta natija topildi</p>
+                <h1 class="font-serif text-2xl sm:text-3xl font-bold text-ink">{{ __('products.page_title') }}</h1>
+                <p class="text-ink-2 mt-0.5 text-sm">{{ __('products.header_subtitle', ['count' => $products->total()]) }}</p>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 {{-- View toggle --}}
@@ -128,27 +128,27 @@
                     <button id="btn-cards" onclick="setView('cards')"
                             style="padding:6px 12px;border-radius:8px;background:#1D3520;color:white;border:none;cursor:pointer;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .15s;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                        Kartochkalar
+                        {{ __('products.cards_view') }}
                     </button>
                     <button id="btn-map" onclick="setView('map')"
                             style="padding:6px 12px;border-radius:8px;background:transparent;color:#5C6352;border:none;cursor:pointer;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .15s;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                        Xarita
+                        {{ __('products.map_view') }}
                     </button>
                 </div>
                 {{-- Sort (desktop) --}}
                 <select onchange="location.href=this.value" class="hidden sm:block text-sm rounded-xl border border-[#E2ECDF] bg-white text-ink px-3 py-2 focus:ring-0 focus:border-[#3E683F]">
-                    <option value="{{ route('products.index', request()->except('sort')) }}" @selected(!request('sort'))>Avval yangilari</option>
-                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'price_asc'])) }}" @selected(request('sort') === 'price_asc')>Narx: arzondan qimmatga</option>
-                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'price_desc'])) }}" @selected(request('sort') === 'price_desc')>Narx: qimmattan arzonga</option>
-                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'popular'])) }}" @selected(request('sort') === 'popular')>Mashhuri</option>
+                    <option value="{{ route('products.index', request()->except('sort')) }}" @selected(!request('sort'))>{{ __('products.sort_newest') }}</option>
+                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'price_asc'])) }}" @selected(request('sort') === 'price_asc')>{{ __('products.sort_price_asc') }}</option>
+                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'price_desc'])) }}" @selected(request('sort') === 'price_desc')>{{ __('products.sort_price_desc') }}</option>
+                    <option value="{{ route('products.index', array_merge(request()->all(), ['sort' => 'popular'])) }}" @selected(request('sort') === 'popular')>{{ __('products.sort_popular') }}</option>
                 </select>
                 {{-- Filter btn (mobile/tablet) --}}
                 <button onclick="toggleFilter()"
                         class="lg:hidden flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-xl"
                         style="background:#EDF0E5;color:#191D14;border:none;cursor:pointer;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
-                    Filter
+                    {{ __('products.filter_btn') }}
                 </button>
             </div>
         </div>
@@ -174,7 +174,7 @@
                 @foreach([['Qoramol','🐄'],["Qo'y va echki",'🐑'],['Ot va tuya','🐴'],['Parranda','🐓']] as [$name, $em])
                     <a href="{{ route('products.index', ['category' => $categories->firstWhere('name', $name)?->id]) }}" class="filter-chip-plain">{{ $em }} {{ $name }}</a>
                 @endforeach
-                <a href="{{ route('products.index') }}" class="filter-chip-plain" style="color:#A34F30;">Tozalash</a>
+                <a href="{{ route('products.index') }}" class="filter-chip-plain" style="color:#A34F30;">{{ __('products.clear') }}</a>
             </div>
         @else
             {{-- Category quick chips --}}
@@ -201,9 +201,9 @@
                  style="border:1px solid #EDF0E5;height:fit-content;align-self:start;">
 
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="font-bold text-base text-ink">Qidiruv va filter</h2>
+                    <h2 class="font-bold text-base text-ink">{{ __('products.filter_title') }}</h2>
                     @if(request()->anyFilled(['category','region','city','price_from','price_to','q']))
-                        <a href="{{ route('products.index') }}" style="color:#A34F30;font-size:.8rem;font-weight:600;text-decoration:none;">Tozalash</a>
+                        <a href="{{ route('products.index') }}" style="color:#A34F30;font-size:.8rem;font-weight:600;text-decoration:none;">{{ __('products.clear') }}</a>
                     @endif
                     <button onclick="toggleFilter()" class="lg:hidden" style="background:none;border:none;cursor:pointer;color:#5C6352;">
                         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -217,14 +217,14 @@
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style="color:#5C6352;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
                         </svg>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Nom, zoti bo'yicha..."
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('products.search_placeholder') }}"
                                style="width:100%;padding:9px 12px 9px 34px;border:1.5px solid #E2ECDF;border-radius:10px;font-size:.84rem;outline:none;background:#F8FCF7;box-sizing:border-box;"
                                onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
                     </div>
 
                     {{-- Categories --}}
                     <div class="mb-5">
-                        <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:#5C6352;">Kategoriya</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:#5C6352;">{{ __('products.category_label') }}</p>
                         @foreach($categories as $parent)
                             <div class="mb-2">
                                 <p class="filter-parent">{{ $parent->name }}</p>
@@ -240,10 +240,10 @@
 
                     {{-- Viloyat --}}
                     <div class="mb-4">
-                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">Viloyat</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">{{ __('products.region_label') }}</p>
                         <select name="region" id="regionSelect" onchange="document.getElementById('filterForm').submit()"
                                 style="width:100%;border:1.5px solid #E2ECDF;border-radius:10px;padding:9px 12px;font-size:.84rem;background:white;color:#191D14;outline:none;box-sizing:border-box;">
-                            <option value="">Barcha viloyatlar</option>
+                            <option value="">{{ __('products.all_regions') }}</option>
                             @foreach($regions as $region)
                                 <option value="{{ $region->id }}" @selected(request('region') == $region->id)>{{ $region->name }}</option>
                             @endforeach
@@ -254,7 +254,7 @@
                     <div class="mb-4">
                         <select name="city" id="citySelect"
                                 style="width:100%;border:1.5px solid #E2ECDF;border-radius:10px;padding:9px 12px;font-size:.84rem;background:white;color:#191D14;outline:none;box-sizing:border-box;">
-                            <option value="">Barcha tumanlar</option>
+                            <option value="">{{ __('products.all_cities') }}</option>
                             @foreach($cities as $city)
                                 <option value="{{ $city->id }}" data-region="{{ $city->region_id }}" @selected(request('city') == $city->id)>{{ $city->name }}</option>
                             @endforeach
@@ -263,12 +263,12 @@
 
                     {{-- Narx --}}
                     <div class="mb-4">
-                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">Narx oralig'i, so'm</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">{{ __('products.price_range') }}</p>
                         <div class="flex gap-2">
-                            <input type="number" name="price_from" value="{{ request('price_from') }}" placeholder="3 000 000"
+                            <input type="number" name="price_from" value="{{ request('price_from') }}" placeholder="{{ __('products.price_from') }}"
                                    style="flex:1;border:1.5px solid #E2ECDF;border-radius:10px;padding:9px 10px;font-size:.82rem;outline:none;min-width:0;"
                                    onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
-                            <input type="number" name="price_to" value="{{ request('price_to') }}" placeholder="Narxgacha"
+                            <input type="number" name="price_to" value="{{ request('price_to') }}" placeholder="{{ __('products.price_to') }}"
                                    style="flex:1;border:1.5px solid #E2ECDF;border-radius:10px;padding:9px 10px;font-size:.82rem;outline:none;min-width:0;"
                                    onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
                         </div>
@@ -276,21 +276,21 @@
 
                     {{-- Jinsi --}}
                     <div class="mb-5">
-                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">Jinsi</p>
+                        <p class="text-xs font-semibold uppercase tracking-wide mb-2" style="color:#5C6352;">{{ __('products.gender_label') }}</p>
                         <div class="flex gap-1.5">
                             <button type="submit" name="gender" value=""
-                                    class="gender-btn {{ !request('gender') ? 'active' : '' }}">Barchasi</button>
+                                    class="gender-btn {{ !request('gender') ? 'active' : '' }}">{{ __('products.gender_all') }}</button>
                             <button type="submit" name="gender" value="erkak"
-                                    class="gender-btn {{ request('gender') === 'erkak' ? 'active' : '' }}">Erkak</button>
+                                    class="gender-btn {{ request('gender') === 'erkak' ? 'active' : '' }}">{{ __('products.gender_male') }}</button>
                             <button type="submit" name="gender" value="urgochi"
-                                    class="gender-btn {{ request('gender') === 'urgochi' ? 'active' : '' }}">Urg'ochi</button>
+                                    class="gender-btn {{ request('gender') === 'urgochi' ? 'active' : '' }}">{{ __('products.gender_female') }}</button>
                         </div>
                     </div>
 
                     <button type="submit"
                             style="width:100%;background:#1D3520;color:white;padding:11px;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:background .2s;"
                             onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                        Qidirish
+                        {{ __('products.search') }}
                     </button>
                 </form>
             </div>
@@ -330,7 +330,7 @@
                                         {{-- Status badges --}}
                                         <div class="absolute top-2.5 left-2.5 flex gap-1.5">
                                             @if($product->created_at->diffInDays() < 3)
-                                                <span style="background:#B5822A;color:white;font-size:.62rem;font-weight:700;padding:3px 7px;border-radius:5px;text-transform:uppercase;">Yangi</span>
+                                                <span style="background:#B5822A;color:white;font-size:.62rem;font-weight:700;padding:3px 7px;border-radius:5px;text-transform:uppercase;">{{ __('products.new_tag') }}</span>
                                             @endif
                                         </div>
                                         {{-- Fav --}}
@@ -379,7 +379,7 @@
                                         <h3 class="font-bold text-ink text-sm leading-snug line-clamp-1 mb-1">{{ $product->name }}</h3>
                                         <p class="font-serif font-bold text-base mb-2" style="color:#1D3520;">{{ $product->formatted_price }}</p>
                                         <div class="flex gap-3 text-xs mb-1.5" style="color:#5C6352;">
-                                            @if($product->age)<span>{{ $product->age }} yosh</span>@endif
+                                            @if($product->age)<span>{{ $product->age }} {{ __('products.age_unit') }}</span>@endif
                                             @if($product->weight)<span>{{ $product->weight }} kg</span>@endif
                                         </div>
                                         @if($product->city || $product->region)
@@ -409,15 +409,15 @@
                 {{-- ══ MAP VIEW ══ --}}
                 <div id="map-view" class="hidden relative">
                     <div class="absolute top-3 right-3 z-[1000] bg-white rounded-xl shadow p-3" style="min-width:150px;border:1px solid #EDF0E5;">
-                        <p class="font-bold text-xs uppercase tracking-wide text-ink mb-1.5">Legenda</p>
+                        <p class="font-bold text-xs uppercase tracking-wide text-ink mb-1.5">{{ __('products.map_legend') }}</p>
                         <div class="space-y-1 text-xs" style="color:#5C6352;">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#1D3520;"></span>Qoramol</div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#B5822A;"></span>Qo'y & Echki</div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#3E683F;"></span>Ot & Tuya</div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#5C6352;"></span>Boshqa</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#1D3520;"></span>{{ __('products.map_legend_cattle') }}</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#B5822A;"></span>{{ __('products.map_legend_sheep') }}</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#3E683F;"></span>{{ __('products.map_legend_horse') }}</div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:#5C6352;"></span>{{ __('products.map_legend_other') }}</div>
                         </div>
                         <hr class="my-2" style="border-color:#EDF0E5;">
-                        <p class="text-xs" style="color:#5C6352;" id="mapCount">{{ $mapProducts->count() }} ta ko'rsatilmoqda</p>
+                        <p class="text-xs" style="color:#5C6352;" id="mapCount">{{ __('products.map_count', ['count' => $mapProducts->count()]) }}</p>
                     </div>
                 </div>
 
@@ -514,7 +514,7 @@ function initMap() {
         bounds.push([p.lat, p.lng]);
     });
     if (bounds.length > 0) mapInstance.fitBounds(bounds, { padding: [40,40], maxZoom: 10 });
-    document.getElementById('mapCount').textContent = MAP_PRODUCTS.length + ' ta ko\'rsatilmoqda';
+    document.getElementById('mapCount').textContent = '{{ __('products.map_count', ['count' => '']) }}' + MAP_PRODUCTS.length;
 }
 
 // ── View toggle ──────────────────────────────────────────────

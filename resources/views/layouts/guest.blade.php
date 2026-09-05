@@ -48,10 +48,10 @@
                 {{-- Tagline --}}
                 <div class="relative z-10">
                     <h2 class="font-serif text-3xl font-bold text-white leading-tight mb-4">
-                        Chorva bozori<br>cho'ntagingizda.
+                        {{ __('auth.guest_tagline') }}
                     </h2>
                     <p class="text-white/60 text-sm leading-relaxed">
-                        Tasdiqlangan fermerlar, shaffof narxlar va AI baholash — barchasi bitta joyda.
+                        {{ __('auth.guest_desc') }}
                     </p>
 
                     {{-- Stats --}}
@@ -63,7 +63,7 @@
                             ];
                         @endphp
                         <p class="text-white font-bold text-2xl font-serif">{{ number_format($guestStats['users']) }}</p>
-                        <p class="text-white/50 text-xs mt-0.5">fermer allaqachon qo'shilgan</p>
+                        <p class="text-white/50 text-xs mt-0.5">{{ __('auth.guest_farmers_joined') }}</p>
                     </div>
                 </div>
             </div>

@@ -48,7 +48,7 @@
                         @endif
                         <p class="font-bold text-sm text-ink leading-tight">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</p>
                         <span class="mt-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full" style="background:#E2ECDF;color:#3E683F;">
-                            Tasdiqlangan
+                            {{ __('profile.verified') }}
                         </span>
                     </div>
 
@@ -56,15 +56,15 @@
                     <nav class="space-y-1">
                         <a href="{{ route('profile.my-products') }}" class="profile-nav-link">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            Mening e'lonlarim
+                            {{ __('profile.my_ads') }}
                         </a>
                         <a href="{{ route('profile.favorites') }}" class="profile-nav-link active">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                            Sevimlilar
+                            {{ __('profile.favorites_tab') }}
                         </a>
                         <a href="{{ route('profile.edit') }}" class="profile-nav-link">
                             <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            Profil sozlamalari
+                            {{ __('profile.profile_title') }}
                         </a>
                     </nav>
                 </div>
@@ -76,14 +76,14 @@
                 {{-- Header --}}
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <h1 class="font-serif text-2xl font-bold text-ink">Sevimlilar</h1>
-                        <p class="text-sm mt-0.5" style="color:#5C6352;">{{ $products->total() }} ta e'lon saqlangan</p>
+                        <h1 class="font-serif text-2xl font-bold text-ink">{{ __('profile.favorites_title') }}</h1>
+                        <p class="text-sm mt-0.5" style="color:#5C6352;">{{ $products->total() }} {{ __('profile.saved_count') }}</p>
                     </div>
                     <a href="{{ route('products.index') }}"
                        style="background:#F8FCF7;color:#1D3520;padding:10px 18px;border-radius:10px;font-weight:700;font-size:.875rem;text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0;border:1.5px solid #E2ECDF;"
                        onmouseover="this.style.background='#EDF0E5'" onmouseout="this.style.background='#F8FCF7'">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                        Bozorga o'tish
+                        {{ __('profile.go_marketplace_btn') }}
                     </a>
                 </div>
 
@@ -91,11 +91,11 @@
                 @if($products->isEmpty())
                     <div class="bg-white rounded-2xl p-16 text-center" style="border:1px solid #EDF0E5;">
                         <p class="text-5xl mb-4">🤍</p>
-                        <p class="font-bold text-lg text-ink mb-1">Saqlangan e'lonlar yo'q</p>
-                        <p class="text-sm mb-6" style="color:#5C6352;">Yoqqan e'lonlarni sevimlilar ro'yxatiga qo'shing</p>
+                        <p class="font-bold text-lg text-ink mb-1">{{ __('profile.no_saved_ads') }}</p>
+                        <p class="text-sm mb-6" style="color:#5C6352;">{{ __('profile.no_saved_hint') }}</p>
                         <a href="{{ route('products.index') }}"
                            style="display:inline-block;background:#1D3520;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.9rem;text-decoration:none;">
-                            Bozorga o'tish
+                            {{ __('profile.go_marketplace_btn') }}
                         </a>
                     </div>
 
@@ -158,7 +158,7 @@
 
                                     @if($product->pivot->created_at)
                                         <p class="text-xs mt-1" style="color:#5C6352;">
-                                            {{ \Carbon\Carbon::parse($product->pivot->created_at)->diffForHumans() }} saqlangan
+                                            {{ \Carbon\Carbon::parse($product->pivot->created_at)->diffForHumans() }} {{ __('profile.time_saved') }}
                                         </p>
                                     @endif
 
@@ -167,7 +167,7 @@
                                        style="background:#E2ECDF;color:#1D3520;"
                                        onmouseover="this.style.background='#1D3520';this.style.color='white'"
                                        onmouseout="this.style.background='#E2ECDF';this.style.color='#1D3520'">
-                                        Batafsil ko'rish
+                                        {{ __('profile.view_detail') }}
                                     </a>
                                 </div>
                             </div>

@@ -42,53 +42,53 @@
                             <span class="font-serif text-xl font-bold text-white">ChorvaAI</span>
                         </div>
                         <p class="text-white/50 text-sm leading-relaxed">
-                            O'zbekistondagi chorva mollarini sotib olish va sotish uchun yagona raqamli platforma. AI yordamida tez, xavfsiz va shaffof.
+                            {{ __('nav.footer_desc') }}
                         </p>
                     </div>
 
                     {{-- Sahifalar --}}
                     <div>
-                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">Sahifalar</h4>
+                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">{{ __('nav.footer_pages') }}</h4>
                         <ul class="space-y-3">
-                            <li><a href="{{ url('/marketplace') }}" class="text-white/70 hover:text-white text-sm transition-colors">Bozor</a></li>
-                            <li><a href="{{ route('ai.index') }}" class="text-white/70 hover:text-white text-sm transition-colors">Ai Yordamchi</a></li>
-                            <li><a href="{{ url('/#why') }}" class="text-white/70 hover:text-white text-sm transition-colors">Biz haqimizda</a></li>
-                            <li><a href="{{ url('/#contact') }}" class="text-white/70 hover:text-white text-sm transition-colors">Aloqa</a></li>
+                            <li><a href="{{ url('/marketplace') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.marketplace') }}</a></li>
+                            <li><a href="{{ route('ai.index') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.ai_assistant') }}</a></li>
+                            <li><a href="{{ url('/#why') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.about') }}</a></li>
+                            <li><a href="{{ url('/#contact') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.contact') }}</a></li>
                         </ul>
                     </div>
 
                     {{-- Hisob --}}
                     <div>
-                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">Hisob</h4>
+                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">{{ __('nav.footer_account') }}</h4>
                         <ul class="space-y-3">
                             @auth
-                                <li><a href="{{ route('login') }}" class="text-white/70 hover:text-white text-sm transition-colors">Kirish</a></li>
-                                <li><a href="{{ url('/register') }}" class="text-white/70 hover:text-white text-sm transition-colors">Ro'yxatdan o'tish</a></li>
-                                <li><a href="{{ route('products.create') }}" class="text-white/70 hover:text-white text-sm transition-colors">E'lon berish</a></li>
-                                <li><a href="{{ route('profile.my-products') }}" class="text-white/70 hover:text-white text-sm transition-colors">Mening e'lonlarim</a></li>
+                                <li><a href="{{ route('login') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.login') }}</a></li>
+                                <li><a href="{{ url('/register') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.register') }}</a></li>
+                                <li><a href="{{ route('products.create') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.footer_post_ad') }}</a></li>
+                                <li><a href="{{ route('profile.my-products') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.my_ads') }}</a></li>
                             @else
-                                <li><a href="{{ route('login') }}" class="text-white/70 hover:text-white text-sm transition-colors">Kirish</a></li>
-                                <li><a href="{{ url('/register') }}" class="text-white/70 hover:text-white text-sm transition-colors">Ro'yxatdan o'tish</a></li>
-                                <li><a href="{{ route('products.create') }}" class="text-white/70 hover:text-white text-sm transition-colors">E'lon berish</a></li>
+                                <li><a href="{{ route('login') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.login') }}</a></li>
+                                <li><a href="{{ url('/register') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.register') }}</a></li>
+                                <li><a href="{{ route('products.create') }}" class="text-white/70 hover:text-white text-sm transition-colors">{{ __('nav.footer_post_ad') }}</a></li>
                             @endauth
                         </ul>
                     </div>
 
                     {{-- Aloqa --}}
                     <div>
-                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">Aloqa</h4>
+                        <h4 class="text-white/40 font-semibold text-xs uppercase tracking-widest mb-5">{{ __('nav.contact') }}</h4>
                         <ul class="space-y-3">
                             <li><span class="text-white/70 text-sm">+998 71 200 00 00</span></li>
                             <li><span class="text-white/70 text-sm">info@chorvaai.uz</span></li>
-                            <li><span class="text-white/70 text-sm">Toshkent, O'zbekiston</span></li>
+                            <li><span class="text-white/70 text-sm">{{ __('nav.footer_location') }}</span></li>
                         </ul>
                     </div>
 
                 </div>
 
                 <div class="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-2">
-                    <p class="text-white/30 text-xs">© {{ date('Y') }} ChorvaAI. Barcha huquqlar himoyalangan.</p>
-                    <p class="text-white/20 text-xs">Maxfiylik siyosati · Foydalanish shartlari</p>
+                    <p class="text-white/30 text-xs">{{ __('nav.footer_copyright', ['year' => date('Y')]) }}</p>
+                    <p class="text-white/20 text-xs">{{ __('nav.footer_privacy') }} · {{ __('nav.footer_terms') }}</p>
                 </div>
             </div>
         </footer>

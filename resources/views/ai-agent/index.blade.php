@@ -11,8 +11,8 @@
                 🐄
             </div>
             <div>
-                <h1 class="text-xl font-bold text-gray-900">Bozor tahlili agenti</h1>
-                <p class="text-sm text-gray-500">Chorva bozori haqida savollar bering — real ma'lumotlar asosida javob olasiz</p>
+                <h1 class="text-xl font-bold text-gray-900">{{ __('ai.agent_title') }}</h1>
+                <p class="text-sm text-gray-500">{{ __('ai.agent_desc') }}</p>
             </div>
         </div>
 
@@ -26,10 +26,11 @@
                 <div class="flex gap-3 items-start">
                     <div class="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-base shrink-0">🤖</div>
                     <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-gray-800 max-w-xl leading-relaxed">
-                        Salom! Men ChorvaAI bozor tahlili agentiman. 🐄<br>
-                        Chorva mollar narxi, trendlar va viloyatlar bo'yicha savollar bering.
-                        <br><br>
-                        <span class="text-gray-500 text-xs">Masalan:</span>
+                        @foreach(explode("\n", __('ai.welcome_msg')) as $line)
+                            {{ $line }}<br>
+                        @endforeach
+                        <br>
+                        <span class="text-gray-500 text-xs">{{ __('ai.example') }}</span>
                     </div>
                 </div>
 
@@ -50,7 +51,7 @@
                         {{-- Avatar --}}
                         <div class="w-8 h-8 rounded-xl flex items-center justify-center text-sm shrink-0"
                              :class="msg.role === 'user' ? 'bg-green-600 text-white font-bold' : 'bg-gray-100'">
-                            <span x-text="msg.role === 'user' ? '{{ substr(auth()->user()->name ?? 'U', 0, 1) }}' : '🤖'"></span>
+                            <span x-text="msg.role === 'user' ? '{{ substr(auth()->user()->first_name ?? 'U', 0, 1) }}' : '🤖'"></span>
                         </div>
 
                         {{-- User bubble --}}
@@ -93,7 +94,7 @@
                         @keydown.enter.prevent="if(!$event.shiftKey) sendMessage()"
                         :disabled="loading"
                         rows="1"
-                        placeholder="Savol yozing... (Enter — yuborish, Shift+Enter — yangi qator)"
+                        placeholder="{{ __('ai.placeholder') }}"
                         class="flex-1 resize-none rounded-xl border-gray-300 focus:ring-emerald-500 focus:border-emerald-500 text-sm py-2.5 leading-relaxed disabled:opacity-50"
                         style="max-height: 120px; overflow-y: auto;"
                         @input="autoResize($event.target)"
@@ -113,7 +114,7 @@
                 </form>
 
                 <p class="text-xs text-gray-400 mt-2 text-center">
-                    AI ma'lumotlari marketplace bazasidan olinadi · Oldingi suhbat saqlanmaydi
+                    {{ __('ai.footer_note') }}
                 </p>
             </div>
 
@@ -145,13 +146,7 @@ function aiAgent() {
         messages: [],
         input: '',
         loading: false,
-        suggestions: [
-            'Hozir qoramollarning o\'rtacha narxi qancha?',
-            'Qaysi viloyatda qo\'ylar arzonroq?',
-            'So\'nggi 3 oyda narxlar o\'zgarganmi?',
-            'Barcha kategoriyalar narxini solishtir',
-            'Otlarning so\'nggi oy narxi qancha?',
-        ],
+        suggestions: @json(trans('ai.suggestions')),
 
         init() {
             if (window.marked) {
@@ -195,7 +190,7 @@ function aiAgent() {
                 if (res.status === 429) {
                     this.messages.push({
                         role: 'assistant',
-                        content: 'So\'rovlar chegarasiga yetdingiz. Iltimos, bir daqiqa kutib, qayta urinib ko\'ring.',
+                        content: '{{ __('ai.rate_limit') }}',
                     });
                     return;
                 }
@@ -205,7 +200,7 @@ function aiAgent() {
             } catch (e) {
                 this.messages.push({
                     role: 'assistant',
-                    content: 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.',
+                    content: '{{ __('ai.error_msg') }}',
                 });
             } finally {
                 this.loading = false;

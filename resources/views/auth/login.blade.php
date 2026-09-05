@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div>
-        <h1 class="font-serif text-3xl font-bold text-ink mb-1">Xush kelibsiz</h1>
-        <p class="text-ink-2 text-sm mb-7">Akkauntingizga kiring</p>
+        <h1 class="font-serif text-3xl font-bold text-ink mb-1">{{ __('auth.Welcome back') }}</h1>
+        <p class="text-ink-2 text-sm mb-7">{{ __('auth.sign_in_desc') }}</p>
 
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -11,7 +11,7 @@
             {{-- Phone --}}
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wide mb-1.5" style="color:#5C6352;">
-                    Telefon raqam
+                    {{ __('auth.phone_number') }}
                 </label>
                 <div class="flex">
                     <span class="inline-flex items-center px-4 rounded-l-xl font-semibold text-sm"
@@ -30,11 +30,11 @@
             {{-- Password --}}
             <div>
                 <div class="flex items-center justify-between mb-1.5">
-                    <label class="block text-xs font-semibold uppercase tracking-wide" style="color:#5C6352;">Parol</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wide" style="color:#5C6352;">{{ __('auth.password') }}</label>
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}"
                            style="color:#3E683F;font-size:.82rem;font-weight:600;text-decoration:none;">
-                            Parolni unutdim?
+                            {{ __('auth.forgot_password') }}
                         </a>
                     @endif
                 </div>
@@ -49,15 +49,15 @@
             <button type="submit"
                     style="width:100%;background:#1D3520;color:white;padding:13px;border-radius:10px;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:background .2s;margin-top:4px;"
                     onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                Kirish
+                {{ __('auth.log_in') }}
             </button>
 
         </form>
 
         <p class="text-center text-sm mt-6" style="color:#5C6352;">
-            Akkauntingiz yo'qmi?
+            {{ __('auth.no_account') }}
             <a href="{{ route('register') }}" style="color:#1D3520;font-weight:700;text-decoration:none;">
-                Ro'yxatdan o'ting
+                {{ __('auth.register_now') }}
             </a>
         </p>
     </div>

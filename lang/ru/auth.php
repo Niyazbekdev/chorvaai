@@ -57,4 +57,14 @@ return [
     'password_updated'        => "Пароль успешно обновлён. Теперь вы можете войти!",
     'login_identifier'        => "Номер телефона",
     'login_placeholder'       => "901234567",
+    // register page
+    'sms_hint'                => "Код подтверждения будет отправлен по SMS",
+    'terms_prefix'            => "Продолжая, вы соглашаетесь с",
+    'terms_link'              => "условиями использования",
+    'terms_suffix'            => ".",
+    'have_account'            => "Уже есть аккаунт?",
+    // guest layout
+    'guest_tagline'           => "Рынок скота в вашем кармане.",
+    'guest_desc'              => "Проверенные фермеры, прозрачные цены и оценка AI — всё в одном месте.",
+    'guest_farmers_joined'    => "фермеров уже присоединились",
 ];

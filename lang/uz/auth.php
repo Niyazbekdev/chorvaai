@@ -57,4 +57,14 @@ return [
     'resend_wait'             => "soniyadan so'ng qayta yuboring.",
     'session_expired'         => "Sessiya tugagan. Qaytadan boshlang.",
     'password_updated'        => "Parol muvaffaqiyatli yangilandi. Endi kira olasiz!",
+    // register page
+    'sms_hint'                => "SMS orqali tasdiqlash kodi yuboriladi",
+    'terms_prefix'            => "Davom etish orqali",
+    'terms_link'              => "foydalanish shartlari",
+    'terms_suffix'            => "ga rozilik bildirasiz.",
+    'have_account'            => "Akkauntingiz bormi?",
+    // guest layout
+    'guest_tagline'           => "Chorva bozori cho'ntagingizda.",
+    'guest_desc'              => "Tasdiqlangan fermerlar, shaffof narxlar va AI baholash — barchasi bitta joyda.",
+    'guest_farmers_joined'    => "fermer allaqachon qo'shilgan",
 ];
