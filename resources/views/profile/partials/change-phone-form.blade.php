@@ -3,19 +3,19 @@
     {{-- Joriy raqam --}}
     <div class="flex items-center justify-between p-4 rounded-xl mb-4" style="background:#F8FCF7;border:1.5px solid #EDF0E5;">
         <div>
-            <p class="text-xs font-semibold uppercase tracking-wide mb-0.5" style="color:#5C6352;">Joriy raqam</p>
+            <p class="text-xs font-semibold uppercase tracking-wide mb-0.5" style="color:#5C6352;">{{ __('profile.current_phone_label') }}</p>
             <p class="font-bold tracking-wide text-ink">{{ auth()->user()->phone }}</p>
         </div>
         <button type="button" @click="step = (step === 0 ? 1 : 0)"
                 style="font-size:.825rem;font-weight:700;color:#1D3520;background:none;border:none;cursor:pointer;padding:0;"
-                x-text="step === 0 ? 'O\'zgartirish' : 'Bekor qilish'">
+                x-text="step === 0 ? '{{ __('profile.change_btn') }}' : '{{ __('profile.cancel') }}'">
         </button>
     </div>
 
     {{-- SUCCESS --}}
     @if(session('status') === 'phone-updated')
         <div class="px-4 py-3 rounded-xl text-sm font-semibold mb-4" style="background:#E2ECDF;color:#1D3520;">
-            ✓ Telefon raqam muvaffaqiyatli yangilandi
+            {{ __('profile.phone_updated_success') }}
         </div>
     @endif
 
@@ -27,7 +27,7 @@
 
         @if(session('dev_otp_change'))
             <div class="px-4 py-3 rounded-xl text-sm" style="background:#FEF9C3;border:1px solid #fde047;color:#854d0e;">
-                <p class="font-bold">Dev rejim — SMS yuborilmadi</p>
+                <p class="font-bold">{{ __('profile.dev_mode_label') }}</p>
                 <p class="mt-1 font-mono font-bold text-xl tracking-widest">{{ session('dev_otp_change') }}</p>
             </div>
         @endif
@@ -35,7 +35,7 @@
         <form method="POST" action="{{ route('profile.phone.request') }}" id="phoneRequestForm">
             @csrf
             <div>
-                <label class="field-label" for="new_phone">Yangi telefon raqam</label>
+                <label class="field-label" for="new_phone">{{ __('profile.new_phone_label') }}</label>
                 <div class="flex">
                     <span class="inline-flex items-center px-4 rounded-l-xl font-bold text-sm"
                           style="background:#EDF0E5;color:#191D14;border:1.5px solid #E2ECDF;border-right:none;">+998</span>
@@ -53,7 +53,7 @@
             <button type="submit"
                     style="margin-top:14px;background:#1D3520;color:white;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.875rem;border:none;cursor:pointer;"
                     onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                SMS kod yuborish
+                {{ __('profile.send_sms_btn') }}
             </button>
         </form>
     </div>
@@ -63,25 +63,25 @@
         @if(session('phone_change_pending'))
             @if(session('dev_otp_change'))
                 <div class="px-4 py-3 rounded-xl text-sm" style="background:#FEF9C3;border:1px solid #fde047;color:#854d0e;">
-                    <p class="font-bold">Dev rejim — kodni kiriting</p>
+                    <p class="font-bold">{{ __('profile.dev_mode_enter') }}</p>
                     <p class="font-mono font-bold text-xl tracking-widest mt-1">{{ session('dev_otp_change') }}</p>
                 </div>
             @endif
 
             <p class="text-sm" style="color:#5C6352;">
                 <span class="font-bold text-ink">{{ session('phone_change_pending') }}</span>
-                raqamiga yuborilgan 6 xonali kodni kiriting
+                {{ __('profile.otp_sent_hint') }}
             </p>
 
             @if(session('status') === 'phone-otp-resent')
                 <div class="px-4 py-3 rounded-xl text-sm" style="background:#E2ECDF;color:#1D3520;">
-                    Kod qayta yuborildi
+                    {{ __('profile.code_resent') }}
                 </div>
             @endif
 
             <form method="POST" action="{{ route('profile.phone.verify') }}">
                 @csrf
-                <label class="field-label" for="phone_code">Tasdiqlash kodi</label>
+                <label class="field-label" for="phone_code">{{ __('profile.verify_code_label') }}</label>
                 <input id="phone_code" name="code" type="text"
                        inputmode="numeric" pattern="\d{6}" maxlength="6"
                        placeholder="• • • • • •" autofocus autocomplete="one-time-code"
@@ -95,12 +95,12 @@
                     <button type="submit"
                             style="background:#1D3520;color:white;padding:12px 24px;border-radius:10px;font-weight:700;font-size:.875rem;border:none;cursor:pointer;"
                             onmouseover="this.style.background='#2C4E2E'" onmouseout="this.style.background='#1D3520'">
-                        Tasdiqlash
+                        {{ __('profile.verify_btn') }}
                     </button>
                     <form method="POST" action="{{ route('profile.phone.resend') }}" style="display:inline;">
                         @csrf
                         <button type="submit" style="font-size:.825rem;font-weight:600;color:#3E683F;background:none;border:none;cursor:pointer;padding:0;">
-                            Qayta yuborish
+                            {{ __('profile.resend_btn') }}
                         </button>
                     </form>
                 </div>
@@ -109,7 +109,7 @@
             <form method="POST" action="{{ route('profile.phone.cancel') }}" class="mt-2">
                 @csrf
                 <button type="submit" style="font-size:.75rem;color:#5C6352;background:none;border:none;cursor:pointer;padding:0;">
-                    Bekor qilish
+                    {{ __('profile.cancel_change') }}
                 </button>
             </form>
         @endif

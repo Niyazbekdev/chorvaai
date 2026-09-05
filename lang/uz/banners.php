@@ -13,4 +13,17 @@ return [
     'make_payment'     => "To'lovni amalga oshirish",
     'delete_confirm'   => "Bannerni o'chirasizmi?",
     'delete_btn'       => "O'chirish",
+    // create page
+    'create_title'     => "Reklama berish",
+    'create_desc'      => "30 kun davomida marketplace sahifasida banneringiz ko'rinadi — <strong>30 000 so'm</strong>",
+    'img_section'      => "Banner rasmi",
+    'img_hint'         => "Tavsiya etilgan o'lcham: 1200×400 px. JPG, PNG yoki WebP. Maks 4 MB.",
+    'img_click'        => "Rasm tanlash uchun bosing",
+    'info_section'     => "Banner ma'lumotlari",
+    'title_label'      => "Sarlavha",
+    'contact_label'    => "Aloqa (telefon yoki manzil)",
+    'url_label'        => "Havola",
+    'url_optional'     => "(ixtiyoriy)",
+    'period_30'        => "30 kunlik to'lov",
+    'continue_btn'     => "Davom etish →",
 ];

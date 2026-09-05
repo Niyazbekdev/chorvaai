@@ -11,9 +11,9 @@
     {{-- SMS kodni ekranda ko'rsatish --}}
     @if(session('dev_otp'))
         <div class="mb-4 bg-amber-50 border-2 border-amber-400 text-amber-900 px-4 py-4 rounded-xl text-center">
-            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">Tasdiqlash kodi</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">{{ __('auth.dev_otp_verify_label') }}</p>
             <p class="font-mono font-bold text-4xl tracking-[0.4em]">{{ session('dev_otp') }}</p>
-            <p class="text-xs text-amber-600 mt-1">Quyidagi maydonga shu kodni kiriting</p>
+            <p class="text-xs text-amber-600 mt-1">{{ __('auth.dev_otp_verify_hint') }}</p>
         </div>
     @endif
 

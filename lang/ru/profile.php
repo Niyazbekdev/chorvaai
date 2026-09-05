@@ -116,4 +116,17 @@ return [
     'delete_account_title'    => "Удалить аккаунт",
     'delete_account_desc'     => "Это действие необратимо. Все данные будут удалены.",
     'delete_modal_desc'       => "Для подтверждения введите пароль. Это действие необратимо.",
+    // change-phone-form partial
+    'current_phone_label'     => "Текущий номер",
+    'phone_updated_success'   => "✓ Номер телефона успешно обновлён",
+    'new_phone_label'         => "Новый номер телефона",
+    'send_sms_btn'            => "Отправить SMS код",
+    'dev_mode_label'          => "Дев режим — SMS не отправлено",
+    'dev_mode_enter'          => "Дев режим — введите код",
+    'otp_sent_hint'           => "на номер отправлен 6-значный код, введите его",
+    'code_resent'             => "Код отправлен повторно",
+    'verify_code_label'       => "Код подтверждения",
+    'verify_btn'              => "Подтвердить",
+    'resend_btn'              => "Отправить повторно",
+    'cancel_change'           => "Отмена",
 ];

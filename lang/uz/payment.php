@@ -11,4 +11,11 @@ return [
     'secure_note'        => "To'lov xavfsiz va shifrlangan kanal orqali amalga oshiriladi",
     'back'               => "← Orqaga",
     'limit_reached'      => "Bu oy uchun 5 ta bepul e'lon limitingiz to'ldi. E'lon joylash uchun obuna oling.",
+    // success/failed pages
+    'success_title'      => "To'lov muvaffaqiyatli!",
+    'success_desc'       => "Xizmat faollashtirildi. 30 kun davomida foydalanishingiz mumkin.",
+    'go_marketplace'     => "Marketplaysga o'tish",
+    'failed_title'       => "To'lov amalga oshmadi",
+    'failed_desc'        => "Qayta urinib ko'ring yoki boshqa to'lov tizimini tanlang.",
+    'retry'              => "Qayta urinish",
 ];

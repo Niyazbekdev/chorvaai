@@ -116,4 +116,17 @@ return [
     'delete_account_title'    => "Akkauntni o'chirish",
     'delete_account_desc'     => "Bu amal qaytarib bo'lmaydi. Barcha ma'lumotlar o'chirib yuboriladi.",
     'delete_modal_desc'       => "Tasdiqlash uchun parolingizni kiriting. Bu amal qaytarib bo'lmaydi.",
+    // change-phone-form partial
+    'current_phone_label'     => "Joriy raqam",
+    'phone_updated_success'   => "✓ Telefon raqam muvaffaqiyatli yangilandi",
+    'new_phone_label'         => "Yangi telefon raqam",
+    'send_sms_btn'            => "SMS kod yuborish",
+    'dev_mode_label'          => "Dev rejim — SMS yuborilmadi",
+    'dev_mode_enter'          => "Dev rejim — kodni kiriting",
+    'otp_sent_hint'           => "raqamiga yuborilgan 6 xonali kodni kiriting",
+    'code_resent'             => "Kod qayta yuborildi",
+    'verify_code_label'       => "Tasdiqlash kodi",
+    'verify_btn'              => "Tasdiqlash",
+    'resend_btn'              => "Qayta yuborish",
+    'cancel_change'           => "Bekor qilish",
 ];

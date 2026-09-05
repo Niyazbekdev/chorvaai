@@ -6,11 +6,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
             </svg>
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">To'lov muvaffaqiyatli!</h1>
-        <p class="text-gray-500 mb-8">Xizmat faollashtirildi. 30 kun davomida foydalanishingiz mumkin.</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ __('payment.success_title') }}</h1>
+        <p class="text-gray-500 mb-8">{{ __('payment.success_desc') }}</p>
         <a href="{{ route('products.index') }}"
            class="inline-block bg-green-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-green-700 transition">
-            Marketplaysga o'tish
+            {{ __('payment.go_marketplace') }}
         </a>
     </div>
 </div>

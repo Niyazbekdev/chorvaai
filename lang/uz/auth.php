@@ -67,4 +67,7 @@ return [
     'guest_tagline'           => "Chorva bozori cho'ntagingizda.",
     'guest_desc'              => "Tasdiqlangan fermerlar, shaffof narxlar va AI baholash — barchasi bitta joyda.",
     'guest_farmers_joined'    => "fermer allaqachon qo'shilgan",
+    // verify-phone
+    'dev_otp_verify_label'    => "Tasdiqlash kodi",
+    'dev_otp_verify_hint'     => "Quyidagi maydonga shu kodni kiriting",
 ];

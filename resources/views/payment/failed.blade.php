@@ -6,11 +6,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </div>
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">To'lov amalga oshmadi</h1>
-        <p class="text-gray-500 mb-8">Qayta urinib ko'ring yoki boshqa to'lov tizimini tanlang.</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ __('payment.failed_title') }}</h1>
+        <p class="text-gray-500 mb-8">{{ __('payment.failed_desc') }}</p>
         <a href="{{ url()->previous() }}"
            class="inline-block bg-gray-800 text-white font-semibold px-8 py-3 rounded-xl hover:bg-gray-900 transition">
-            Qayta urinish
+            {{ __('payment.retry') }}
         </a>
     </div>
 </div>
