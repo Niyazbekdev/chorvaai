@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'anthropic_key' => env('ANTHROPIC_API_KEY', ''),
-    'model'         => env('ANTHROPIC_MODEL', 'claude-haiku-4-5-20251001'),
-    'max_tokens'    => (int) env('ANTHROPIC_MAX_TOKENS', 2048),
+    'gemini_key' => env('GEMINI_API_KEY', ''),
+    'model'      => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+    'max_tokens' => (int) env('GEMINI_MAX_TOKENS', 2048),
 ];

@@ -6,71 +6,93 @@ use Illuminate\Support\Facades\DB;
 
 class MarketAnalysisTools
 {
-    /** Tool definitions to send to Claude */
+    public function __construct(private ProductRetrieverService $retriever) {}
+
+    /** Gemini formatidagi function_declarations */
     public function definitions(): array
     {
         return [
             [
                 'name'        => 'get_market_stats',
-                'description' => 'Marketplacessdagi e\'lonlarning narx statistikasini olish. Kategoriya va viloyat bo\'yicha filtrlash mumkin.',
-                'input_schema' => [
+                'description' => "Marketplacessdagi e'lonlarning narx statistikasini olish. Kategoriya va viloyat bo'yicha filtrlash mumkin.",
+                'parameters'  => [
                     'type'       => 'object',
                     'properties' => [
-                        'category'    => ['type' => 'string', 'description' => 'Chorva kategoriyasi nomi (masalan: Qoramol, Qo\'y). Bo\'sh qoldirsa barcha kategoriyalar.'],
-                        'region'      => ['type' => 'string', 'description' => 'Viloyat nomi. Bo\'sh qoldirsa barcha viloyatlar.'],
-                        'months_back' => ['type' => 'integer', 'description' => 'Necha oy oldindan boshlab hisoblash. Default: 1', 'default' => 1],
+                        'category'    => ['type' => 'string', 'description' => "Chorva kategoriyasi nomi (masalan: Qoramol, Qo'y). Bo'sh qoldirsa barcha kategoriyalar."],
+                        'region'      => ['type' => 'string', 'description' => "Viloyat nomi. Bo'sh qoldirsa barcha viloyatlar."],
+                        'months_back' => ['type' => 'integer', 'description' => 'Necha oy oldindan boshlab hisoblash. Default: 1'],
                     ],
-                    'required' => [],
                 ],
             ],
             [
                 'name'        => 'get_price_trend',
-                'description' => 'Kategoriya bo\'yicha oylik narx o\'zgarishini ko\'rish. Narxlar oshyabdimi yoki tushyabdimi — shu uchun.',
-                'input_schema' => [
+                'description' => "Kategoriya bo'yicha oylik narx o'zgarishini ko'rish. Narxlar oshyabdimi yoki tushyabdimi.",
+                'parameters'  => [
                     'type'       => 'object',
                     'properties' => [
                         'category'    => ['type' => 'string', 'description' => 'Chorva kategoriyasi nomi (masalan: Qoramol).'],
-                        'months_back' => ['type' => 'integer', 'description' => 'Necha oy orqaga qarab trend ko\'rish. Default: 6', 'default' => 6],
+                        'months_back' => ['type' => 'integer', 'description' => "Necha oy orqaga qarab trend ko'rish. Default: 6"],
                     ],
                     'required' => ['category'],
                 ],
             ],
             [
                 'name'        => 'get_cheapest_regions',
-                'description' => 'Muayyan kategoriya uchun o\'rtacha narx bo\'yicha eng arzon viloyatlar ro\'yxati.',
-                'input_schema' => [
+                'description' => "Muayyan kategoriya uchun o'rtacha narq bo'yicha eng arzon viloyatlar ro'yxati.",
+                'parameters'  => [
                     'type'       => 'object',
                     'properties' => [
                         'category' => ['type' => 'string', 'description' => 'Chorva kategoriyasi nomi.'],
-                        'limit'    => ['type' => 'integer', 'description' => 'Nechta viloyat qaytarilsin. Default: 5', 'default' => 5],
+                        'limit'    => ['type' => 'integer', 'description' => 'Nechta viloyat qaytarilsin. Default: 5'],
                     ],
                     'required' => ['category'],
                 ],
             ],
             [
                 'name'        => 'compare_categories',
-                'description' => 'Barcha kategoriyalar bo\'yicha o\'rtacha narx va e\'lon soni taqqoslamasi.',
-                'input_schema' => [
+                'description' => "Barcha kategoriyalar bo'yicha o'rtacha narx va e'lon soni taqqoslamasi.",
+                'parameters'  => [
                     'type'       => 'object',
                     'properties' => [
-                        'months_back' => ['type' => 'integer', 'description' => 'Necha oy ichidagi ma\'lumot. Default: 1', 'default' => 1],
+                        'months_back' => ['type' => 'integer', 'description' => "Necha oy ichidagi ma'lumot. Default: 1"],
                     ],
-                    'required' => [],
+                ],
+            ],
+            [
+                'name'        => 'search_products',
+                'description' => "Foydalanuvchi so'roviga mos real e'lonlarni saytdan topib beradi. Narx, viloyat, kategoriya bo'yicha qidirish mumkin.",
+                'parameters'  => [
+                    'type'       => 'object',
+                    'properties' => [
+                        'query' => ['type' => 'string', 'description' => "Qidiruv so'rovi. Misol: 'Toshkentda 3 mlngacha qoramol', 'Samarqanddagi qo'ylar'"],
+                    ],
+                    'required' => ['query'],
                 ],
             ],
         ];
     }
 
-    /** Dispatch a tool call by name */
     public function execute(string $name, array $input): array
     {
         return match ($name) {
-            'get_market_stats'    => $this->getMarketStats($input),
-            'get_price_trend'     => $this->getPriceTrend($input),
-            'get_cheapest_regions'=> $this->getCheapestRegions($input),
-            'compare_categories'  => $this->compareCategories($input),
-            default               => ['error' => "Noma'lum tool: $name"],
+            'get_market_stats'     => $this->getMarketStats($input),
+            'get_price_trend'      => $this->getPriceTrend($input),
+            'get_cheapest_regions' => $this->getCheapestRegions($input),
+            'compare_categories'   => $this->compareCategories($input),
+            'search_products'      => $this->searchProducts($input),
+            default                => ['error' => "Noma'lum tool: $name"],
         };
+    }
+
+    private function searchProducts(array $input): array
+    {
+        $products = $this->retriever->search($input['query'] ?? '', 6);
+
+        if ($products->isEmpty()) {
+            return ['message' => "So'rovga mos e'lonlar topilmadi."];
+        }
+
+        return ['listings' => $this->retriever->formatForContext($products)];
     }
 
     private function getMarketStats(array $input): array

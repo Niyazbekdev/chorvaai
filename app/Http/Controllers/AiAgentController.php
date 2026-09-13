@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AnthropicService;
+use App\Services\GeminiService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,7 @@ class AiAgentController extends Controller
         ]);
 
         try {
-            $reply = app(AnthropicService::class)->chat($request->messages);
+            $reply = app(GeminiService::class)->chat($request->messages);
             return response()->json(['reply' => $reply]);
         } catch (\Throwable $e) {
             Log::error('AiAgent chat error: ' . $e->getMessage());
