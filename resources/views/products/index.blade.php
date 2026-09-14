@@ -145,48 +145,73 @@
                 </select>
                 {{-- Filter btn (mobile/tablet) --}}
                 <button onclick="toggleFilter()"
-                        class="lg:hidden flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-xl"
+                        class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl flex-shrink-0"
                         style="background:#EDF0E5;color:#191D14;border:none;cursor:pointer;">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
-                    {{ __('products.filter_btn') }}
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
                 </button>
             </div>
         </div>
 
-        {{-- Active filter chips --}}
-        @if(request()->anyFilled(['category','region','city','price_from','price_to','q','gender']))
-            <div class="flex flex-wrap gap-2 mb-5">
-                @if(request('q'))
+        {{-- Mobile search bar (always visible on mobile, outside filter sheet) --}}
+        <div class="flex gap-2 mb-4 lg:hidden">
+            <form method="GET" action="{{ route('products.index') }}" class="relative flex-1">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style="color:#5C6352;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/>
+                </svg>
+                @foreach(request()->except('q') as $key => $val)
+                    <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                @endforeach
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="{{ __('products.search_placeholder') }}"
+                       style="width:100%;padding:11px 12px 11px 36px;border:1.5px solid #E2ECDF;border-radius:12px;font-size:.9rem;outline:none;background:white;box-sizing:border-box;"
+                       onfocus="this.style.borderColor='#3E683F'" onblur="this.style.borderColor='#E2ECDF'">
+            </form>
+        </div>
+
+        {{-- Filter chips: active filters + category quick links (always visible) --}}
+        <div class="flex flex-wrap gap-2 mb-5">
+            {{-- Active: search query --}}
+            @if(request('q'))
+                <span class="filter-chip">
+                    "{{ request('q') }}"
+                    <a href="{{ route('products.index', request()->except('q')) }}" style="color:white;line-height:1;">×</a>
+                </span>
+            @endif
+            {{-- Active: region --}}
+            @if(request('region'))
+                @php $rn = $regions->firstWhere('id', request('region'))?->name; @endphp
+                @if($rn)
                     <span class="filter-chip">
-                        "{{ request('q') }}"
-                        <a href="{{ route('products.index', request()->except('q')) }}" style="color:white;line-height:1;">×</a>
+                        {{ $rn }}
+                        <a href="{{ route('products.index', request()->except('region','city')) }}" style="color:white;line-height:1;">×</a>
                     </span>
                 @endif
-                @if(request('region'))
-                    @php $rn = $regions->firstWhere('id', request('region'))?->name; @endphp
-                    @if($rn)
-                        <span class="filter-chip">
-                            {{ $rn }}
-                            <a href="{{ route('products.index', request()->except('region','city')) }}" style="color:white;line-height:1;">×</a>
-                        </span>
-                    @endif
-                @endif
-                @foreach([['Qoramol','🐄'],["Qo'y va echki",'🐑'],['Ot va tuya','🐴'],['Parranda','🐓']] as [$name, $em])
-                    <a href="{{ route('products.index', ['category' => $categories->firstWhere('name', $name)?->id]) }}" class="filter-chip-plain">{{ $em }} {{ $name }}</a>
-                @endforeach
+            @endif
+            {{-- Active: price range --}}
+            @if(request('price_from'))
+                <span class="filter-chip">
+                    {{ number_format(request('price_from')) }} dan
+                    <a href="{{ route('products.index', request()->except('price_from')) }}" style="color:white;line-height:1;">×</a>
+                </span>
+            @endif
+            @if(request('price_to'))
+                <span class="filter-chip">
+                    {{ number_format(request('price_to')) }} gacha
+                    <a href="{{ route('products.index', request()->except('price_to')) }}" style="color:white;line-height:1;">×</a>
+                </span>
+            @endif
+            {{-- Always visible: category chips (no emojis, as in Figma) --}}
+            @foreach([['Qoramol'],["Qo'y va echki"],['Ot va tuya'],['Parranda']] as [$name])
+                @php $cid = $categories->firstWhere('name', $name)?->id; @endphp
+                <a href="{{ route('products.index', ['category' => $cid]) }}"
+                   class="filter-chip-plain {{ request('category') == $cid ? 'active' : '' }}">
+                    {{ $name }}
+                </a>
+            @endforeach
+            {{-- Clear all --}}
+            @if(request()->anyFilled(['category','region','city','price_from','price_to','q','gender']))
                 <a href="{{ route('products.index') }}" class="filter-chip-plain" style="color:#A34F30;">{{ __('products.clear') }}</a>
-            </div>
-        @else
-            {{-- Category quick chips --}}
-            <div class="flex flex-wrap gap-2 mb-5">
-                @foreach([['Qoramol','🐄'],["Qo'y va echki",'🐑'],['Ot va tuya','🐴'],['Parranda','🐓']] as [$name, $em])
-                    @php $cid = $categories->firstWhere('name', $name)?->id; @endphp
-                    <a href="{{ route('products.index', ['category' => $cid]) }}" class="filter-chip-plain {{ request('category') == $cid ? 'active' : '' }}">
-                        {{ $em }} {{ $name }}
-                    </a>
-                @endforeach
-            </div>
-        @endif
+            @endif
+        </div>
 
         {{-- Flash --}}
         @if(session('success'))
@@ -307,11 +332,11 @@
                             <p class="text-sm mt-1">{{ __('products.no_results_hint') }}</p>
                         </div>
                     @else
-                        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                             @foreach($products as $product)
                                 <a href="{{ route('products.show', $product) }}" class="product-card group">
                                     {{-- Image --}}
-                                    <div class="relative" style="height:160px;background:#EDF0E5;overflow:hidden;">
+                                    <div class="relative" style="height:180px;background:#EDF0E5;overflow:hidden;">
                                         @if($product->primary_image_url)
                                             <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}"
                                                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
@@ -378,8 +403,9 @@
                                         </div>
                                         <h3 class="font-bold text-ink text-sm leading-snug line-clamp-1 mb-1">{{ $product->name }}</h3>
                                         <p class="font-serif font-bold text-base mb-2" style="color:#1D3520;">{{ $product->formatted_price }}</p>
-                                        <div class="flex gap-3 text-xs mb-1.5" style="color:#5C6352;">
+                                        <div class="flex items-center gap-1.5 text-xs mb-1.5" style="color:#5C6352;">
                                             @if($product->age)<span>{{ $product->age }} {{ __('products.age_unit') }}</span>@endif
+                                            @if($product->age && $product->weight)<span>·</span>@endif
                                             @if($product->weight)<span>{{ $product->weight }} kg</span>@endif
                                         </div>
                                         @if($product->city || $product->region)
