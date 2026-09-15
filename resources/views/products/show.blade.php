@@ -555,7 +555,7 @@
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     const map = L.map('miniMap', { scrollWheelZoom: false, dragging: window.innerWidth > 768, tap: false })
                  .setView([{{ $product->latitude }}, {{ $product->longitude }}], 15);
 
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     L.marker([{{ $product->latitude }}, {{ $product->longitude }}], { icon })
      .addTo(map)
-     .bindPopup('<b>' + {{ json_encode(e($product->name)) }} + '</b><br><span style="font-size:.8rem;color:#6b7280">{{ collect([$product->city?->name, $product->region?->name])->filter()->implode(', ') }}</span>')
+     .bindPopup('<b>' + {!! json_encode($product->name) !!} + '</b><br><span style="font-size:.8rem;color:#6b7280">' + {!! json_encode(collect([$product->city?->name, $product->region?->name])->filter()->implode(', ')) !!} + '</span>')
      .openPopup();
 
     if (window.innerWidth < 768) {
@@ -577,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.open('https://www.google.com/maps/dir/?api=1&destination={{ $product->latitude }},{{ $product->longitude }}', '_blank'));
         document.getElementById('miniMap').style.cursor = 'pointer';
     }
-});
+})();
 </script>
 @endpush
 @endif
