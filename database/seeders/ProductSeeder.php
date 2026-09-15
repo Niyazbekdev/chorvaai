@@ -142,7 +142,8 @@ class ProductSeeder extends Seeder
         Storage::disk('public')->deleteDirectory('products');
         Storage::disk('public')->makeDirectory('products');
 
-        $user     = User::first();
+        $user     = User::whereHas('role', fn($q) => $q->where('slug', 'admin'))->first()
+                    ?? User::first();
         $statusId = Status::where('name', 'Faol')->value('id') ?? Status::first()->id;
         $region   = Region::where('name', "Qoraqalpog'iston Respublikasi")->first();
 
