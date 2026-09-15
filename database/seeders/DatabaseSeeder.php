@@ -209,26 +209,18 @@ class DatabaseSeeder extends Seeder
 
     private function seedUsers(): void
     {
-        $adminRole    = Role::where('slug', 'admin')->first();
-        $customerRole = Role::where('slug', 'customer')->first();
+        $adminRole = Role::where('slug', 'admin')->first();
 
-        $users = [
-            ['first_name' => 'Admin',  'last_name' => 'User',       'phone' => '+998901234567', 'role_id' => $adminRole?->id],
-            ['first_name' => 'Jasur',  'last_name' => 'Toshmatov',  'phone' => '+998901111111', 'role_id' => $customerRole?->id],
-            ['first_name' => 'Nodira', 'last_name' => 'Karimova',   'phone' => '+998902222222', 'role_id' => $customerRole?->id],
-            ['first_name' => 'Bobur',  'last_name' => "Yo'ldoshev", 'phone' => '+998903333333', 'role_id' => $customerRole?->id],
-            ['first_name' => 'Malika', 'last_name' => 'Rahimova',   'phone' => '+998904444444', 'role_id' => $customerRole?->id],
-            ['first_name' => 'Sanjar', 'last_name' => 'Usmonov',    'phone' => '+998905555555', 'role_id' => $customerRole?->id],
-        ];
-
-        foreach ($users as $data) {
-            User::firstOrCreate(
-                ['phone' => $data['phone']],
-                array_merge($data, [
-                    'password'          => 'password',
-                    'phone_verified_at' => now(),
-                ])
-            );
-        }
+        User::firstOrCreate(
+            ['phone' => '+998901234567'],
+            [
+                'first_name'        => 'Admin',
+                'last_name'         => 'User',
+                'phone'             => '+998901234567',
+                'role_id'           => $adminRole?->id,
+                'password'          => 'password',
+                'phone_verified_at' => now(),
+            ]
+        );
     }
 }

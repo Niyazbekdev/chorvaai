@@ -378,12 +378,11 @@
                                             </svg>
                                         </button>
                                         @else
-                                        <a href="{{ route('login') }}"
-                                           class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white flex items-center justify-center"
-                                           style="box-shadow:0 2px 6px rgba(0,0,0,.12);"
-                                           @click.stop>
+                                        <div class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white flex items-center justify-center"
+                                             style="box-shadow:0 2px 6px rgba(0,0,0,.12);cursor:pointer;"
+                                             onclick="event.preventDefault();event.stopPropagation();window.location.href='{{ route('login') }}'">
                                             <svg width="13" height="13" fill="none" stroke="#5C6352" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                                        </a>
+                                        </div>
                                         @endauth
                                     </div>
 
